@@ -1,4 +1,4 @@
-import socket, select
+import socket, select, traceback
 
 #Function to send message to all connected clients
 def send_to_all (sock, message):
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # List to keep track of socket descriptors
     connected_list = []
     buffer = 4096
-    port = 5001
+    port = 5002
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -63,9 +63,9 @@ if __name__ == "__main__":
             else:
                 # Data from client
                 try:
-                    data1 = sock.recv(buffer)
+                    data1 = sock.recv(buffer).decode()
                     #print "sock is: ",sock
-                    data=data1[:data1.index("\n")]
+                    data=data1[:-1]
                     #print "\ndata received: ",data
                     
                     #get addr of client sending the message
@@ -80,11 +80,14 @@ if __name__ == "__main__":
                         continue
 
                     else:
-                        msg="\r\33[1m"+"\33[35m "+record[(i,p)]+": "+"\33[0m"+data+"\n"
+                        clientname = record[(i,p)].decode()
+                        print(clientname, data)
+                        msg = "\r\33[1m" + "\33[35m " + clientname + ": " + "\33[0m" + data + "\n"
                         send_to_all(sock,msg)
             
                 #abrupt user exit
-                except:
+                except Exception:
+                    traceback.print_exc()
                     (i,p)=sock.getpeername()
                     send_to_all(sock, "\r\33[31m \33[1m"+record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
                     print ("Client (%s, %s) is offline (error)" % (i,p)," [",record[(i,p)],"]\n")

@@ -9,14 +9,16 @@ def display() :
 def main():
 
     if len(sys.argv)<2:
-        host = input("Enter host ip address: ")
+        # host = input("Enter host ip address: ")
+        host = 'localhost'
     else:
         host = sys.argv[1]
 
-    port = 5001
+    port = 5002
     
     #asks for user name
     name = input("\33[34m\33[1m CREATING NEW ID:\n Enter username: \33[0m")
+    # name = 'client-name'
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(2)
     
