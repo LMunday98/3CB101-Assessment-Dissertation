@@ -72,8 +72,9 @@ class MultiServer:
                         
                         #get addr of client sending the message
                         i,p=sock.getpeername()
+                        clientname = self.record[(i,p)].decode()
                         if data == "tata":
-                            msg="\r\33[1m"+"\33[31m "+self.record[(i,p)]+" left the conversation \33[0m\n"
+                            msg="\r\33[1m"+"\33[31m "+clientname+" left the conversation \33[0m\n"
                             self.send_to_all(sock,msg)
                             print ("Client (%s, %s) is offline" % (i,p)," [",self.record[(i,p)],"]")
                             del self.record[(i,p)]
@@ -82,7 +83,6 @@ class MultiServer:
                             continue
 
                         else:
-                            clientname = self.record[(i,p)].decode()
                             print(clientname, data)
                             msg = "\r\33[1m" + "\33[35m " + clientname + ": " + "\33[0m" + data + "\n"
                             self.send_to_all(sock,msg)
