@@ -12,8 +12,8 @@ def index():
         def events():
             while True:
                 data = stream.get_boat_data()
-                yield "data: %s %s %s %s\n\n" % (data["stroke"], data["seat2"], data["seat3"], data["seat4"])
-                time.sleep(.1)
+                yield "data: %s %s\n\n" % (data[0], data[1])
+                time.sleep(.5)
         return Response(events(), content_type='text/event-stream')
     # return redirect(url_for('static', filename='index.html'))
     return render_template("index.html")

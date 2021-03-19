@@ -87,7 +87,7 @@ class MultiServer:
                         else:
                             print(clientname, data)
                             f = open("data/session_data.csv", "a")
-                            f.write("%s,%s\n" % (clientname, data))
+                            f.write("\n%s,%s" % (clientname, data))
                             f.close()
                             msg = "\r\33[1m" + "\33[35m " + clientname + ": " + "\33[0m" + data + "\n"
                             self.send_to_all(sock,msg)
@@ -102,7 +102,7 @@ class MultiServer:
                         self.connected_list.remove(sock)
                         sock.close()
                         continue
-        
+        self.server_socket.shutdown()
         self.server_socket.close()
 
     def finish(self):
