@@ -4,6 +4,12 @@
   var targetContainer = document.getElementById("target_div");
   var eventSource = new EventSource("/stream")
     eventSource.onmessage = function(e) {
-    targetContainer.innerHTML = e.data;
+    var stream_data = e.data
+    targetContainer.innerHTML = stream_data;
+    
+    /* var partsOfStr = e.data.split(',');
+    console.log(partsOfStr); */
+
+    console.log(stream_data);
   };
 </script>

@@ -8,7 +8,7 @@ stream = MyStreamMonitor()
 
 def get_data(stream):
     time.sleep(.5)
-    data_stream = stream.get_boat_data()
+    data_stream = stream.get_data_string()
     return data_stream
 
 @app.route('/')
@@ -21,5 +21,5 @@ def stream():
     @stream_with_context
     def eventStream():
         while True:
-            yield 'data: {}\n\n'.format(get_data(stream))
+            yield 'data: %s\n\n' % (get_data(stream))
     return Response(eventStream(), mimetype="text/event-stream")
