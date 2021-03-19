@@ -4,7 +4,7 @@ from multi_server import MultiServer
 multi_server = MultiServer()
 
 listen_thread = threading.Thread(target=multi_server.run_listen)
-process_thread = threading.Thread(target=multi_server.run_process)
+process_thread = threading.Thread(target=multi_server.run_calc_timing)
 
 listen_thread.setDaemon(True)
 process_thread.setDaemon(True)

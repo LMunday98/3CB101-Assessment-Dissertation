@@ -112,9 +112,9 @@ class MultiServer:
         self.server_socket.shutdown()
         self.server_socket.close()
 
-    def run_process(self):
+    def run_calc_timing(self):
         while self.run_server:
-            time.sleep(1)
+            time.sleep(0.5)
             print ("rower data", self.rower_data)
             print("\n")
             
@@ -122,7 +122,9 @@ class MultiServer:
             count = self.data_count
 
             for index in range(4):
-                avg[index] = avg[index] / count[index]
+                calculated_average = avg[index] / count[index]
+                avg[index] = round (calculated_average, 2)
+                
 
             f = open("data/session_data.csv", "a")
             f.write("\n%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3]))
