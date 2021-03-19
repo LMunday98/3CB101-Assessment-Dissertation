@@ -18,7 +18,9 @@ class MultiServer:
         # Add server socket to the list of readable connections
         self.connected_list.append(self.server_socket)
 
-        print ("\33[32m \t\t\t\tSERVER WORKING \33[0m") 
+        self.run_server = True
+
+        print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
 
     #Function to send message to all connected clients
     def send_to_all (self, sock, message):
@@ -33,7 +35,7 @@ class MultiServer:
                     self.connected_list.remove(socket)   
 
     def run(self):
-        while True:
+        while self.run_server:
             # Get the list sockets which are ready to be read through select
             rList,wList,error_sockets = select.select(self.connected_list,[],[])
 
@@ -84,6 +86,9 @@ class MultiServer:
 
                         else:
                             print(clientname, data)
+                            f = open("data/session_data.csv", "a")
+                            f.write("%s,%s\n" % (clientname, data))
+                            f.close()
                             msg = "\r\33[1m" + "\33[35m " + clientname + ": " + "\33[0m" + data + "\n"
                             self.send_to_all(sock,msg)
                 
@@ -97,5 +102,8 @@ class MultiServer:
                         self.connected_list.remove(sock)
                         sock.close()
                         continue
-
+        
         self.server_socket.close()
+
+    def finish(self):
+        self.run_server = False

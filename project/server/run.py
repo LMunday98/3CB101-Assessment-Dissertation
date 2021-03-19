@@ -1,11 +1,11 @@
 # run.py
 import threading
-from app import app
 
 if __name__ == '__main__':
 
     # Import web and api routes before running the app
     # to prevent circular dependencies
+    from app import app
     from app.routes import *
     from app.routes.web import stream
 

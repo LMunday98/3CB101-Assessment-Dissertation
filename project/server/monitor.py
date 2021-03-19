@@ -10,7 +10,7 @@ class MyStreamMonitor(object):
         }
     def monitor(self, report_interval=1):
         while True:
-            print(self.boat_data)
+            # print(self.boat_data)
             self.boat_data["stroke"] += 1
             self.boat_data["seat2"] += 1
             self.boat_data["seat3"] += 1
