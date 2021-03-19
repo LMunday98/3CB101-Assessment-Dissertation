@@ -1,5 +1,5 @@
 import time
-from flask import Flask, Response, redirect, request, url_for
+from flask import Flask, Response, redirect, request, url_for, render_template
 from app import app
 
 from monitor import MyStreamMonitor
@@ -11,7 +11,9 @@ def index():
     if request.headers.get('accept') == 'text/event-stream':
         def events():
             while True:
-                yield "data: %s\n\n" % (stream.get_count())
-                time.sleep(.5)
+                data = stream.get_boat_data()
+                yield "data: %s %s %s %s\n\n" % (data["stroke"], data["seat2"], data["seat3"], data["seat4"])
+                time.sleep(.1)
         return Response(events(), content_type='text/event-stream')
-    return redirect(url_for('static', filename='index.html'))
+    # return redirect(url_for('static', filename='index.html'))
+    return render_template("index.html")
