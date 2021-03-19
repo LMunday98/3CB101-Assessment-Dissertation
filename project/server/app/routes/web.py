@@ -6,11 +6,10 @@ from monitor import MyStreamMonitor
 
 stream = MyStreamMonitor()
 
-def get_message():
-    '''this could be any function that blocks until data is ready'''
-    time.sleep(1.0)
-    s = time.ctime(time.time())
-    return s
+def get_data(stream):
+    time.sleep(.5)
+    data_stream = stream.get_boat_data()
+    return data_stream
 
 @app.route('/')
 def root():
@@ -18,9 +17,9 @@ def root():
 
 @app.route('/stream')
 def stream():
+    stream = MyStreamMonitor()
     @stream_with_context
     def eventStream():
         while True:
-            # wait for source data to be available, then push it
-            yield 'data: {}\n\n'.format(get_message())
+            yield 'data: {}\n\n'.format(get_data(stream))
     return Response(eventStream(), mimetype="text/event-stream")
