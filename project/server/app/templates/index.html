@@ -35,7 +35,7 @@
 
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<div style="margin-top:16px;color:dimgrey;font-size:9px;font-family: Verdana, Arial, Helvetica, sans-serif;text-decoration:none;">Source: <a href="https://canvasjs.com/html5-javascript-dynamic-chart/" target="_blank" title="JavaScript Live / Dynamic Charts &amp; Graphs ">https://canvasjs.com/html5-javascript-dynamic-chart/</a></div>
+<div style="margin-top:16px;color:dimgrey;font-size:9px;font-family: Verdana, Arial, Helvetica, sans-serif;text-decoration:none;"></div>
 
 <script>
 
@@ -44,7 +44,7 @@
     var dps = []; // dataPoints
     var chart = new CanvasJS.Chart("chartContainer", {
       title :{
-        text: "Boat Data"
+        text: "Stroke Data"
       },
       data: [{
         type: "line",
@@ -53,16 +53,22 @@
     });
     
     var xVal = 0;
-    var yVal = 100; 
+    var yVal = 0; 
     var updateInterval = 1000;
     var dataLength = 20; // number of dataPoints visible at any point
+
+    var temp_val = 2
     
-    function updateChart (count) {
+    function updateChart (new_y) {
+
+      console.log(new_y);
+      yVal = parseInt(new_y)
     
+      count = 0
       count = count || 1;
     
       for (var j = 0; j < count; j++) {
-        yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+        //yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
         dps.push({
           x: xVal,
           y: yVal
@@ -77,8 +83,7 @@
       chart.render();
     };
     
-    updateChart(dataLength);
-    //setInterval(function(){updateChart()}, updateInterval);
+    //updateChart(dataLength, 0);
 
     // // // // //
 
@@ -90,7 +95,7 @@
       for (let index = 0; index < 5; index++) {
         display_data(document.getElementById(display_elements[index]), data_array[index])
       }
-      updateChart();
+      updateChart(data_array[3]);
     };
 
     function display_data(html_element, data) {
