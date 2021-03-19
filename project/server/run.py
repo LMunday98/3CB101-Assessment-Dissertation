@@ -8,5 +8,5 @@ if __name__ == '__main__':
     from app import app
     from app.routes import *
     
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='192.168.0.184', port=5000)
     #app.run(host='cs2s.yorkdc.net', port=5018)

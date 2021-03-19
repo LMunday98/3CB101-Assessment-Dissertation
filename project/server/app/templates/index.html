@@ -1,25 +1,49 @@
-<div id="datetime">datetime</div>
-<div id="bow">bow</div>
-<div id="seat2">seat2</div>
-<div id="seat3">seat3</div>
-<div id="stroke">stroke</div>
+<style>
+  table, th, td {
+    border: 1px solid black;
+    text-align: center;
+  }
+</style>
+
+<table>
+  <tr>
+    <th>Timestamp</th>
+    <th><div id="datetime">datetime</div></th>
+  </tr>
+  <tr>
+    <th>Label</th>
+    <th>Data</th>
+  </tr>
+  <tr>
+    <td>Bow</td>
+    <td><div id="bow">bow</div></td>
+  </tr>
+  <tr>
+    <td>Seat 2</td>
+    <td><div id="seat2">seat2</div></td>
+  </tr>
+  <tr>
+    <td>Seat 3</td>
+    <td><div id="seat3">seat3</div></td>
+  </tr>
+  <tr>
+    <td>Stroke</td>
+    <td><div id="stroke">stroke</div></td>
+  </tr>
+</table>
 
 <script>
-  var datetime = document.getElementById("datetime");
-  var stroke = document.getElementById("stroke");
-  var seat3 = document.getElementById("seat2");
-  var seat2 = document.getElementById("seat3");
-  var bow = document.getElementById("bow");
+  var display_elements = ["bow", "seat2", "seat3", "stroke", "datetime"]
 
   var eventSource = new EventSource("/stream")
     eventSource.onmessage = function(e) {
-    var stream_data = e.data
-    var data_array = stream_data.split(',');
+    var data_array = e.data.split(',');
+    for (let index = 0; index < 5; index++) {
+      display_data(document.getElementById(display_elements[index]), data_array[index])
+    }
+  };  
 
-    datetime.innerHTML = "Timestamp: " + data_array[0];
-    bow.innerHTML = "Bow: " + data_array[1];
-    seat2.innerHTML = "Seat 2: " + data_array[2];
-    seat3.innerHTML = "Seat 3: " + data_array[3];
-    stroke.innerHTML = "Stroke: " + data_array[4];
-  };
+  function display_data(html_element, data) {
+    html_element.innerHTML = data;
+  }
 </script>
