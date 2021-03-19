@@ -1,15 +1,25 @@
-<div id="target_div">Watch this space...</div>
+<div id="datetime">datetime</div>
+<div id="bow">bow</div>
+<div id="seat2">seat2</div>
+<div id="seat3">seat3</div>
+<div id="stroke">stroke</div>
 
 <script>
-  var targetContainer = document.getElementById("target_div");
+  var datetime = document.getElementById("datetime");
+  var stroke = document.getElementById("stroke");
+  var seat3 = document.getElementById("seat2");
+  var seat2 = document.getElementById("seat3");
+  var bow = document.getElementById("bow");
+
   var eventSource = new EventSource("/stream")
     eventSource.onmessage = function(e) {
     var stream_data = e.data
-    targetContainer.innerHTML = stream_data;
-    
-    /* var partsOfStr = e.data.split(',');
-    console.log(partsOfStr); */
+    var data_array = stream_data.split(',');
 
-    console.log(stream_data);
+    datetime.innerHTML = "Timestamp: " + data_array[0];
+    bow.innerHTML = "Bow: " + data_array[1];
+    seat2.innerHTML = "Seat 2: " + data_array[2];
+    seat3.innerHTML = "Seat 3: " + data_array[3];
+    stroke.innerHTML = "Stroke: " + data_array[4];
   };
 </script>

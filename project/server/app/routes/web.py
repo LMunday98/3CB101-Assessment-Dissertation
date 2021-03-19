@@ -7,7 +7,7 @@ from monitor import MyStreamMonitor
 stream = MyStreamMonitor()
 
 def get_data(stream):
-    time.sleep(.5)
+    time.sleep(.1)
     data_stream = stream.get_data_string()
     return data_stream
 
