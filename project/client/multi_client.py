@@ -1,5 +1,6 @@
 import socket, select, string, sys
 import time
+import random
 
 class MultiClient:
     def __init__(self, client_name):
@@ -48,14 +49,8 @@ class MultiClient:
                         sys.exit()
                     else :
                         sys.stdout.write(data.decode())
-            
-                #user entered a message
-                else :
-                    # msg=sys.stdin.readline()
-                    msg = "test message"
-                    self.s.send(msg.encode())
 
-            msg = "test message"
+            msg = str(random.randint(1,10)) + " "
             self.s.send(msg.encode())
             time.sleep(.5)
 

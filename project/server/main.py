@@ -2,9 +2,15 @@ import threading
 from multi_server import MultiServer
 
 multi_server = MultiServer()
-server_thread = threading.Thread(target=multi_server.run)
-server_thread.setDaemon(True)
-server_thread.start()
+
+listen_thread = threading.Thread(target=multi_server.run_listen)
+process_thread = threading.Thread(target=multi_server.run_process)
+
+listen_thread.setDaemon(True)
+process_thread.setDaemon(True)
+
+listen_thread.start()
+process_thread.start()
 
 try:
     input("Press enter to shutdown server")

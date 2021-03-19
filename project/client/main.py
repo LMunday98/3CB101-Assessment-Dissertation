@@ -5,7 +5,7 @@ clients = []
 threads = []
 
 # create clients and threads
-for index in range(2):
+for index in range(4):
     new_client = MultiClient(index)
     clients.append(new_client)
 
