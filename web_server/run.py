@@ -8,10 +8,11 @@ if __name__ == '__main__':
     # to prevent circular dependencies
     from app.routes import *
     from app.routes.web import stream
+    import 3CB101-Pi.server.multi-server  
 
-    # Start data monitor
-    t = threading.Thread(target=stream.monitor)
-    t.start()
+    # Start threads
+    monitor_thread = threading.Thread(target=stream.monitor)
+    monitor_thread.start()
     
     app.run(host='0.0.0.0', port=5000)
     #app.run(host='cs2s.yorkdc.net', port=5018)
