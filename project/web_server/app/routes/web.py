@@ -1,8 +1,8 @@
 import time
 from flask import Flask, Response, redirect, request, url_for, render_template
-from app import app
+from web_server.app import app
 
-from monitor import MyStreamMonitor
+from web_server.monitor import MyStreamMonitor
 
 stream = MyStreamMonitor()
 
