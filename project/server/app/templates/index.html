@@ -1,17 +1,9 @@
-<!doctype html>
-<title>Server Send Events Demo</title>
-<style>
-  #data {
-    text-align: center;
-  }
-</style>
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+<div id="target_div">Watch this space...</div>
+
 <script>
-if (!!window.EventSource) {
-  var source = new EventSource('/');
-  source.onmessage = function(e) {
-    $("#data").text(e.data);
-  }
-}
+  var targetContainer = document.getElementById("target_div");
+  var eventSource = new EventSource("/stream")
+    eventSource.onmessage = function(e) {
+    targetContainer.innerHTML = e.data;
+  };
 </script>
-<div id="data">nothing received yet</div>
