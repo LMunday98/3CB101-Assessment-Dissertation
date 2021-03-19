@@ -21,9 +21,14 @@ class MultiServer:
 
         self.run_server = True
 
-        self.rower_data = [0, 0, 0, 0]
+        self.reset()
 
         print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
+
+    def reset(self):
+        self.rower_data = [1,1,1,1]
+        self.data_count = [1,1,1,1]
+        
 
     #Function to send message to all connected clients
     def send_to_all (self, sock, message):
@@ -88,8 +93,9 @@ class MultiServer:
                             continue
 
                         else:
-                            print(client_index, data)
-                            self.rower_data[int(client_index)] += int(data)
+                            self.rower_data[int(client_index)] = self.rower_data[int(client_index)] + int(data)
+                            self.data_count[int(client_index)] = self.data_count[int(client_index)] + 1
+
                             msg = "\r\33[1m" + "\33[35m " + client_index + ": " + "\33[0m" + data + "\n"
                             self.send_to_all(sock,msg)
                 
@@ -107,13 +113,21 @@ class MultiServer:
         self.server_socket.close()
 
     def run_process(self):
-        data = self.rower_data
         while self.run_server:
-            f = open("data/session_data.csv", "a")
-            f.write("\n%s,%s,%s,%s" % (data[0], data[1], data[2], data[3]))
-            f.close()
-        
-            time.sleep(.1)
+            time.sleep(1)
+            print ("rower data", self.rower_data)
+            print("\n")
+            
+            avg = self.rower_data
+            count = self.data_count
 
+            for index in range(4):
+                avg[index] = avg[index] / count[index]
+
+            f = open("data/session_data.csv", "a")
+            f.write("\n%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3]))
+            f.close()
+            self.reset()
+            
     def finish(self):
         self.run_server = False
