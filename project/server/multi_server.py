@@ -1,4 +1,4 @@
-import time
+import time, datetime
 import socket, select, traceback
 
 class MultiServer:
@@ -115,8 +115,6 @@ class MultiServer:
     def run_calc_timing(self):
         while self.run_server:
             time.sleep(0.5)
-            print ("rower data", self.rower_data)
-            print("\n")
             
             avg = self.rower_data
             count = self.data_count
@@ -124,10 +122,11 @@ class MultiServer:
             for index in range(4):
                 calculated_average = avg[index] / count[index]
                 avg[index] = round (calculated_average, 2)
-                
+
+            print ("\n", avg)
 
             f = open("data/session_data.csv", "a")
-            f.write("\n%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3]))
+            f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
             f.close()
             self.reset()
             
