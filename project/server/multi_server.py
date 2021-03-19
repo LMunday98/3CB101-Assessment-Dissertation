@@ -113,7 +113,7 @@ class MultiServer:
             f.write("\n%s,%s,%s,%s" % (data[0], data[1], data[2], data[3]))
             f.close()
         
-            time.sleep(.5)
+            time.sleep(.1)
 
     def finish(self):
         self.run_server = False

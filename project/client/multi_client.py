@@ -52,7 +52,7 @@ class MultiClient:
 
             msg = str(random.randint(1,10)) + " "
             self.s.send(msg.encode())
-            time.sleep(.5)
+            time.sleep(.1)
 
     def finish(self):
         self.s.send("tata ".encode())
