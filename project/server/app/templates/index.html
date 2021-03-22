@@ -16,7 +16,7 @@
   <tr>
     <th>Position</th>
     {% for sensor_point in sensor_points %}
-    <th>{{ sensor_point}}</th>
+    <th style="width: 50px;">{{ sensor_point}}</th>
     {% endfor %}
   </tr>
   {% for seat in seats %}
@@ -110,7 +110,8 @@
       });
 
       timestamp = data_array[data_array.length - 1]
-      display_data("datetime", timestamp)
+      datetime = timestamp.split('.')[0]
+      display_data("datetime", datetime)
 
       //updateChart(data_array[1]);
     };
