@@ -140,16 +140,16 @@ class MultiServer:
             rower_index = 0
             for rower_data in logged_data:
                 num_data_logs = rower_data[0]
-                
-                if num_data_logs == 0:
-                    rower_index += 1
-                    continue
 
                 data_array.append(rower_index)
-
-                for data_index in range(1,9):
-                    avg_data = rower_data[data_index] / num_data_logs
-                    data_array.append(avg_data)
+                
+                if num_data_logs == 0:
+                    for data_index in range(8):
+                        data_array.append(0)
+                else:
+                    for data_index in range(1,9):
+                        avg_data = rower_data[data_index] / num_data_logs
+                        data_array.append(avg_data)
                 
                 rower_index += 1
                 
