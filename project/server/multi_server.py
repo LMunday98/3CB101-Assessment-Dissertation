@@ -27,8 +27,6 @@ class MultiServer:
 
         self.run_server = True
 
-        self.reset()
-
         self.session_name = datetime.datetime.now()
 
         self.new_session()
@@ -36,13 +34,18 @@ class MultiServer:
         print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
 
     def reset(self):
-        self.rower0 = []
-        self.rower1 = []
-        self.rower2 = []
-        self.rower3 = []
+        self.logged_data = [
+        self.create_clean_data_array(),
+        self.create_clean_data_array(),
+        self.create_clean_data_array(),
+        self.create_clean_data_array()]
+
+    def create_clean_data_array(self):
+        return [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def new_session(self):
         self.write_rower_data("realtime_analysis", "/session_data", [], "w")
+        self.reset()
 
     #Function to send message to all connected clients
     def send_to_all (self, sock, message):
@@ -90,9 +93,9 @@ class MultiServer:
                     # Data from client
                     try:
                         client_data = sock.recv(self.buffer)
-                        sensor_data = pickle.loads(client_data)
-                        self.write_rower_data("rower" + str(sensor_data.get_rowerId()), "/session_data_" + str(self.session_name) ,sensor_data.get_all_data())
-                
+                        rower_data = pickle.loads(client_data)
+                        self.capture_data(rower_data)
+                        
                     #abrupt user exit
                     except Exception:
                         # traceback.print_exc()
@@ -106,6 +109,18 @@ class MultiServer:
         self.server_socket.shutdown()
         self.server_socket.close()
 
+    def capture_data(self, rower_data):
+        rower_index = rower_data.get_rowerId()
+        logged_data = self.logged_data[rower_index]
+        logged_data[0] = logged_data[0] + 1
+
+        data_index = 1
+        for data in rower_data.get_sensor_data():
+            logged_data[data_index] = logged_data[data_index] + data
+            data_index += 1
+
+        self.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
+
     def write_rower_data(self, file_dir, file_name, data_to_write, file_method="a"):
         f = open("data/" + file_dir + file_name + ".csv", file_method)
         data_string = "\n"
@@ -118,7 +133,26 @@ class MultiServer:
     def run_calc_timing(self):
         while self.run_server:
             time.sleep(0.5)
-            data_to_write = ["yeet"]
+            logged_data = self.logged_data
+
+            data_array = []
+            rower_index = 0
+            for rower_data in logged_data:
+                num_data_logs = rower_data[0]
+                
+                if num_data_logs == 0:
+                    rower_index += 1
+                    continue
+
+                data_array.append(rower_index)
+
+                for data_index in range(1,9):
+                    avg_data = rower_data[data_index] / num_data_logs
+                    data_array.append(avg_data)
+                
+                rower_index += 1
+                
+            data_to_write = [data_array]
             self.write_rower_data("realtime_analysis", "/session_data", data_to_write)
             self.reset()
             

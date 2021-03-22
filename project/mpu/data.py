@@ -45,6 +45,9 @@ class Data:
     def get_all_data(self):
         return [self.rowerId, self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry, self.data_datetime]
 
+    def get_sensor_data(self):
+        return [self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry]
+
     def printData(self):
         print ("\nRower Identification")
         print ("Id: ", ("%5d" % self.rowerId))
