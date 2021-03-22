@@ -1,6 +1,9 @@
 import threading
 from multi_client import MultiClient
-from mpu.sensor import Sensor
+
+import sys
+sys.path.append("..")
+import mpu
 
 num_clients = 1
 single_client_index = 0

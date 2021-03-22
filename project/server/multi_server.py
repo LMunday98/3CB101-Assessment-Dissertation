@@ -2,6 +2,10 @@ import pickle
 import time, datetime
 import socket, select, traceback
 
+import sys
+sys.path.append("..")
+import mpu
+
 class MultiServer:
     def __init__(self):
         self.name=""
