@@ -5,35 +5,6 @@
   }
 </style>
 
-<!--
-<table>
-  <tr>
-    <th>Timestamp</th>
-    <th><div id="datetime">datetime</div></th>
-  </tr>
-  <tr>
-    <th>Position</th>
-    <th>Raw Data</th>
-  </tr>
-  <tr>
-    <td>Bow</td>
-    <td><div id="bow">bow</div></td>
-  </tr>
-  <tr>
-    <td>Seat 2</td>
-    <td><div id="seat2">seat2</div></td>
-  </tr>
-  <tr>
-    <td>Seat 3</td>
-    <td><div id="seat3">seat3</div></td>
-  </tr>
-  <tr>
-    <td>Stroke</td>
-    <td><div id="stroke">stroke</div></td>
-  </tr>
-</table>
--->
-
 {% set seats=["bow", "bow2", "stroke2", "stroke"] %}
 {% set sensor_points=["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"] %}
 
@@ -110,23 +81,41 @@
 
     // // // // //
 
-    var display_elements = ["bow", "seat2", "seat3", "stroke", "datetime"]
+    var seats = ["bow", "bow2", "stroke2", "stroke"]
+    var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
 
     var eventSource = new EventSource("/stream")
       eventSource.onmessage = function(e) {
       var data_array = e.data.split(',');
-      /*
-      for (let index = 0; index < 5; index++) {
-        display_data(document.getElementById(display_elements[index]), data_array[index])
-      }
-      */
-      timestamp = data_array[data_array.length - 1]
-      display_data(document.getElementById(display_elements[4]), timestamp)
+      
+      var num_rowers = (data_array.length - 1) / 9
+      var rower_ids = []
 
-      updateChart(data_array[1]);
+      for (let index = 0; index < num_rowers; index++) {
+        rower_id = data_array[index * 9]
+        rower_ids.push(rower_id)
+      }
+
+      rower_ids.forEach(rower_index => {
+        seat_name = seats[rower_index]
+        var sensor_count = 0
+        sensor_points.forEach(sensor_point => {
+          var data_id = seat_name + sensor_point
+          data_index = (rower_index * 9) + sensor_count
+          data = data_array[data_index]
+          display_data(data_id, data)
+          sensor_count++
+        });
+      });
+
+      timestamp = data_array[data_array.length - 1]
+      display_data("datetime", timestamp)
+
+      //updateChart(data_array[1]);
     };
 
-    function display_data(html_element, data) {
+    function display_data(element_id, data) {
+      html_element = document.getElementById(element_id)
       html_element.innerHTML = data;
     }
   
