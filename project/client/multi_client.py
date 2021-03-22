@@ -12,7 +12,6 @@ class MultiClient:
 
         self.run_client = True
         self.name = str(client_index)
-        print(client_index)
         self.sensor = Sensor(client_index)
 
         if len(sys.argv)<2:
@@ -40,11 +39,12 @@ class MultiClient:
 
 
     def run(self):
-        print("name", self.name)
         while self.run_client:
             socket_list = [sys.stdin, self.s]
-            # msg = str(random.randint(1,10)) + " "
-            data_string = pickle.dumps(self.sensor.get_data())
+            sensor_data = self.sensor.get_data()
+            sensor_data.printData()
+            print(str(sensor_data.get_data_datetime()))
+            data_string = pickle.dumps(sensor_data)
             self.s.send(data_string)
             time.sleep(.2)
 
