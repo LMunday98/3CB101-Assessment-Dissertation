@@ -28,6 +28,8 @@ class MultiServer:
 
         self.reset()
 
+        self.session_name = datetime.datetime.now()
+
         print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
 
     def reset(self):
@@ -86,7 +88,7 @@ class MultiServer:
                 
                     #abrupt user exit
                     except Exception:
-                        traceback.print_exc()
+                        # traceback.print_exc()
                         (i,p)=sock.getpeername()
                         self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
                         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
@@ -98,7 +100,7 @@ class MultiServer:
         self.server_socket.close()
 
     def write_rower_data(self, filename, data_to_write):
-        f = open("data/" + filename + "/session_data.csv", "a")
+        f = open("data/" + filename + "/session_data_" + str(self.session_name) + ".csv", "a")
         # f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
         data_string = "\n"
         for data in data_to_write:
