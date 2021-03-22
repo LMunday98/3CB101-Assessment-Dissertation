@@ -1,12 +1,14 @@
 import socket, select, string, sys
 import time
 import random
+import pickle
 
 class MultiClient:
-    def __init__(self, client_name):
+    def __init__(self, client_name, sensor):
 
         self.run_client = True
         self.name = str(client_name)
+        self.sensor = sensor
 
         if len(sys.argv)<2:
             # host = input("Enter host ip address: ")
@@ -36,9 +38,10 @@ class MultiClient:
         print("name", self.name)
         while self.run_client:
             socket_list = [sys.stdin, self.s]
-            msg = str(random.randint(1,10)) + " "
-            self.s.send(msg.encode())
-            time.sleep(.1)
+            # msg = str(random.randint(1,10)) + " "
+            data_string = pickle.dumps(self.sensor.get_data())
+            self.s.send(data_string)
+            time.sleep(.2)
 
     def finish(self):
         self.s.send("tata ".encode())

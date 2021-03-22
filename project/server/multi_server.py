@@ -1,3 +1,4 @@
+import pickle
 import time, datetime
 import socket, select, traceback
 
@@ -75,29 +76,21 @@ class MultiServer:
                 else:
                     # Data from client
                     try:
-                        data1 = sock.recv(self.buffer).decode()
-                        #print "sock is: ",sock
-                        data=data1[:-1]
-                        #print "\ndata received: ",data
-                        
-                        #get addr of client sending the message
-                        i,p=sock.getpeername()
-                        client_index = self.record[(i,p)].decode()
-                        if data == "tata":
-                            msg="\r\33[1m"+"\33[31m "+client_index+" left the conversation \33[0m\n"
-                            self.send_to_all(sock,msg)
-                            print ("Client (%s, %s) is offline" % (i,p)," [",self.record[(i,p)],"]")
-                            del self.record[(i,p)]
-                            self.connected_list.remove(sock)
-                            sock.close()
-                            continue
+                        # data1 = sock.recv(self.buffer).decode()
+                        # print "sock is: ",sock
+                        # data=data1[:-1]
+                        # print "\ndata received: ",data
 
-                        else:
-                            self.rower_data[int(client_index)] = self.rower_data[int(client_index)] + int(data)
-                            self.data_count[int(client_index)] = self.data_count[int(client_index)] + 1
+                        client_data = sock.recv(self.buffer)
+                        sensor_data = pickle.loads(client_data)
+                        sensor_data.printData()
 
-                            msg = "\r\33[1m" + "\33[35m " + client_index + ": " + "\33[0m" + data + "\n"
-                            self.send_to_all(sock,msg)
+                        # print(data)
+                        # self.rower_data[int(client_index)] = self.rower_data[int(client_index)] + int(data)
+                        # self.data_count[int(client_index)] = self.data_count[int(client_index)] + 1
+
+                        # msg = "\r\33[1m" + "\33[35m " + client_index + ": " + "\33[0m" + data + "\n"
+                        # self.send_to_all(sock,msg)
                 
                     #abrupt user exit
                     except Exception:
