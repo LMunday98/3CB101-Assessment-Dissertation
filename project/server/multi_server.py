@@ -31,8 +31,6 @@ class MultiServer:
 
         self.new_session()
 
-        print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
-
     def reset(self):
         self.logged_data = [
         self.create_clean_data_array(),
@@ -60,6 +58,7 @@ class MultiServer:
                     self.connected_list.remove(socket)   
 
     def run_listen(self):
+        print ("\33[32m \t\t\t\tSOCKET SERVER WORKING \33[0m")
         while self.run_server:
             # Get the list sockets which are ready to be read through select
             rList,wList,error_sockets = select.select(self.connected_list,[],[])
@@ -152,8 +151,8 @@ class MultiServer:
                 
                 rower_index += 1
                 
-            data_to_write = [data_array]
-            self.write_rower_data("realtime_analysis", "/session_data", data_to_write)
+            if len(data_array) != 0:
+                self.write_rower_data("realtime_analysis", "/session_data", data_array)
             self.reset()
             
     def finish(self):
