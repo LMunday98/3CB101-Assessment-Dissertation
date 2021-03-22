@@ -42,7 +42,7 @@ class MultiServer:
         return [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def new_session(self):
-        self.write_rower_data("realtime_analysis", "/session_data", [], "w")
+        # self.write_rower_data("realtime_analysis", "/session_data", [], "w")
         self.reset()
 
     #Function to send message to all connected clients

@@ -6,10 +6,10 @@ from app.routes import *
 
 # server
 from multi_server import MultiServer
-multi_server = MultiServer()
 
 def socket_server():
     print("\nStart Socket Server")
+    multi_server = MultiServer()
     listen_thread = threading.Thread(target=multi_server.run_listen)
     process_thread = threading.Thread(target=multi_server.run_calc_timing)
 
@@ -19,6 +19,8 @@ def socket_server():
     listen_thread.start()
     process_thread.start()
 
+    return multi_server
+
 def flask_server():
     print("\nStart Flask Server\n")
     flask_thread = threading.Thread(target=app.run(host='192.168.0.184', port=4444))
@@ -27,14 +29,16 @@ def flask_server():
 
 
 if __name__ == '__main__':
-
+    
     try:
-        socket_server()
+        multi_server = socket_server()
+        x = 1
     except Exception as e:
         print(e)
 
     try:
         flask_server()
+        x = 1
     except Exception as e:
         print(e)
 
