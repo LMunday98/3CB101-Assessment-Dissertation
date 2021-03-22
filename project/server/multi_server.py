@@ -31,7 +31,7 @@ class MultiServer:
 
         self.session_name = datetime.datetime.now()
 
-        self.write_rower_data("realtime_analysis", "/session_data", [], "w")
+        self.new_session()
 
         print ("\33[32m \t\t\t\tSERVER WORKING \33[0m")
 
@@ -40,7 +40,9 @@ class MultiServer:
         self.rower1 = []
         self.rower2 = []
         self.rower3 = []
-        
+
+    def new_session(self):
+        self.write_rower_data("realtime_analysis", "/session_data", [], "w")
 
     #Function to send message to all connected clients
     def send_to_all (self, sock, message):
