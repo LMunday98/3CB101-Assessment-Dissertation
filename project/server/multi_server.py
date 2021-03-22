@@ -83,7 +83,8 @@ class MultiServer:
 
                         client_data = sock.recv(self.buffer)
                         sensor_data = pickle.loads(client_data)
-                        sensor_data.printData()
+                        print (sensor_data.get_rowerId())
+                        print (sensor_data.get_data_datetime())
 
                         # print(data)
                         # self.rower_data[int(client_index)] = self.rower_data[int(client_index)] + int(data)
@@ -116,7 +117,7 @@ class MultiServer:
                 calculated_average = avg[index] / count[index]
                 avg[index] = round (calculated_average, 2)
 
-            print ("\n", avg)
+            # print ("\n", avg)
 
             f = open("data/session_data.csv", "a")
             f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))

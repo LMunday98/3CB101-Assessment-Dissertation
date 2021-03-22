@@ -1,5 +1,6 @@
 import smbus
 import time
+import datetime
 from .data import Data
 
 class Sensor():
@@ -44,4 +45,4 @@ class Sensor():
         ay = self.read_word_2c(0x3d)
         az = self.read_word_2c(0x3f)
 
-        return Data(self.rowerId, gx, gy, gz, ax, ay, az)
+        return Data(self.rowerId, gx, gy, gz, ax, ay, az, datetime.datetime.now())

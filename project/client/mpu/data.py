@@ -1,10 +1,11 @@
+import datetime
 from .calcs import Calc
 
 class Data:
 
     rowerId = 0
 
-    def __init__(self, rowerId, gx, gy, gz, ax, ay, az):
+    def __init__(self, rowerId, gx, gy, gz, ax, ay, az, data_datetime):
         self.rowerId = rowerId
 
         self.gx = gx
@@ -30,11 +31,16 @@ class Data:
         self.rx = Calc.get_x_rotation(sax, say, saz)
         self.ry = Calc.get_y_rotation(sax, say, saz)
 
+        self.data_datetime = data_datetime
+
     def set_rowerId(self, newId):
         self.rowerId = newId
 
     def get_rowerId(self):
         return self.rowerId
+
+    def get_data_datetime(self):
+        return self.data_datetime
 
     def printData(self):
         print ("\nRower Identification")
