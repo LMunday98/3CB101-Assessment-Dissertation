@@ -36,6 +36,12 @@
 <script>
 
   window.onload = function () {
+
+    var seats = ["bow", "bow2", "stroke2", "stroke"]
+    var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
+
+    var chart_index = 3
+    var chart_title = sensor_points[gx]
   
     var dps = []; // dataPoints
     var chart = new CanvasJS.Chart("chartContainer", {
@@ -50,25 +56,16 @@
     
     var xVal = 0;
     var yVal = 0; 
-    var updateInterval = 1000;
     var dataLength = 20; // number of dataPoints visible at any point
-
-    var temp_val = 2
     
     function updateChart (new_y) {
       yVal = parseInt(new_y)
     
-      count = 0
-      count = count || 1;
-    
-      for (var j = 0; j < count; j++) {
-        //yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
-        dps.push({
+      dps.push({
           x: xVal,
           y: yVal
         });
-        xVal++;
-      }
+      xVal++;
     
       if (dps.length > dataLength) {
         dps.shift();
@@ -80,9 +77,6 @@
     //updateChart(dataLength, 0);
 
     // // // // //
-
-    var seats = ["bow", "bow2", "stroke2", "stroke"]
-    var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
 
     var eventSource = new EventSource("/stream")
       eventSource.onmessage = function(e) {
@@ -113,7 +107,7 @@
       datetime = timestamp.split('.')[0]
       display_data("datetime", datetime)
 
-      //updateChart(data_array[1]);
+      updateChart(data_array[chart_index + 1]);
     };
 
     function display_data(element_id, data) {
