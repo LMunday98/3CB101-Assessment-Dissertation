@@ -84,7 +84,7 @@ class MultiServer:
                     try:
                         client_data = sock.recv(self.buffer)
                         sensor_data = pickle.loads(client_data)
-                        self.write_rower_data("rower" + str(sensor_data.get_rowerId()), sensor_data.get_all_data())
+                        self.write_rower_data("rower" + str(sensor_data.get_rowerId()), "/session_data_" + str(self.session_name) ,sensor_data.get_all_data())
                 
                     #abrupt user exit
                     except Exception:
@@ -99,8 +99,8 @@ class MultiServer:
         self.server_socket.shutdown()
         self.server_socket.close()
 
-    def write_rower_data(self, filename, data_to_write):
-        f = open("data/" + filename + "/session_data_" + str(self.session_name) + ".csv", "a")
+    def write_rower_data(self, file_dir, file_name, data_to_write):
+        f = open("data/" + file_dir + file_name + ".csv", "a")
         # f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
         data_string = "\n"
         for data in data_to_write:
@@ -112,20 +112,7 @@ class MultiServer:
     def run_calc_timing(self):
         while self.run_server:
             time.sleep(0.5)
-            
-            avg = self.rower_data
-            count = self.data_count
-
-            for index in range(4):
-                calculated_average = avg[index] / count[index]
-                avg[index] = round (calculated_average, 2)
-
-            # print ("\n", avg)
-
-            f = open("data/session_data.csv", "a")
-            f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
-            f.close()
-            self.reset()
+            self.write_rower_data("realtime_analysis", "/session_data", ["1", "2", "3", "4"])
             
     def finish(self):
         self.run_server = False
