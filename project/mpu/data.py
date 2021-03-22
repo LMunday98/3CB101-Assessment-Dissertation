@@ -42,6 +42,9 @@ class Data:
     def get_data_datetime(self):
         return self.data_datetime
 
+    def get_all_data(self):
+        return [self.rowerId, self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry, self.data_datetime]
+
     def printData(self):
         print ("\nRower Identification")
         print ("Id: ", ("%5d" % self.rowerId))

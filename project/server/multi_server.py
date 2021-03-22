@@ -80,22 +80,9 @@ class MultiServer:
                 else:
                     # Data from client
                     try:
-                        # data1 = sock.recv(self.buffer).decode()
-                        # print "sock is: ",sock
-                        # data=data1[:-1]
-                        # print "\ndata received: ",data
-
                         client_data = sock.recv(self.buffer)
                         sensor_data = pickle.loads(client_data)
-                        print (sensor_data.get_rowerId())
-                        print (sensor_data.get_data_datetime())
-
-                        # print(data)
-                        # self.rower_data[int(client_index)] = self.rower_data[int(client_index)] + int(data)
-                        # self.data_count[int(client_index)] = self.data_count[int(client_index)] + 1
-
-                        # msg = "\r\33[1m" + "\33[35m " + client_index + ": " + "\33[0m" + data + "\n"
-                        # self.send_to_all(sock,msg)
+                        self.write_rower_data("rower" + str(sensor_data.get_rowerId()), sensor_data.get_all_data())
                 
                     #abrupt user exit
                     except Exception:
@@ -109,6 +96,16 @@ class MultiServer:
                         continue
         self.server_socket.shutdown()
         self.server_socket.close()
+
+    def write_rower_data(self, filename, data_to_write):
+        f = open("data/" + filename + "/session_data.csv", "a")
+        # f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
+        data_string = "\n"
+        for data in data_to_write:
+            data_string = data_string + str(data) + ","
+        data_string = data_string[:-1]
+        f.write(data_string)
+        f.close()
 
     def run_calc_timing(self):
         while self.run_server:
