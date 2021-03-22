@@ -1,6 +1,7 @@
 import pickle
 import time, datetime
 import socket, select, traceback
+from shutil import copyfile
 
 import sys
 sys.path.append("..")
@@ -101,7 +102,6 @@ class MultiServer:
 
     def write_rower_data(self, file_dir, file_name, data_to_write):
         f = open("data/" + file_dir + file_name + ".csv", "a")
-        # f.write("\n%s,%s,%s,%s,%s" % (avg[0], avg[1], avg[2], avg[3], datetime.datetime.now()))
         data_string = "\n"
         for data in data_to_write:
             data_string = data_string + str(data) + ","
@@ -112,7 +112,9 @@ class MultiServer:
     def run_calc_timing(self):
         while self.run_server:
             time.sleep(0.5)
-            self.write_rower_data("realtime_analysis", "/session_data", ["1", "2", "3", "4"])
+            data_to_write = ["yeet"]
+            self.write_rower_data("realtime_analysis", "/session_data", data_to_write)
             
     def finish(self):
         self.run_server = False
+        copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
