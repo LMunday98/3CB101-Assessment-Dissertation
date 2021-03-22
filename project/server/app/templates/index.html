@@ -29,7 +29,8 @@
   {% endfor %}
 </table>
 
-<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
+<div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <div style="margin-top:16px;color:dimgrey;font-size:9px;font-family: Verdana, Arial, Helvetica, sans-serif;text-decoration:none;"></div>
@@ -41,43 +42,58 @@
     var seats = ["bow", "bow2", "stroke2", "stroke"]
     var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
 
-    var chart_title = "sax"
-  
-    var dps = [[], [], [], []]; // dataPoints
-
-    var chart = new CanvasJS.Chart("chartContainer", {
+    var chart_title_rx = "rx"
+    var dps_rx = [[], [], [], []]; // dataPoints
+    var chart_rx = new CanvasJS.Chart("chartContainer_rx", {
       title :{
-        text: chart_title
+        text: chart_title_rx
       },
       data: [{
         type: "line",
-        dataPoints: dps[0]
+        dataPoints: dps_rx[0]
       }, {
         type: "line",
-        dataPoints: dps[1]
+        dataPoints: dps_rx[1]
       }, {
         type: "line",
-        dataPoints: dps[2]
+        dataPoints: dps_rx[2]
       }, {
         type: "line",
-        dataPoints: dps[3]
+        dataPoints: dps_rx[3]
+      }]
+    });
+
+    var chart_title_ry = "ry"
+    var dps_ry = [[], [], [], []]; // dataPoints
+    var chart_ry = new CanvasJS.Chart("chartContainer_ry", {
+      title :{
+        text: chart_title_ry
+      },
+      data: [{
+        type: "line",
+        dataPoints: dps_ry[0]
+      }, {
+        type: "line",
+        dataPoints: dps_ry[1]
+      }, {
+        type: "line",
+        dataPoints: dps_ry[2]
+      }, {
+        type: "line",
+        dataPoints: dps_ry[3]
       }]
     });
     
     var xVal = 0;
     var yVal = 0; 
-    var dataLength = 20; // number of dataPoints visible at any point
+    var dataLength = 100; // number of dataPoints visible at any point
     
-    function updateChart (rower_index, new_y) {
+    function updateChart (chart, data_points, rower_index, new_y) {
       yVal = parseInt(new_y)
-      add_coords(dps[rower_index], xVal, yVal)
-      shift_coords(dps[rower_index], dataLength)
+      add_coords(data_points[rower_index], xVal, yVal)
+      shift_coords(data_points[rower_index], dataLength)
       chart.render();
     };
-    
-    //updateChart(dataLength, 0);
-
-    // // // // //
 
     var eventSource = new EventSource("/stream")
       eventSource.onmessage = function(e) {
@@ -103,9 +119,14 @@
           display_data(data_id, data)
           sensor_count++
         });
-        sensor_index = get_sensor_index(chart_title)
+        sensor_index = get_sensor_index(chart_title_rx)
         data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        updateChart(rower_index, data_to_plot);
+        updateChart(chart_rx, dps_rx, rower_index, data_to_plot);
+
+        sensor_index = get_sensor_index(chart_title_ry)
+        data_to_plot = data_array[(rower_index * 9) + sensor_index]
+        updateChart(chart_ry, dps_ry, rower_index, data_to_plot);
+
         rower_index++
       });
 
