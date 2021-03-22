@@ -42,7 +42,7 @@ class MultiServer:
         return [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def new_session(self):
-        self.write_rower_data("realtime_analysis", "/session_data", [], "w")
+        self.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
         self.reset()
 
     #Function to send message to all connected clients
@@ -123,6 +123,8 @@ class MultiServer:
     def write_rower_data(self, file_dir, file_name, data_to_write, file_method="a"):
         f = open("data/" + file_dir + file_name + ".csv", file_method)
         data_string = "\n"
+        if file_method == "w":
+            data_string = ""
         for data in data_to_write:
             data_string = data_string + str(data) + ","
         data_string = data_string[:-1]
