@@ -13,7 +13,7 @@ class MultiServer:
 
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.server_socket.bind(("localhost", port))
+        self.server_socket.bind(("192.168.0.184", port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections

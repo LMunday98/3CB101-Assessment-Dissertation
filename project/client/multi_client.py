@@ -10,7 +10,7 @@ class MultiClient:
 
         if len(sys.argv)<2:
             # host = input("Enter host ip address: ")
-            host = 'localhost'
+            host = '192.168.0.184'
         else:
             host = sys.argv[1]
 
@@ -36,20 +36,6 @@ class MultiClient:
         print("name", self.name)
         while self.run_client:
             socket_list = [sys.stdin, self.s]
-            
-            # Get the list of sockets which are readable
-            rList, wList, error_list = select.select(socket_list , [], [])
-            
-            for sock in rList:
-                #incoming message from server
-                if sock == self.s:
-                    data = sock.recv(4096)
-                    if not data :
-                        print ('\33[31m\33[1m \rDISCONNECTED!!\n \33[0m')
-                        sys.exit()
-                    else :
-                        sys.stdout.write(data.decode())
-
             msg = str(random.randint(1,10)) + " "
             self.s.send(msg.encode())
             time.sleep(.1)
