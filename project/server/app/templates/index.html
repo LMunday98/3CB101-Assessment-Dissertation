@@ -1,0 +1,107 @@
+<style>
+  table, th, td {
+    border: 1px solid black;
+    text-align: center;
+  }
+</style>
+
+<table>
+  <tr>
+    <th>Timestamp</th>
+    <th><div id="datetime">datetime</div></th>
+  </tr>
+  <tr>
+    <th>Position</th>
+    <th>Raw Data</th>
+  </tr>
+  <tr>
+    <td>Bow</td>
+    <td><div id="bow">bow</div></td>
+  </tr>
+  <tr>
+    <td>Seat 2</td>
+    <td><div id="seat2">seat2</div></td>
+  </tr>
+  <tr>
+    <td>Seat 3</td>
+    <td><div id="seat3">seat3</div></td>
+  </tr>
+  <tr>
+    <td>Stroke</td>
+    <td><div id="stroke">stroke</div></td>
+  </tr>
+</table>
+
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<div style="margin-top:16px;color:dimgrey;font-size:9px;font-family: Verdana, Arial, Helvetica, sans-serif;text-decoration:none;"></div>
+
+<script>
+
+  window.onload = function () {
+  
+    var dps = []; // dataPoints
+    var chart = new CanvasJS.Chart("chartContainer", {
+      title :{
+        text: "Stroke Data"
+      },
+      data: [{
+        type: "line",
+        dataPoints: dps
+      }]
+    });
+    
+    var xVal = 0;
+    var yVal = 0; 
+    var updateInterval = 1000;
+    var dataLength = 20; // number of dataPoints visible at any point
+
+    var temp_val = 2
+    
+    function updateChart (new_y) {
+
+      console.log(new_y);
+      yVal = parseInt(new_y)
+    
+      count = 0
+      count = count || 1;
+    
+      for (var j = 0; j < count; j++) {
+        //yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+        dps.push({
+          x: xVal,
+          y: yVal
+        });
+        xVal++;
+      }
+    
+      if (dps.length > dataLength) {
+        dps.shift();
+      }
+    
+      chart.render();
+    };
+    
+    //updateChart(dataLength, 0);
+
+    // // // // //
+
+    var display_elements = ["bow", "seat2", "seat3", "stroke", "datetime"]
+
+    var eventSource = new EventSource("/stream")
+      eventSource.onmessage = function(e) {
+      var data_array = e.data.split(',');
+      for (let index = 0; index < 5; index++) {
+        display_data(document.getElementById(display_elements[index]), data_array[index])
+      }
+      updateChart(data_array[3]);
+    };
+
+    function display_data(html_element, data) {
+      html_element.innerHTML = data;
+    }
+  
+  }
+</script>
+
