@@ -152,6 +152,7 @@ class MultiServer:
                 rower_index += 1
                 
             if len(data_array) != 0:
+                data_array.append(datetime.datetime.now())
                 self.write_rower_data("realtime_analysis", "/session_data", data_array)
             self.reset()
             
