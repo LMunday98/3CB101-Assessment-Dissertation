@@ -28,8 +28,10 @@ class Data:
         self.say = say
         self.saz = saz
 
-        self.rx = Calc.get_x_rotation(sax, say, saz)
-        self.ry = Calc.get_y_rotation(sax, say, saz)
+        calculations = Calc()
+
+        self.rx = calculations.get_x_rotation(sax, say, saz)
+        self.ry = calculations.get_y_rotation(sax, say, saz)
 
         self.data_datetime = data_datetime
 
