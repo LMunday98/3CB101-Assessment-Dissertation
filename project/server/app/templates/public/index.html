@@ -1,96 +1,68 @@
-<!-- CSS -->
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
-<!-- Js -->
-<script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
-<!-- CDNs -->
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YSJBC</title>
 
+  <!-- CSS -->
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
+  <!-- Js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
+  <!-- CDNs -->
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+  <!-- Rowing data table-->
+  {% from "components/data_table.html" import create_data_table with context %}
+  {{ create_data_table () }}
 
+  <!-- Chart containers -->
+  <div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
+  <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
-<style>
-  
-</style>
+  <script>
+    const num_rowers = 4;
+    const dataLength = 100;
+    let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", num_rowers, dataLength);
+    let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", num_rowers, dataLength);
 
-{% from "components/data_table.html" import create_data_table with context %}
-{{ create_data_table () }}
+    window.onload = function () { 
 
-<div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
-<div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
-
-
-
-<script>
-
-const num_rowers = 4
-const dataLength = 100
-let chart_rx = new RowerChart("rx", "chartContainer_rx", num_rowers, dataLength);
-var chart_ry = new RowerChart("ry", "chartContainer_ry", num_rowers, dataLength);
-
-
-  window.onload = function () { 
-
-    var seats = ["bow", "bow2", "stroke2", "stroke"]
-    var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
-    
-    var eventSource = new EventSource("/stream")
+      var seats = ["bow", "bow2", "stroke2", "stroke"];
+      var measurements = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"];
+        
+      var eventSource = new EventSource("/stream");
       eventSource.onmessage = function(e) {
-      var data_array = e.data.split(',');
-      
-      var num_rowers = (data_array.length - 1) / 9
-      var rower_ids = []
+        var data_array = e.data.split(',');
 
-      for (let index = 0; index < num_rowers; index++) {
-        rower_id = data_array[index * 9]
-        rower_ids.push(rower_id)
-      }
+        timestamp = data_array[data_array.length - 1];
+        datetime = timestamp.split('.')[0];
+        display_data("datetime", datetime);
 
-      timestamp = data_array[data_array.length - 1]
-      datetime = timestamp.split('.')[0]
-      display_data("datetime", datetime)
+        for (let rower_index = 0; rower_index < num_rowers; rower_index++) {
+          offset = rower_index * 9;
 
-      rower_index = 0
-      rower_ids.forEach(rower_index => {
-        seat_name = seats[rower_index]
-        var sensor_count = 1
-        sensor_points.forEach(sensor_point => {
-          var data_id = seat_name + sensor_point
-          data_index = (rower_index * 9) + sensor_count
-          data = data_array[data_index]
-          data = Math.round(data * 100) / 100
-          display_data(data_id, data)
-          sensor_count++
-        });
-        sensor_index = get_sensor_index("rx")
-        data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        chart_rx.update_chart(rower_index, data_to_plot);
+          rower_data = data_array.slice(1 + offset, 9 + offset);
+          let rower = new Rower(seats[rower_index], rower_data);
+          rower.display_all_data();
+          
+          data_to_plot = data_array[offset + chart_rx.get_measurement_index()]
+          chart_rx.update_chart(rower_index, data_to_plot);
 
-        sensor_index = get_sensor_index("ry")
-        data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        chart_ry.update_chart(rower_index, data_to_plot);
-
-        rower_index++
-      });
+          data_to_plot = data_array[offset + chart_ry.get_measurement_index()]
+          chart_ry.update_chart(rower_index, data_to_plot);
+        }
+      };
     };
-
-    function get_sensor_index(sensor_name) {
-      sensor_dict = {
-        "gx" : 1,
-        "gy" : 2,
-        "gz" : 3,
-        "sax" : 4,
-        "say" : 5,
-        "saz" : 6,
-        "rx" : 7,
-        "ry" : 8,
-      }
-      return sensor_dict[sensor_name]
-    }
 
     function display_data(element_id, data) {
       html_element = document.getElementById(element_id)
       html_element.innerHTML = data;
     }
-  
-  }
-</script>
-
+  </script>
+</body>
+</html>

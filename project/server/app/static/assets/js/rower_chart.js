@@ -1,6 +1,7 @@
 class RowerChart {
-    constructor(chart_title, chart_element, num_rowers, num_datapoints) {
+    constructor(chart_title, measurement_name, chart_element, num_rowers, num_datapoints) {
         this.chart_title = chart_title;
+        this.measurement_index = this.find_measurement_index(measurement_name);
         this.num_datapoints = num_datapoints;
 
         this.x_val = 0;
@@ -13,6 +14,10 @@ class RowerChart {
             },
             data: this.chart_data
           });
+    }
+
+    get_measurement_index() {
+        return this.measurement_index;
     }
 
     setup_datapoints(num_rowers) {
@@ -52,5 +57,19 @@ class RowerChart {
         if (coords_array.length > data_length) {
             coords_array.shift();
         }
+    }
+
+    find_measurement_index(measurement_name) {
+        let measurement_dict = {
+        "gx" : 1,
+        "gy" : 2,
+        "gz" : 3,
+        "sax" : 4,
+        "say" : 5,
+        "saz" : 6,
+        "rx" : 7,
+        "ry" : 8,
+        }
+        return measurement_dict[measurement_name]
     }
 }
