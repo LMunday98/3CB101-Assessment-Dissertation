@@ -3,10 +3,10 @@ from multi_client import MultiClient
 
 class ClientManager:
     def __init__(self):
-        self.rower_index = self.get_rower_index()
-        self.create_new_client(self.rower_index)
         self.clients = []
         self.threads = []
+        self.rower_index = self.get_rower_index()
+        self.create_new_client(self.rower_index)
 
     def get_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
