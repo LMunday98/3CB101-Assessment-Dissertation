@@ -36,7 +36,7 @@ class ClientManager:
 
     def thread_clients(self):
         for client in self.clients:
-            threads.append(threading.Thread(target=client.run))
+            self.threads.append(threading.Thread(target=client.run))
 
         for thread in self.threads:
             thread.setDaemon(True)
