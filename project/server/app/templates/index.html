@@ -1,9 +1,5 @@
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
 
-<script>
-  var chart = new RowerChart("title", 2, 10);
-</script>
-
 <style>
   table, th, td {
     border: 1px solid black;
@@ -43,64 +39,20 @@
 
 <script>
 
-  window.onload = function () {
+const num_rowers = 4
+const dataLength = 100
+let chart_rx = new RowerChart("rx", "chartContainer_rx", num_rowers, dataLength);
+var chart_ry = new RowerChart("ry", "chartContainer_ry", num_rowers, dataLength);
+
+
+  window.onload = function () { 
 
     var seats = ["bow", "bow2", "stroke2", "stroke"]
     var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
 
-    var chart_title_rx = "rx"
-    var dps_rx = [[], [], [], []]; // dataPoints
-    var chart_rx = new CanvasJS.Chart("chartContainer_rx", {
-      title :{
-        text: chart_title_rx
-      },
-      data: [{
-        type: "line",
-        dataPoints: dps_rx[0]
-      }, {
-        type: "line",
-        dataPoints: dps_rx[1]
-      }, {
-        type: "line",
-        dataPoints: dps_rx[2]
-      }, {
-        type: "line",
-        dataPoints: dps_rx[3]
-      }]
-    });
-
-    var chart_title_ry = "ry"
-    var dps_ry = [[], [], [], []]; // dataPoints
-    var chart_ry = new CanvasJS.Chart("chartContainer_ry", {
-      title :{
-        text: chart_title_ry
-      },
-      data: [{
-        type: "line",
-        dataPoints: dps_ry[0]
-      }, {
-        type: "line",
-        dataPoints: dps_ry[1]
-      }, {
-        type: "line",
-        dataPoints: dps_ry[2]
-      }, {
-        type: "line",
-        dataPoints: dps_ry[3]
-      }]
-    });
-    
     var xVal = 0;
     var yVal = 0; 
-    var dataLength = 100; // number of dataPoints visible at any point
     
-    function updateChart (chart, data_points, rower_index, new_y) {
-      yVal = parseInt(new_y)
-      add_coords(data_points[rower_index], xVal, yVal)
-      shift_coords(data_points[rower_index], dataLength)
-      chart.render();
-    };
-
     var eventSource = new EventSource("/stream")
       eventSource.onmessage = function(e) {
       var data_array = e.data.split(',');
@@ -125,15 +77,18 @@
           display_data(data_id, data)
           sensor_count++
         });
-        sensor_index = get_sensor_index(chart_title_rx)
+        sensor_index = get_sensor_index("rx")
         data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        updateChart(chart_rx, dps_rx, rower_index, data_to_plot);
+        //updateChart(chart_rx, dps_rx, rower_index, data_to_plot);
+        chart_rx.update_chart(rower_index, xVal, data_to_plot);
 
-        sensor_index = get_sensor_index(chart_title_ry)
+        sensor_index = get_sensor_index("ry")
         data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        updateChart(chart_ry, dps_ry, rower_index, data_to_plot);
+        //updateChart(chart_ry, dps_ry, rower_index, data_to_plot);
+        chart_ry.update_chart(rower_index, xVal, data_to_plot);
 
         rower_index++
+        xVal++
       });
 
       timestamp = data_array[data_array.length - 1]
@@ -153,20 +108,6 @@
         "ry" : 8,
       }
       return sensor_dict[sensor_name]
-    }
-
-    function add_coords(coords_array, x_val, y_val) {
-      coords_array.push({
-          x: x_val,
-          y: y_val
-        });
-      xVal++;
-    }
-
-    function shift_coords(coords_array, data_length) {
-      if (coords_array.length > data_length) {
-        coords_array.shift();
-      }
     }
 
     function display_data(element_id, data) {
