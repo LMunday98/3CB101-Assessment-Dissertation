@@ -8,7 +8,7 @@ class ClientManager:
         self.clients = []
         self.threads = []
         
-    def get_rower_index(self, ip):
+    def get_rower_index(self):
         ip_dict = {
             "192.168.0.184" : -1, # Host
             "192.168.0.186" : 0,  # Bow
