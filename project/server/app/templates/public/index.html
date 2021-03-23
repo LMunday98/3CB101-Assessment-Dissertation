@@ -1,10 +1,14 @@
+<!-- CSS -->
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
+<!-- Js -->
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
+<!-- CDNs -->
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
 
 <style>
-  table, th, td {
-    border: 1px solid black;
-    text-align: center;
-  }
+  
 </style>
 
 {% from "components/data_table.html" import create_data_table with context %}
@@ -13,8 +17,7 @@
 <div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
 <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<div style="margin-top:16px;color:dimgrey;font-size:9px;font-family: Verdana, Arial, Helvetica, sans-serif;text-decoration:none;"></div>
+
 
 <script>
 
