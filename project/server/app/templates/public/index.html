@@ -29,6 +29,7 @@
     const seats = ["bow", "bow2", "stroke2", "stroke"];
     let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
     let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
+    let charts = [chart_rx, chart_ry];
 
     window.onload = function () { 
 
@@ -44,12 +45,11 @@
           rower_data = data_array.slice(1 + offset, 9 + offset);
           let rower = new Rower(seats[rower_index], rower_data);
           rower.display_all_data();
-          
-          data_to_plot = data_array[offset + chart_rx.get_measurement_index()]
-          chart_rx.update_chart(rower_index, data_to_plot);
 
-          data_to_plot = data_array[offset + chart_ry.get_measurement_index()]
-          chart_ry.update_chart(rower_index, data_to_plot);
+          charts.forEach(chart => {
+            data_to_plot = data_array[offset + chart.get_measurement_index()]
+            chart.update_chart(rower_index, data_to_plot);
+          });
         }
       };
     };
