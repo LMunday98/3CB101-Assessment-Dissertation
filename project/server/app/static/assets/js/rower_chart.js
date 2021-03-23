@@ -3,6 +3,7 @@ class RowerChart {
         this.chart_title = chart_title;
         this.num_datapoints = num_datapoints;
 
+        this.x_val = 0;
         this.dps = this.setup_datapoints(num_rowers);
         this.chart_data = this.setup_chartdata(num_rowers);
 
@@ -33,11 +34,11 @@ class RowerChart {
         return data;
     }
 
-    update_chart(rower_index, new_x, new_y) {
-        this.add_coords(this.dps[rower_index], new_x, parseInt(new_y));
+    update_chart(rower_index, new_y) {
+        this.add_coords(this.dps[rower_index], this.x_val, parseInt(new_y));
         this.shift_coords(this.dps[rower_index], this.num_datapoints);
         this.chart.render();
-        return 0;
+        this.x_val++;
     }
 
     add_coords(coords_array, x_val, y_val) {

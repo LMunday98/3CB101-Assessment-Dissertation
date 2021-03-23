@@ -13,7 +13,7 @@ def get_data(stream):
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    return render_template('public/index.html')
 
 @app.route('/stream')
 def stream():

@@ -49,9 +49,6 @@ var chart_ry = new RowerChart("ry", "chartContainer_ry", num_rowers, dataLength)
 
     var seats = ["bow", "bow2", "stroke2", "stroke"]
     var sensor_points = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"]
-
-    var xVal = 0;
-    var yVal = 0; 
     
     var eventSource = new EventSource("/stream")
       eventSource.onmessage = function(e) {
@@ -64,6 +61,10 @@ var chart_ry = new RowerChart("ry", "chartContainer_ry", num_rowers, dataLength)
         rower_id = data_array[index * 9]
         rower_ids.push(rower_id)
       }
+
+      timestamp = data_array[data_array.length - 1]
+      datetime = timestamp.split('.')[0]
+      display_data("datetime", datetime)
 
       rower_index = 0
       rower_ids.forEach(rower_index => {
@@ -79,21 +80,14 @@ var chart_ry = new RowerChart("ry", "chartContainer_ry", num_rowers, dataLength)
         });
         sensor_index = get_sensor_index("rx")
         data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        //updateChart(chart_rx, dps_rx, rower_index, data_to_plot);
-        chart_rx.update_chart(rower_index, xVal, data_to_plot);
+        chart_rx.update_chart(rower_index, data_to_plot);
 
         sensor_index = get_sensor_index("ry")
         data_to_plot = data_array[(rower_index * 9) + sensor_index]
-        //updateChart(chart_ry, dps_ry, rower_index, data_to_plot);
-        chart_ry.update_chart(rower_index, xVal, data_to_plot);
+        chart_ry.update_chart(rower_index, data_to_plot);
 
         rower_index++
-        xVal++
       });
-
-      timestamp = data_array[data_array.length - 1]
-      datetime = timestamp.split('.')[0]
-      display_data("datetime", datetime)
     };
 
     function get_sensor_index(sensor_name) {
