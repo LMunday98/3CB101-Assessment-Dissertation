@@ -61,14 +61,14 @@ class RowerChart {
 
     find_measurement_index(measurement_name) {
         let measurement_dict = {
-        "gx" : 1,
-        "gy" : 2,
-        "gz" : 3,
-        "sax" : 4,
-        "say" : 5,
-        "saz" : 6,
-        "rx" : 7,
-        "ry" : 8,
+        "gx" : 0,
+        "gy" : 1,
+        "gz" : 2,
+        "sax" : 3,
+        "say" : 4,
+        "saz" : 5,
+        "rx" : 6,
+        "ry" : 7,
         }
         return measurement_dict[measurement_name]
     }

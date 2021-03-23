@@ -10,7 +10,6 @@
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
   <!-- Js -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
   <!-- CDNs -->
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
@@ -27,9 +26,15 @@
   <script>
     const dataLength = 100;
     const seats = ["bow", "bow2", "stroke2", "stroke"];
+
     let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
     let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
     let charts = [chart_rx, chart_ry];
+
+    let rowers = []
+    seats.forEach(seat => {
+      rowers.push(new Rower(seat, charts));
+    });
 
     window.onload = function () { 
 
@@ -39,18 +44,12 @@
         var data_array = e.data.split(',');
         display_data("datetime", get_datetime(data_array));
 
-        for (let rower_index = 0; rower_index < seats.length; rower_index++) {
-          offset = rower_index * 9;
-
-          rower_data = data_array.slice(1 + offset, 9 + offset);
-          let rower = new Rower(seats[rower_index], rower_data);
-          rower.display_all_data();
-
-          charts.forEach(chart => {
-            data_to_plot = data_array[offset + chart.get_measurement_index()]
-            chart.update_chart(rower_index, data_to_plot);
-          });
-        }
+        rowers.forEach(rower => {
+          table_data = data_array.slice(1 + rower.get_offset(), 9 + rower.get_offset());
+          rower.set_data(table_data);
+          rower.update_table_data();
+          rower.update_chart_data();
+        });
       };
     };
 
