@@ -25,25 +25,20 @@
   <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
   <script>
-    const num_rowers = 4;
     const dataLength = 100;
-    let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", num_rowers, dataLength);
-    let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", num_rowers, dataLength);
+    const seats = ["bow", "bow2", "stroke2", "stroke"];
+    let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
+    let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
 
     window.onload = function () { 
 
-      var seats = ["bow", "bow2", "stroke2", "stroke"];
-      var measurements = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"];
-        
       var eventSource = new EventSource("/stream");
       eventSource.onmessage = function(e) {
+
         var data_array = e.data.split(',');
+        display_data("datetime", get_datetime(data_array));
 
-        timestamp = data_array[data_array.length - 1];
-        datetime = timestamp.split('.')[0];
-        display_data("datetime", datetime);
-
-        for (let rower_index = 0; rower_index < num_rowers; rower_index++) {
+        for (let rower_index = 0; rower_index < seats.length; rower_index++) {
           offset = rower_index * 9;
 
           rower_data = data_array.slice(1 + offset, 9 + offset);
@@ -58,6 +53,12 @@
         }
       };
     };
+
+    function get_datetime(data_array) {
+      timestamp = data_array[data_array.length - 1];
+      datetime = timestamp.split('.')[0];
+      return datetime;
+    }
 
     function display_data(element_id, data) {
       html_element = document.getElementById(element_id)
