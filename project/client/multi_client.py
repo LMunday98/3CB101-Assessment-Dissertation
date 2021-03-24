@@ -46,7 +46,8 @@ class MultiClient:
         try:
             sensor_data = self.sensor.get_data()
             data_string = pickle.dumps(sensor_data)
-            return data_string
+            # print(data_string)
+            self.send_data(data_string)
         except:
             print ("\n\33[93m\33[1mReinitalising sensor \33[0m")
             self.setup_sensor()
@@ -58,7 +59,6 @@ class MultiClient:
             print ("\n\33[93m\33[1mReconnecting to server \33[0m")
             self.establish_connection()
 
-
     def run(self):
         self.setup_sensor()
         self.establish_connection()
@@ -66,8 +66,7 @@ class MultiClient:
 
         while self.run_client:
             try:
-                data_to_send = self.read_sensor()
-                self.send_data(data_to_send)
+                self.read_sensor()
                 time.sleep(.2)
             except Exception as e:
                 print (e)

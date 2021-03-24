@@ -97,7 +97,7 @@ class MultiServer:
                         
                     #abrupt user exit
                     except Exception:
-                        # traceback.print_exc()
+                        traceback.print_exc()
                         (i,p)=sock.getpeername()
                         self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
                         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
