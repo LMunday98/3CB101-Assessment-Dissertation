@@ -35,7 +35,7 @@ class MultiClient:
             self.s.connect((self.host, self.port))
         except :
             print ("\33[31m\33[1m Can't connect to the server \33[0m")
-            sys.exit()
+            # sys.exit()
 
         #if connected
         self.s.send(self.name.encode())
@@ -58,3 +58,4 @@ class MultiClient:
 
     def finish(self):
         self.s.send("tata ".encode())
+        sys.exit()
