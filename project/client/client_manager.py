@@ -47,7 +47,7 @@ class ClientManager:
 
     def finish_threads(self):
         try:
-            input("Press enter to shutdown server")
+            input("Press enter to shutdown client\n")
         except Exception as e:
             print("Force quit")
 
