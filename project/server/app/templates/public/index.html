@@ -12,12 +12,17 @@
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
   <!-- CDNs -->
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
+
   <!-- Socket server call -->
-  <a href="{{ url_for('socket_call', socket_code='cal') }}">Calibrate</a>
-  <a href="{{ url_for('socket_call', socket_code='data') }}">Get data</a>
-  <br><br>
+  <form>
+    <a href=# id=calibrate><button class='btn btn-default'>Calibrate</button></a>
+    <a href=# id=test><button class='btn btn-default'>Test</button></a>
+  </form>
+  <br>
+
   <!-- Rowing data table-->
   {% from "components/data_table.html" import create_data_table with context %}
   {{ create_data_table () }}
@@ -67,5 +72,24 @@
       html_element.innerHTML = data;
     }
   </script>
+
+<script type=text/javascript>
+  $(function() {
+    $('a#calibrate').bind('click', function() {
+      $.getJSON('{{ url_for('socket_call', socket_code='cal') }}',
+        function(data) {
+      });
+      return false;
+    });
+  });
+  $(function() {
+    $('a#test').bind('click', function() {
+      $.getJSON('{{ url_for('socket_call', socket_code='test') }}',
+        function(data) {
+      });
+      return false;
+    });
+  });
+</script>
 </body>
 </html>

@@ -21,3 +21,8 @@ def socket_call():
         socket_instance = server_manager_instance.get_socket_instance()
         socket_instance.send_message(socket_code)
     return redirect("/")
+
+@app.route('/background_process_test')
+def background_process_test():
+    print ("Hello")
+    return "nothing"
