@@ -1,9 +1,4 @@
-import socket, select, string, sys
-import time
-import random
-import pickle
-
-import sys
+import socket, select, string, sys, time, pickle
 sys.path.append("..")
 from mpu.sensor import Sensor
 
@@ -59,17 +54,37 @@ class MultiClient:
             print ("\n\33[93m\33[1mReconnecting to server \33[0m")
             self.establish_connection()
 
-    def run(self):
+    def send(self):
         self.setup_sensor()
         self.establish_connection()
         time.sleep(.2)
 
         while self.run_client:
             try:
+                #print("send")
                 self.read_sensor()
                 time.sleep(.2)
             except Exception as e:
                 print (e)
+                    
+    def listen(self):
+        s = self.s
+        while self.run_client:
+            #print("listen")
+            socket_list = [sys.stdin, s]
+
+            # Get the list of sockets which are readable
+            rList, wList, error_list = select.select(socket_list , [], [])
+
+            for sock in rList:
+                #incoming message from server
+                if sock == s:
+                    data = sock.recv(4096)
+                    if not data :
+                        print ('\33[31m\33[1m \rDISCONNECTED!!\n \33[0m')
+                    else :
+                        sys.stdout.write(data.decode())
+            
 
     def finish(self):
         try:

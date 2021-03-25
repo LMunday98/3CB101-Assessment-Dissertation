@@ -35,8 +35,6 @@ class MultiServer:
 
         self.new_session()
 
-        self.test_string = "TEST STRING"
-
 
     def reset(self):
         self.logged_data = [
@@ -71,7 +69,6 @@ class MultiServer:
             rList,wList,error_sockets = select.select(self.connected_list,[],[])
 
             for sock in rList:
-                #New connection
                 if sock == self.server_socket:
                     # Handle the case in which there is a new connection recieved through self.server_socket
                     sockfd, addr = self.server_socket.accept()
@@ -91,8 +88,8 @@ class MultiServer:
                         #add name and address
                         self.record[addr]=self.name
                         print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
-                        sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
-                        self.send_to_all(sockfd, "\33[32m\33[1m\r "+self.name.decode()+" joined the conversation \n\33[0m")
+                        #sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
+                        #self.send_to_all(sockfd, "\33[32m\33[1m\r "+self.name.decode()+" joined the conversation \n\33[0m")
 
                 #Some incoming message from a client
                 else:
@@ -163,3 +160,15 @@ class MultiServer:
         while True:
             time.sleep(.2)
             yield 'data: %s\n\n' % (self.file_handler.get_data_string())
+
+    def send_message(self, message_to_send):
+        print("\n\n\nSending message to all:", message_to_send)
+        print("\nConnected list:", self.connected_list)
+        print("\nself record:", self.record)
+
+        for record in self.record:
+            i = record[0]
+            p = record[1]
+
+            print ("\ni:", i)
+            print ("\np:", p)
