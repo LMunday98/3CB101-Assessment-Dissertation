@@ -20,6 +20,8 @@ class Sensor():
         # Activate to be able to address the module
         self.bus.write_byte_data(self.address, self.power_mgmt_1, 0)
 
+        self.cal_offset = [0,0]
+
     def read_byte(self, reg):
         return self.bus.read_byte_data(self.address, reg)
 
@@ -36,6 +38,19 @@ class Sensor():
         else:
             return val
 
+    def calibrate(self):
+        print("Calibrating sensor...")
+        calibration_data = self.get_cal_offset()
+        self.cal_offset = calibration_data
+        print("Calibration offset:", self.cal_offset)
+
+    def get_cal_offset(self):
+        data_reading = self.get_data()
+        data = data_reading.get_sensor_data()
+        rx = data[6]
+        ry = data[7]
+        return [rx, ry]
+
     def get_data(self):
         gx = self.read_word_2c(0x43)
         gy = self.read_word_2c(0x45)
@@ -45,4 +60,7 @@ class Sensor():
         ay = self.read_word_2c(0x3d)
         az = self.read_word_2c(0x3f)
 
-        return Data(self.rowerId, gx, gy, gz, ax, ay, az, datetime.datetime.now())
+        data_reading = Data(self.rowerId, gx, gy, gz, ax, ay, az, [0,0], datetime.datetime.now())
+        data_reading.rx = data_reading.rx - self.cal_offset[0]
+        data_reading.ry = data_reading.ry - self.cal_offset[1]
+        return data_reading

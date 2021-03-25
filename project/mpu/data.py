@@ -5,7 +5,7 @@ class Data:
 
     rowerId = 0
 
-    def __init__(self, rowerId, gx, gy, gz, ax, ay, az, data_datetime):
+    def __init__(self, rowerId, gx, gy, gz, ax, ay, az, cal_offset, data_datetime):
         self.rowerId = rowerId
 
         self.gx = gx
@@ -30,8 +30,8 @@ class Data:
 
         calculations = Calc()
 
-        self.rx = calculations.get_x_rotation(sax, say, saz)
-        self.ry = calculations.get_y_rotation(sax, say, saz)
+        self.rx = calculations.get_x_rotation(sax, say, saz) - cal_offset[0]
+        self.ry = calculations.get_y_rotation(sax, say, saz) - cal_offset[0]
 
         self.data_datetime = data_datetime
 
