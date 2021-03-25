@@ -3,10 +3,11 @@ class RowerChart {
         this.chart_title = chart_title;
         this.measurement_index = this.find_measurement_index(measurement_name);
         this.num_datapoints = num_datapoints;
+        this.num_rowers = num_rowers;
 
         this.x_val = 0;
-        this.dps = this.setup_datapoints(num_rowers);
-        this.chart_data = this.setup_chartdata(num_rowers);
+        this.setup_datapoints();
+        this.setup_chartdata();
 
         this.chart = new CanvasJS.Chart(chart_element, {
             title :{
@@ -20,30 +21,34 @@ class RowerChart {
         return this.measurement_index;
     }
 
-    setup_datapoints(num_rowers) {
+    setup_datapoints() {
         let dps = [];
-        for (let index = 0; index < num_rowers; index++) {
+        for (let index = 0; index < this.num_rowers; index++) {
             dps.push([]);
         }
-        return dps;
+        this.dps = dps;
     }
 
-    setup_chartdata(num_rowers) {
+    setup_chartdata() {
         let data = [];
-        for (let index = 0; index < num_rowers; index++) {
+        for (let index = 0; index < this.num_rowers; index++) {
             data.push({
                 type: "line",
                 dataPoints: this.dps[index]
             });
         }
-        return data;
+        this.chart_data = data;
     }
 
     update_chart(rower_index, new_y) {
         this.add_coords(this.dps[rower_index], this.x_val, parseInt(new_y));
         this.shift_coords(this.dps[rower_index], this.num_datapoints);
-        this.chart.render();
+        this.render_chart();
         this.x_val++;
+    }
+
+    render_chart() {
+        this.chart.render();
     }
 
     add_coords(coords_array, x_val, y_val) {

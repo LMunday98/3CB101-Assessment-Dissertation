@@ -1,52 +1,92 @@
-import socket, select, string, sys
-import time
-import random
-import pickle
-
-import sys
+import socket, select, string, sys, time, pickle
 sys.path.append("..")
 from mpu.sensor import Sensor
 
 class MultiClient:
     def __init__(self, client_index):
-
         self.run_client = True
         self.name = str(client_index)
-        self.sensor = Sensor(client_index)
+        self.client_index = client_index
+        self.port = 5001
 
         if len(sys.argv)<2:
-            # host = input("Enter host ip address: ")
-            host = '192.168.0.184'
+            self.host = '192.168.0.184'
         else:
-            host = sys.argv[1]
+            self.host = sys.argv[1]
 
-        port = 5001
+    def setup_sensor(self):
+        while True:
+            try:
+                self.sensor = Sensor(self.client_index)
+                print ("\33[32m\33[1mSuccessfully setup sensor \33[0m")
+                break
+            except Exception as e:
+                print ("\33[31m\33[1mError setting up the sensor \33[0m")
+                time.sleep(1)
 
-        #asks for user name
-        # name = input("\33[34m\33[1m CREATING NEW ID:\n Enter username: \33[0m")
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.settimeout(2)
+    def establish_connection(self):
+        while True:
+            try :
+                self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.s.settimeout(2)
+                time.sleep(1)
+                self.s.connect((self.host, self.port))
+                self.s.send(self.name.encode())
+                print ("\33[32m\33[1mSuccessfully connected to the server \33[0m")
+                break
+            except :
+                print ("\33[31m\33[1mCan't connect to the server \33[0m")
+                time.sleep(1)
 
-        # connecting host
-        try :
-            self.s.connect((host, port))
-        except :
-            print ("\33[31m\33[1m Can't connect to the server \33[0m")
-            sys.exit()
-
-        #if connected
-        self.s.send(self.name.encode())
-
-
-    def run(self):
-        while self.run_client:
-            socket_list = [sys.stdin, self.s]
+    def read_sensor(self):
+        try:
             sensor_data = self.sensor.get_data()
-            sensor_data.printData()
-            print(str(sensor_data.get_data_datetime()))
             data_string = pickle.dumps(sensor_data)
-            self.s.send(data_string)
-            time.sleep(.2)
+            # print(data_string)
+            self.send_data(data_string)
+        except:
+            print ("\n\33[93m\33[1mReinitalising sensor \33[0m")
+            self.setup_sensor()
+
+    def send_data(self, data_to_send):
+        try:
+            self.s.send(data_to_send)
+        except:
+            print ("\n\33[93m\33[1mReconnecting to server \33[0m")
+            self.establish_connection()
+
+    def send(self):
+        self.setup_sensor()
+        self.establish_connection()
+        time.sleep(.2)
+
+        while self.run_client:
+            try:
+                self.read_sensor()
+                time.sleep(.2)
+            except Exception as e:
+                print (e)
+                    
+    def listen(self):
+        s = self.s
+        while self.run_client:
+            try:
+                data = s.recv(4096)
+                if not data :
+                    continue
+                else :
+                    socket_code = data.decode()
+                    self.execute_code(socket_code)
+            except Exception as e:
+                continue
+            
+    def execute_code(self, socket_code):
+        if socket_code == "cal":
+            print("Calibrating Client")
 
     def finish(self):
-        self.s.send("tata ".encode())
+        try:
+            self.s.send("disconnect".encode())
+        except Exception as e:
+            print(e)
+        sys.exit()

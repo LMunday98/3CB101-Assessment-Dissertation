@@ -2,6 +2,8 @@ import pickle
 import time, datetime
 import socket, select, traceback
 from shutil import copyfile
+from flask import stream_with_context
+from file_handler import FileHandler
 
 import sys
 sys.path.append("..")
@@ -11,15 +13,17 @@ class MultiServer:
     def __init__(self):
         self.name=""
         #dictionary to store address corresponding to userself.name
-        self.record={}
         # List to keep track of socket descriptors
-        self.connected_list = []
         self.buffer = 4096
-        port = 5001
+        self.port = 5001
+        self.file_handler = FileHandler()
 
+    def setup(self):
+        self.record={}
+        self.connected_list = []
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.server_socket.bind(("192.168.0.184", port))
+        self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections
@@ -30,6 +34,8 @@ class MultiServer:
         self.session_name = datetime.datetime.now()
 
         self.new_session()
+        self.record_session = False
+
 
     def reset(self):
         self.logged_data = [
@@ -42,7 +48,7 @@ class MultiServer:
         return [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def new_session(self):
-        self.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
+        self.file_handler.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
         self.reset()
 
     #Function to send message to all connected clients
@@ -58,13 +64,12 @@ class MultiServer:
                     self.connected_list.remove(socket)   
 
     def run_listen(self):
-        print ("\33[32m \t\t\t\tSOCKET SERVER WORKING \33[0m")
+        print ("\33[32m \t\t\t\tSocket Server Running \33[0m")
         while self.run_server:
             # Get the list sockets which are ready to be read through select
             rList,wList,error_sockets = select.select(self.connected_list,[],[])
 
             for sock in rList:
-                #New connection
                 if sock == self.server_socket:
                     # Handle the case in which there is a new connection recieved through self.server_socket
                     sockfd, addr = self.server_socket.accept()
@@ -84,20 +89,31 @@ class MultiServer:
                         #add name and address
                         self.record[addr]=self.name
                         print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
-                        sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
-                        self.send_to_all(sockfd, "\33[32m\33[1m\r "+self.name.decode()+" joined the conversation \n\33[0m")
+                        #sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
+                        #self.send_to_all(sockfd, "\33[32m\33[1m\r "+self.name.decode()+" joined the conversation \n\33[0m")
 
                 #Some incoming message from a client
                 else:
                     # Data from client
                     try:
                         client_data = sock.recv(self.buffer)
+                        try:
+                            if client_data.decode() == "disconnect":
+                                (i,p)=sock.getpeername()
+                                self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
+                                print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
+                                del self.record[(i,p)]
+                                self.connected_list.remove(sock)
+                                sock.close()
+                                continue
+                        except Exception as e:
+                            x = 1
                         rower_data = pickle.loads(client_data)
                         self.capture_data(rower_data)
-                        
+                            
                     #abrupt user exit
                     except Exception:
-                        # traceback.print_exc()
+                        traceback.print_exc()
                         (i,p)=sock.getpeername()
                         self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
                         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
@@ -105,8 +121,6 @@ class MultiServer:
                         self.connected_list.remove(sock)
                         sock.close()
                         continue
-        self.server_socket.shutdown()
-        self.server_socket.close()
 
     def capture_data(self, rower_data):
         rower_index = rower_data.get_rowerId()
@@ -118,18 +132,7 @@ class MultiServer:
             logged_data[data_index] = logged_data[data_index] + data
             data_index += 1
 
-        self.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
-
-    def write_rower_data(self, file_dir, file_name, data_to_write, file_method="a"):
-        f = open("data/" + file_dir + file_name + ".csv", file_method)
-        data_string = "\n"
-        if file_method == "w":
-            data_string = ""
-        for data in data_to_write:
-            data_string = data_string + str(data) + ","
-        data_string = data_string[:-1]
-        f.write(data_string)
-        f.close()
+        self.file_handler.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
 
     def run_calc_timing(self):
         while self.run_server:
@@ -153,11 +156,39 @@ class MultiServer:
                 
                 rower_index += 1
                 
-            if len(data_array) != 0:
+            if (len(data_array) != 0) and (self.record_session == True):
                 data_array.append(datetime.datetime.now())
-                self.write_rower_data("realtime_analysis", "/session_data", data_array)
+                self.file_handler.write_rower_data("realtime_analysis", "/session_data", data_array)
             self.reset()
             
     def finish(self):
+        print("Shutting down socket server")
         self.run_server = False
+        try:
+            self.server_socket.shutdown()
+            self.server_socket.close()
+        except Exception as e:
+            print(e)
         copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
+
+    @stream_with_context
+    def get_stream(self):
+        while True:
+            time.sleep(.2)
+            if self.record_session == True:
+                yield 'data: %s\n\n' % (self.file_handler.get_data_string())
+            else:
+                yield 'data: \n\n'
+
+    def send_message(self, socket_code):
+        if socket_code == "session_start":
+            print("Start session")
+            self.record_session = True
+            self.new_session()
+        if socket_code == "session_end":
+            print("End session")
+            self.record_session = False
+
+        for client_index in range(1,len(self.connected_list)):
+            client = self.connected_list[client_index]
+            client.send(socket_code.encode())
