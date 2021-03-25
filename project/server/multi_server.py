@@ -2,6 +2,7 @@ import pickle
 import time, datetime
 import socket, select, traceback
 from shutil import copyfile
+from flask import stream_with_context
 
 import sys
 sys.path.append("..")
@@ -15,11 +16,12 @@ class MultiServer:
         # List to keep track of socket descriptors
         self.connected_list = []
         self.buffer = 4096
-        port = 5001
+        self.port = 5001
 
+    def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.server_socket.bind(("192.168.0.184", port))
+        self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections
@@ -30,6 +32,9 @@ class MultiServer:
         self.session_name = datetime.datetime.now()
 
         self.new_session()
+
+        self.test_string = "TEST STRING"
+
 
     def reset(self):
         self.logged_data = [
@@ -161,3 +166,21 @@ class MultiServer:
     def finish(self):
         self.run_server = False
         copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
+
+    def read_boat_data(self):
+        f1 = open("data/realtime_analysis/session_data.csv", "r")
+        last_line = f1.readlines()[-1]
+        f1.close()
+        row = last_line.split(',')
+        return row
+
+    def get_data_string(self):
+        data_array = self.read_boat_data()
+        data_string = ','.join(data_array)
+        return data_string
+
+    @stream_with_context
+    def get_stream(self):
+        while True:
+            time.sleep(.2)
+            yield 'data: %s\n\n' % (self.get_data_string())
