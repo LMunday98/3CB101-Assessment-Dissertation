@@ -187,6 +187,7 @@ class MultiServer:
             self.new_session()
         if socket_code == "session_end":
             print("End session")
+            copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
 
         for client_index in range(1,len(self.connected_list)):
