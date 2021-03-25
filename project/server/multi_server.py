@@ -63,7 +63,7 @@ class MultiServer:
                     self.connected_list.remove(socket)   
 
     def run_listen(self):
-        print ("\33[32m \t\t\t\tSOCKET SERVER WORKING \33[0m")
+        print ("\33[32m \t\t\t\tSocket Server Running \33[0m")
         while self.run_server:
             # Get the list sockets which are ready to be read through select
             rList,wList,error_sockets = select.select(self.connected_list,[],[])
@@ -109,8 +109,6 @@ class MultiServer:
                         self.connected_list.remove(sock)
                         sock.close()
                         continue
-        self.server_socket.shutdown()
-        self.server_socket.close()
 
     def capture_data(self, rower_data):
         rower_index = rower_data.get_rowerId()
@@ -153,6 +151,8 @@ class MultiServer:
             
     def finish(self):
         self.run_server = False
+        self.server_socket.shutdown()
+        self.server_socket.close()
         copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
 
     @stream_with_context
@@ -172,3 +172,8 @@ class MultiServer:
 
             print ("\ni:", i)
             print ("\np:", p)
+
+        for client_index in range(1,len(self.connected_list)):
+            client = self.connected_list[client_index]
+            print("client:", client)
+            client.send("Hello there".encode())

@@ -70,20 +70,14 @@ class MultiClient:
     def listen(self):
         s = self.s
         while self.run_client:
-            #print("listen")
-            socket_list = [sys.stdin, s]
-
-            # Get the list of sockets which are readable
-            rList, wList, error_list = select.select(socket_list , [], [])
-
-            for sock in rList:
-                #incoming message from server
-                if sock == s:
-                    data = sock.recv(4096)
-                    if not data :
-                        print ('\33[31m\33[1m \rDISCONNECTED!!\n \33[0m')
-                    else :
-                        sys.stdout.write(data.decode())
+            try:
+                data = s.recv(4096)
+                if not data :
+                    continue
+                else :
+                    print(data.decode())
+            except Exception as e:
+                print (e)
             
 
     def finish(self):
