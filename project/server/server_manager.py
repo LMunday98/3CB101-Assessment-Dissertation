@@ -4,9 +4,9 @@ from multi_server import MultiServer
 class ServerManager:
     def __init__(self):
         self.socket_server = MultiServer()
-        self.threads = []
 
     def setup(self):
+        self.threads = []
         self.socket_server.setup()
         listen_thread = threading.Thread(target=self.socket_server.run_listen)
         process_thread = threading.Thread(target=self.socket_server.run_calc_timing)

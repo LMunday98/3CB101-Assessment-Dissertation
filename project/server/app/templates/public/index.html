@@ -19,8 +19,10 @@
   <!-- Socket server call -->
   <form>
     <a href=# id=calibrate><button class='btn btn-default'>Calibrate</button></a>
-    <a href=# id=test><button class='btn btn-default'>Test</button></a>
+    <a href=# id=session_start><button class='btn btn-default'>Start Session</button></a>
+    <a href=# id=session_end><button class='btn btn-default'>End Session</button></a>
   </form>
+  <div id="session_satus"></div>
   <br>
 
   <!-- Rowing data table-->
@@ -32,14 +34,17 @@
   <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
   <script>
+    let rowers = [];
+    let charts = [];
     const dataLength = 100;
     const seats = ["bow", "bow2", "stroke2", "stroke"];
 
     let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
     let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
-    let charts = [chart_rx, chart_ry];
+    
+    charts.push(chart_rx);
+    charts.push(chart_ry);
 
-    let rowers = []
     seats.forEach(seat => {
       rowers.push(new Rower(seat, charts));
     });
@@ -48,16 +53,20 @@
 
       var eventSource = new EventSource("/stream");
       eventSource.onmessage = function(e) {
+        if (e.data == "") {
+          display_data("session_satus", "Session: Ended")
+        } else {
+          display_data("session_satus", "Session: In Progress")
+          var data_array = e.data.split(',');
+          display_data("datetime", get_datetime(data_array));
 
-        var data_array = e.data.split(',');
-        display_data("datetime", get_datetime(data_array));
-
-        rowers.forEach(rower => {
-          table_data = data_array.slice(1 + rower.get_offset(), 9 + rower.get_offset());
-          rower.set_data(table_data);
-          rower.update_table_data();
-          rower.update_chart_data();
-        });
+          rowers.forEach(rower => {
+            table_data = data_array.slice(1 + rower.get_offset(), 9 + rower.get_offset());
+            rower.set_data(table_data);
+            rower.update_table_data();
+            rower.update_chart_data();
+          });
+        }
       };
     };
 
@@ -82,9 +91,19 @@
       return false;
     });
   });
+
   $(function() {
-    $('a#test').bind('click', function() {
-      $.getJSON('{{ url_for('socket_call', socket_code='test') }}',
+    $('a#session_start').bind('click', function() {
+      $.getJSON('{{ url_for('socket_call', socket_code='session_start') }}',
+        function(data) {
+      });
+      return false;
+    });
+  });
+  
+  $(function() {
+    $('a#session_end').bind('click', function() {
+      $.getJSON('{{ url_for('socket_call', socket_code='session_end') }}',
         function(data) {
       });
       return false;

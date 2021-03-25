@@ -29,6 +29,7 @@ class MultiClient:
             try :
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.s.settimeout(2)
+                time.sleep(1)
                 self.s.connect((self.host, self.port))
                 self.s.send(self.name.encode())
                 print ("\33[32m\33[1mSuccessfully connected to the server \33[0m")
@@ -61,7 +62,6 @@ class MultiClient:
 
         while self.run_client:
             try:
-                #print("send")
                 self.read_sensor()
                 time.sleep(.2)
             except Exception as e:
@@ -75,14 +75,18 @@ class MultiClient:
                 if not data :
                     continue
                 else :
-                    print(data.decode())
+                    socket_code = data.decode()
+                    self.execute_code(socket_code)
             except Exception as e:
                 continue
             
+    def execute_code(self, socket_code):
+        if socket_code == "cal":
+            print("Calibrating Client")
 
     def finish(self):
         try:
-            self.s.send("tata ".encode())
+            self.s.send("disconnect".encode())
         except Exception as e:
             print(e)
         sys.exit()
