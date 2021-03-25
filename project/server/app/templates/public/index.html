@@ -36,6 +36,7 @@
   <script>
     const dataLength = 100;
     const seats = ["bow", "bow2", "stroke2", "stroke"];
+    const measurements = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"];
 
     let charts = gen_charts(dataLength, seats);
     let rowers = gen_rowers(seats, charts);
@@ -48,6 +49,7 @@
           display_data("session_satus", "Session: Ended")
           charts = gen_charts(dataLength, seats);
           rowers = gen_rowers(seats, charts);
+          clear_table_data();
         } else {
           display_data("session_satus", "Session: In Progress")
           var data_array = e.data.split(',');
@@ -62,6 +64,16 @@
         }
       };
     };
+
+    function clear_table_data() {
+        seats.forEach(seat_name => {
+          measurements.forEach(measurement => {
+            var data_id = seat_name + measurement;
+            var reset_data = seat_name + " " + measurement;
+            display_data(data_id, reset_data)
+          });
+        });
+    }
 
     function gen_rowers(seats, charts) {
       let new_rowers = [];
