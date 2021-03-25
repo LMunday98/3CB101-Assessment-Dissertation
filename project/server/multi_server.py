@@ -3,6 +3,7 @@ import time, datetime
 import socket, select, traceback
 from shutil import copyfile
 from flask import stream_with_context
+from file_handler import FileHandler
 
 import sys
 sys.path.append("..")
@@ -17,6 +18,7 @@ class MultiServer:
         self.connected_list = []
         self.buffer = 4096
         self.port = 5001
+        self.file_handler = FileHandler()
 
     def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,7 +49,7 @@ class MultiServer:
         return [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def new_session(self):
-        self.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
+        self.file_handler.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
         self.reset()
 
     #Function to send message to all connected clients
@@ -123,18 +125,7 @@ class MultiServer:
             logged_data[data_index] = logged_data[data_index] + data
             data_index += 1
 
-        self.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
-
-    def write_rower_data(self, file_dir, file_name, data_to_write, file_method="a"):
-        f = open("data/" + file_dir + file_name + ".csv", file_method)
-        data_string = "\n"
-        if file_method == "w":
-            data_string = ""
-        for data in data_to_write:
-            data_string = data_string + str(data) + ","
-        data_string = data_string[:-1]
-        f.write(data_string)
-        f.close()
+        self.file_handler.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
 
     def run_calc_timing(self):
         while self.run_server:
@@ -160,27 +151,15 @@ class MultiServer:
                 
             if len(data_array) != 0:
                 data_array.append(datetime.datetime.now())
-                self.write_rower_data("realtime_analysis", "/session_data", data_array)
+                self.file_handler.write_rower_data("realtime_analysis", "/session_data", data_array)
             self.reset()
             
     def finish(self):
         self.run_server = False
         copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
 
-    def read_boat_data(self):
-        f1 = open("data/realtime_analysis/session_data.csv", "r")
-        last_line = f1.readlines()[-1]
-        f1.close()
-        row = last_line.split(',')
-        return row
-
-    def get_data_string(self):
-        data_array = self.read_boat_data()
-        data_string = ','.join(data_array)
-        return data_string
-
     @stream_with_context
     def get_stream(self):
         while True:
             time.sleep(.2)
-            yield 'data: %s\n\n' % (self.get_data_string())
+            yield 'data: %s\n\n' % (self.file_handler.get_data_string())
