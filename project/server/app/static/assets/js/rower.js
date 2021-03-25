@@ -9,6 +9,10 @@ class Rower {
         this.measurements = ["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"];
     }
 
+    set_charts(charts) {
+        this.charts = charts;
+    }
+
     get_offset() {
         return this.offset;
     }

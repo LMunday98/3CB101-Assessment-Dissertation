@@ -34,27 +34,20 @@
   <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
   <script>
-    let rowers = [];
-    let charts = [];
     const dataLength = 100;
     const seats = ["bow", "bow2", "stroke2", "stroke"];
 
-    let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
-    let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
-    
-    charts.push(chart_rx);
-    charts.push(chart_ry);
-
-    seats.forEach(seat => {
-      rowers.push(new Rower(seat, charts));
-    });
+    let charts = gen_charts(dataLength, seats);
+    let rowers = gen_rowers(seats, charts);
 
     window.onload = function () { 
 
-      var eventSource = new EventSource("/stream");
+      var eventSource = new EventSource("/stream"); 
       eventSource.onmessage = function(e) {
         if (e.data == "") {
           display_data("session_satus", "Session: Ended")
+          charts = gen_charts(dataLength, seats);
+          rowers = gen_rowers(seats, charts);
         } else {
           display_data("session_satus", "Session: In Progress")
           var data_array = e.data.split(',');
@@ -69,6 +62,24 @@
         }
       };
     };
+
+    function gen_rowers(seats, charts) {
+      let new_rowers = [];
+      seats.forEach(seat => {
+        new_rowers.push(new Rower(seat, charts));
+      });
+      return new_rowers;
+    }
+
+    function gen_charts(dataLength, seats) {
+      let new_charts = [];
+      let chart_rx = new RowerChart("A graph of rx:", "rx", "chartContainer_rx", seats.length, dataLength);
+      let chart_ry = new RowerChart("A graph of ry:", "ry", "chartContainer_ry", seats.length, dataLength);
+      
+      new_charts.push(chart_rx);
+      new_charts.push(chart_ry);
+      return new_charts;
+    }
 
     function get_datetime(data_array) {
       timestamp = data_array[data_array.length - 1];
