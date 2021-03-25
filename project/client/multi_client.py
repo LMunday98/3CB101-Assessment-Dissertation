@@ -77,7 +77,7 @@ class MultiClient:
                 else :
                     print(data.decode())
             except Exception as e:
-                print (e)
+                continue
             
 
     def finish(self):

@@ -15,7 +15,8 @@
 </head>
 <body>
   <!-- Socket server call -->
-  <a href="/socket_call">Socket Server Call</a>
+  <a href="{{ url_for('socket_call', socket_code='cal') }}">Calibrate</a>
+  <a href="{{ url_for('socket_call', socket_code='data') }}">Get data</a>
   <br><br>
   <!-- Rowing data table-->
   {% from "components/data_table.html" import create_data_table with context %}

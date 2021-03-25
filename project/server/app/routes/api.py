@@ -16,6 +16,8 @@ def stream():
 
 @app.route('/socket_call')
 def socket_call():
-    socket_instance = server_manager_instance.get_socket_instance()
-    socket_instance.send_message("HELLO")
+    socket_code = request.args.get('socket_code', None)
+    if socket_code != None:
+        socket_instance = server_manager_instance.get_socket_instance()
+        socket_instance.send_message(socket_code)
     return redirect("/")

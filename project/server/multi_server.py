@@ -162,18 +162,6 @@ class MultiServer:
             yield 'data: %s\n\n' % (self.file_handler.get_data_string())
 
     def send_message(self, message_to_send):
-        print("\n\n\nSending message to all:", message_to_send)
-        print("\nConnected list:", self.connected_list)
-        print("\nself record:", self.record)
-
-        for record in self.record:
-            i = record[0]
-            p = record[1]
-
-            print ("\ni:", i)
-            print ("\np:", p)
-
         for client_index in range(1,len(self.connected_list)):
             client = self.connected_list[client_index]
-            print("client:", client)
-            client.send("Hello there".encode())
+            client.send(message_to_send.encode())
