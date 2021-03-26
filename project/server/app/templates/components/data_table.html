@@ -9,9 +9,9 @@
             <th scope="col><div id="datetime">datetime</div></th>
         </tr>
         <tr>
-            <th>Position</th>
+            <th scope="col">Position</th>
             {% for sensor_point in sensor_points %}
-            <th>{{ sensor_point}}</th>
+            <th scope="col">{{ sensor_point}}</th>
             {% endfor %}
         </tr>
         {% for seat in seats %}
