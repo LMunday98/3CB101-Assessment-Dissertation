@@ -1,4 +1,4 @@
-import sys, time, datetime, socket, traceback
+import sys, time, datetime, socket, traceback, select
 from shutil import copyfile
 from server.file_handler import FileHandler
 from server.data_handler import DataHandler
@@ -33,6 +33,7 @@ class SocketServer:
             self.connection_handler.check_connections()
         # Close socket
         try:
+            self.connection_handler.disconnect_all()
             self.server_socket.shutdown()
             self.server_socket.close()
         except Exception as e:

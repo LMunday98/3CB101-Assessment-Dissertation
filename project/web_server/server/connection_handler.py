@@ -1,4 +1,4 @@
-import select
+import sys, time, datetime, socket, traceback, select
 
 class ConnectionHandler:
 
@@ -46,6 +46,7 @@ class ConnectionHandler:
         name = sock.recv(self.buffer)
         
         # if repeated username
+        print(name)
         if name in self.record.values():
             self.send_message(sock, "\r\33[31m\33[1m Username already taken!\n\33[0m")
             sock.close()
