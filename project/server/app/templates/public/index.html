@@ -11,12 +11,15 @@
 
 {% block body %}
   <!-- Socket server calls -->
-  <form>
-    <a href=# id=calibrate><button class='btn btn-default'>Calibrate</button></a>
-    <a href=# id=session_start><button class='btn btn-default'>Start Session</button></a>
-    <a href=# id=session_end><button class='btn btn-default'>End Session</button></a>
-  </form>
+  <div class="d-flex justify-content-center">
+    <form class="row">
+      <a class="col-sm" href=# id=calibrate><button type="button" class='btn btn-primary btn-lg'>Calibrate</button></a>
+      <a class="col-sm" href=# id=session_start><button class='btn btn-success btn-lg'>Start Session</button></a>
+      <a class="col-sm" href=# id=session_end><button class='btn btn-danger btn-lg'>End Session</button></a>
+    </form>
+  </div>
   <div id="session_satus"></div>
+  
   <br>
 
   <!-- Rowing data table-->
