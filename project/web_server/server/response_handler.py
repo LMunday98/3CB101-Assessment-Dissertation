@@ -1,13 +1,14 @@
 class ResponseHandler:
 
-    def __init__(self):
+    def __init__(self, buffer):
         self.record = {}
+        self.buffer = buffer
 
-    def new_connection(self, server_socket, connected_list, buffer):
+    def new_connection(self, server_socket, connected_list):
         # Handle the case in which there is a new connection recieved through server_socket
         name = ""
         sockfd, addr = server_socket.accept()
-        name = sockfd.recv(buffer)
+        name = sockfd.recv(self.buffer)
         
         # if repeated username
         if name in self.record.values():
@@ -24,4 +25,4 @@ class ResponseHandler:
         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
         del self.record[(i,p)]
         connected_list.remove(sock)
-        sock.close()
+        sock.close()  

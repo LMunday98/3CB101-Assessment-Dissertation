@@ -16,7 +16,7 @@ class SocketServer:
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
-        self.response_handler = ResponseHandler()
+        self.response_handler = ResponseHandler(self.buffer)
 
     def setup(self):
         self.connected_list = []
@@ -38,7 +38,7 @@ class SocketServer:
 
             for sock in rList:
                 if sock == self.server_socket:
-                    self.response_handler.new_connection(self.server_socket, self.connected_list, self.buffer)
+                    self.response_handler.new_connection(self.server_socket, self.connected_list)
                     continue
                 #Some incoming message from a client
                 else:
