@@ -1,7 +1,7 @@
 import time
 
 from app import app
-from server_manager import ServerManager
+from socket_server_package.server_manager import ServerManager
 from flask import Flask, Response, request, render_template, redirect
 
 global server_manager_instance

@@ -1,5 +1,5 @@
 import threading
-from socket_server import SocketServer
+from socket_server_package.socket_server import SocketServer
 
 class ServerManager:
     def __init__(self):

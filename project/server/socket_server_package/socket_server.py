@@ -2,7 +2,7 @@ import pickle
 import time, datetime
 import socket, select, traceback
 from shutil import copyfile
-from file_handler import FileHandler
+from socket_server_package.file_handler import FileHandler
 
 import sys
 sys.path.append("..")
