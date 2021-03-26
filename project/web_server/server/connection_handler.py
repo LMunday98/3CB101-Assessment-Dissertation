@@ -1,9 +1,10 @@
 class ConnectionHandler:
 
-    def __init__(self, buffer):
+    def __init__(self, server_socket, buffer):
         self.record = {}
         self.buffer = buffer
         self.connected_list = []
+        self.add_connection(server_socket)
 
     def add_connection(self, socket):
         self.connected_list.append(socket)
@@ -17,17 +18,17 @@ class ConnectionHandler:
     def new_connection(self, server_socket):
         # Handle the case in which there is a new connection recieved through server_socket
         name = ""
-        sockfd, addr = server_socket.accept()
-        name = sockfd.recv(self.buffer)
+        sock, addr = server_socket.accept()
+        name = sock.recv(self.buffer)
         
         # if repeated username
         if name in self.record.values():
-            sockfd.send("\r\33[31m\33[1m Username already taken!\n\33[0m".encode())
-            sockfd.close()
+            self.send_message(sock, "\r\33[31m\33[1m Username already taken!\n\33[0m")
+            sock.close()
         else:
             # add name and address
             self.record[addr] = name
-            self.add_connection(sockfd)
+            self.add_connection(sock)
             print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
 
     def disconnect_client(self, sock):
@@ -36,3 +37,11 @@ class ConnectionHandler:
         del self.record[(i,p)]
         self.remove_connection(sock)
         sock.close()  
+
+    def send_message(self, sock, message):
+        sock.send(message.encode())
+    
+    def send_to_all(self, message):
+        for connection_index in range(1,len(self.connected_list)):
+            sock = self.connected_list[client_index]
+            self.send_message(sock, message)

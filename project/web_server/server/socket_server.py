@@ -16,15 +16,16 @@ class SocketServer:
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
-        self.connection_handler = ConnectionHandler(self.buffer)
-
+        
     def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections
-        self.connection_handler.add_connection(self.server_socket)
+        self.connection_handler = ConnectionHandler(self.server_socket, self.buffer)
+
+        # Runtime vars
         self.run_server = True
         self.session_name = datetime.datetime.now()
 
@@ -90,7 +91,4 @@ class SocketServer:
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
 
-        current_connections = self.connection_handler.get_connections()
-        for client_index in range(1,len(current_connections)):
-            client = current_connections[client_index]
-            client.send(socket_code.encode())
+        self.connection_handler(socket_code)
