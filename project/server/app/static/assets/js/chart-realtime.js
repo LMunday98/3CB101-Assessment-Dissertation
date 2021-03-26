@@ -57,8 +57,11 @@ class RealtimeChart {
 		};
 
 		this.ctx = document.getElementById(chart_id).getContext('2d');
-
-		//this.create_listeners();
+		
+		this.create_listen_randomise();
+		this.create_listen_add_dataset();
+		this.create_listen_remove_dataset();
+		this.create_listen_add_data();
 	}
 
 	get_chart_element() {
@@ -70,7 +73,7 @@ class RealtimeChart {
 	}
 
 	get_colours() {
-		let chartColors = {
+		let colours_dict = {
 			red: 'rgb(255, 99, 132)',
 			orange: 'rgb(255, 159, 64)',
 			yellow: 'rgb(255, 205, 86)',
@@ -79,14 +82,7 @@ class RealtimeChart {
 			purple: 'rgb(153, 102, 255)',
 			grey: 'rgb(201, 203, 207)'
 		};
-		return chartColors;
-	}
-
-	create_listeners() {
-		this.create_listen_randomise();
-		this.create_listen_add_dataset();
-		this.create_listen_remove_dataset();
-		this.create_listen_add_data();
+		return colours_dict;
 	}
 
 	create_listen_randomise() {
@@ -101,11 +97,13 @@ class RealtimeChart {
 	}
 
 	create_listen_add_dataset() {
-		var config = this.myChart.config;
+		var config = this.config;
+		var chartColors = this.chartColors;
 		var colorNames = Object.keys(this.chartColors);
+		var color = this.color;
 		document.getElementById('addDataset').addEventListener('click', function() {
 			var colorName = colorNames[config.data.datasets.length % colorNames.length];
-			var newColor = this.chartColors[colorName];
+			var newColor = chartColors[colorName];
 			var newDataset = {
 				label: 'Dataset ' + (config.data.datasets.length + 1),
 				backgroundColor: color(newColor).alpha(0.5).rgbString(),
