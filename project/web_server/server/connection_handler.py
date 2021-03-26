@@ -1,9 +1,12 @@
+import select
+
 class ConnectionHandler:
 
     def __init__(self, server_socket, buffer):
         self.record = {}
         self.buffer = buffer
         self.connected_list = []
+        self.server_socket = server_socket
         self.add_connection(server_socket)
 
     def add_connection(self, socket):
@@ -14,6 +17,27 @@ class ConnectionHandler:
 
     def get_connections(self):
         return self.connected_list
+
+    def check_connections(self):
+        try:
+            # Get the list sockets which are ready to be read through select
+            rList, wList, error_sockets = select.select(self.connected_list,[],[])
+            for sock in rList:
+                # Check connection against pre-existing ones
+                if sock == self.server_socket:
+                    self.new_connection(self.server_socket)
+                #Some incoming message from a client
+                else:
+                    # Data from client
+                    try:
+                        sent_data = sock.recv(self.buffer)
+                        # self.data_handler.record_data(sent_data)
+                    #abrupt user exit
+                    except Exception:
+                        traceback.print_exc()
+                        self.disconnect_client(sock)
+        except:
+            print("No connections")
 
     def new_connection(self, server_socket):
         # Handle the case in which there is a new connection recieved through server_socket

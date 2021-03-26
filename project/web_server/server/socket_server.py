@@ -1,4 +1,4 @@
-import sys, time, datetime, socket, select, traceback
+import sys, time, datetime, socket, traceback
 from shutil import copyfile
 from server.file_handler import FileHandler
 from server.data_handler import DataHandler
@@ -30,29 +30,7 @@ class SocketServer:
     def run_listen(self):
         print ("\33[32m \t\t\t\tSocket Server Running \33[0m")
         while self.run_server:
-            # Get the list sockets which are ready to be read through select
-            current_connections = self.connection_handler.get_connections()
-            try:
-                rList,wList,error_sockets = select.select(current_connections,[],[])
-            except:
-                continue
-
-            for sock in rList:
-                # Check connection against pre-existing ones
-                if sock == self.server_socket:
-                    self.connection_handler.new_connection(self.server_socket)
-                    continue
-                #Some incoming message from a client
-                else:
-                    # Data from client
-                    try:
-                        sent_data = sock.recv(self.buffer)
-                        self.data_handler.record_data(sent_data)
-                    #abrupt user exit
-                    except Exception:
-                        traceback.print_exc()
-                        self.connection_handler.disconnect_client(sock)
-                        continue
+            self.connection_handler.check_connections()
         # Close socket
         try:
             self.server_socket.shutdown()
