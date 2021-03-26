@@ -3,7 +3,7 @@ import time, datetime
 import socket, select, traceback
 from shutil import copyfile
 from server.file_handler import FileHandler
-from server.response_handler import ResponseHandler
+from server.connection_handler import ConnectionHandler
 
 import sys
 sys.path.append("..")
@@ -16,7 +16,7 @@ class SocketServer:
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
-        self.response_handler = ResponseHandler(self.buffer)
+        self.connection_handler = ConnectionHandler(self.buffer)
 
     def setup(self):
         self.connected_list = []
@@ -38,7 +38,7 @@ class SocketServer:
 
             for sock in rList:
                 if sock == self.server_socket:
-                    self.response_handler.new_connection(self.server_socket, self.connected_list)
+                    self.connection_handler.new_connection(self.server_socket, self.connected_list)
                     continue
                 #Some incoming message from a client
                 else:
@@ -47,7 +47,7 @@ class SocketServer:
                         client_data = sock.recv(self.buffer)
                         try:
                             if client_data.decode() == "disconnect":
-                                self.response_handler.disconnect_client(sock, self.connected_list)
+                                self.connection_handler.disconnect_client(sock, self.connected_list)
                                 continue
                         except Exception as e:
                             x = 1
@@ -59,7 +59,7 @@ class SocketServer:
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
-                        self.response_handler.disconnect_client(sock, self.connected_list)
+                        self.connection_handler.disconnect_client(sock, self.connected_list)
                         continue
 
     def capture_data(self, rower_data):

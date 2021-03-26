@@ -1,4 +1,4 @@
-class ResponseHandler:
+class ConnectionHandler:
 
     def __init__(self, buffer):
         self.record = {}
