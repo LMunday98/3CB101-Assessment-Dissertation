@@ -180,6 +180,9 @@ class MultiServer:
             else:
                 yield 'data: \n\n'
 
+    def get_latest_data(self):
+        return self.file_handler.get_csv_to_json()
+
     def send_message(self, socket_code):
         if socket_code == "session_start":
             print("Start session")
@@ -187,6 +190,7 @@ class MultiServer:
             self.new_session()
         if socket_code == "session_end":
             print("End session")
+            copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
 
         for client_index in range(1,len(self.connected_list)):

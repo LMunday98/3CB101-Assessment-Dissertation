@@ -68,9 +68,9 @@ class MultiClient:
                 print (e)
                     
     def listen(self):
-        s = self.s
         while self.run_client:
             try:
+                s = self.s
                 data = s.recv(4096)
                 if not data :
                     continue
@@ -82,7 +82,8 @@ class MultiClient:
             
     def execute_code(self, socket_code):
         if socket_code == "cal":
-            print("Calibrating Client")
+            print("Calibration call")
+            self.sensor.calibrate()
 
     def finish(self):
         try:
