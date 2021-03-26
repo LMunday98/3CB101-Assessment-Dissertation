@@ -124,8 +124,8 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
   <script>
-    var rx_instance = new RealtimeChart('rx_chart');
-    var ry_instance = new RealtimeChart('ry_chart');
+    var rx_instance = new RealtimeChart('rx_chart', 'A graph of rx rotation', 'Time (s)', 'X Rotation (deg)');
+    var ry_instance = new RealtimeChart('ry_chart', 'A graph of ry rotation', 'Time (s)', 'Y Rotation (deg)');
 
     window.onload = function() {
         var rx_chart = new Chart(rx_instance.get_chart_element(), rx_instance.get_config());

@@ -1,5 +1,5 @@
 class RealtimeChart {
-	constructor(chart_id) {
+	constructor(chart_id, chart_name, x_label, y_label) {
 		this.chartColors = this.get_colours();
 
 		this.color = Chart.helpers.color;
@@ -7,17 +7,30 @@ class RealtimeChart {
 			type: 'line',
 			data: {
 				datasets: [{
-					label: 'Dataset 1 (linear interpolation)',
+					label: 'Dataset 1 (Stroke)',
 					backgroundColor: this.color(this.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.red,
-					fill: false,
-					lineTension: 0,
-					borderDash: [8, 4],
+					fill: true,
+					cubicInterpolationMode: 'monotone',
 					data: []
 				}, {
-					label: 'Dataset 2 (cubic interpolation)',
+					label: 'Dataset 2 (Stroke 2)',
 					backgroundColor: this.color(this.chartColors.blue).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.blue,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}, {
+					label: 'Dataset 3 (Bow 2)',
+					backgroundColor: this.color(this.chartColors.yellow).alpha(0.5).rgbString(),
+					borderColor: this.chartColors.yellow,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}, {
+					label: 'Dataset 4 (Bow)',
+					backgroundColor: this.color(this.chartColors.green).alpha(0.5).rgbString(),
+					borderColor: this.chartColors.green,
 					fill: false,
 					cubicInterpolationMode: 'monotone',
 					data: []
@@ -26,7 +39,7 @@ class RealtimeChart {
 			options: {
 				title: {
 					display: true,
-					text: 'Line chart (hotizontal scroll) sample'
+					text: chart_name
 				},
 				scales: {
 					xAxes: [{
@@ -36,12 +49,16 @@ class RealtimeChart {
 							refresh: 1000,
 							delay: 2000,
 							onRefresh: this.onRefresh
+						},
+						scaleLabel: {
+							display: true,
+							labelString: x_label
 						}
 					}],
 					yAxes: [{
 						scaleLabel: {
 							display: true,
-							labelString: 'value'
+							labelString: y_label
 						}
 					}]
 				},
