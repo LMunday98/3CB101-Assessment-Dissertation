@@ -1,6 +1,7 @@
 import sys, pickle, time, datetime, socket, select, traceback
 from shutil import copyfile
 from server.file_handler import FileHandler
+from server.data_handler import DataHandler
 from server.connection_handler import ConnectionHandler
 
 sys.path.append("..")
@@ -11,6 +12,7 @@ class SocketServer:
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
+        self.data_handler = DataHandler()
         
     def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
