@@ -3,8 +3,18 @@ class ConnectionHandler:
     def __init__(self, buffer):
         self.record = {}
         self.buffer = buffer
+        self.connected_list = []
 
-    def new_connection(self, server_socket, connected_list):
+    def add_connection(self, socket):
+        self.connected_list.append(socket)
+
+    def remove_connection(self, socket):
+        self.connected_list.remove(socket)
+
+    def get_connections(self):
+        return self.connected_list
+
+    def new_connection(self, server_socket):
         # Handle the case in which there is a new connection recieved through server_socket
         name = ""
         sockfd, addr = server_socket.accept()
@@ -17,12 +27,12 @@ class ConnectionHandler:
         else:
             # add name and address
             self.record[addr] = name
-            connected_list.append(sockfd)
+            self.add_connection(sockfd)
             print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
 
-    def disconnect_client(self, sock, connected_list):
+    def disconnect_client(self, sock):
         (i,p)=sock.getpeername()
         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
         del self.record[(i,p)]
-        connected_list.remove(sock)
+        self.remove_connection(sock)
         sock.close()  

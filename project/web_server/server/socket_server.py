@@ -19,14 +19,12 @@ class SocketServer:
         self.connection_handler = ConnectionHandler(self.buffer)
 
     def setup(self):
-        self.connected_list = []
-
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections
-        self.connected_list.append(self.server_socket)
+        self.connection_handler.add_connection(self.server_socket)
         self.run_server = True
         self.session_name = datetime.datetime.now()
 
@@ -34,11 +32,12 @@ class SocketServer:
         print ("\33[32m \t\t\t\tSocket Server Running \33[0m")
         while self.run_server:
             # Get the list sockets which are ready to be read through select
-            rList,wList,error_sockets = select.select(self.connected_list,[],[])
+            current_connections = self.connection_handler.get_connections()
+            rList,wList,error_sockets = select.select(current_connections,[],[])
 
             for sock in rList:
                 if sock == self.server_socket:
-                    self.connection_handler.new_connection(self.server_socket, self.connected_list)
+                    self.connection_handler.new_connection(self.server_socket)
                     continue
                 #Some incoming message from a client
                 else:
@@ -47,7 +46,7 @@ class SocketServer:
                         client_data = sock.recv(self.buffer)
                         try:
                             if client_data.decode() == "disconnect":
-                                self.connection_handler.disconnect_client(sock, self.connected_list)
+                                self.connection_handler.disconnect_client(sock)
                                 continue
                         except Exception as e:
                             x = 1
@@ -59,7 +58,7 @@ class SocketServer:
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
-                        self.connection_handler.disconnect_client(sock, self.connected_list)
+                        self.connection_handler.disconnect_client(sock)
                         continue
 
     def capture_data(self, rower_data):
@@ -91,6 +90,7 @@ class SocketServer:
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
 
-        for client_index in range(1,len(self.connected_list)):
-            client = self.connected_list[client_index]
+        current_connections = self.connection_handler.get_connections()
+        for client_index in range(1,len(current_connections)):
+            client = current_connections[client_index]
             client.send(socket_code.encode())
