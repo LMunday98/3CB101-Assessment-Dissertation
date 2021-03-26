@@ -6,8 +6,8 @@ from flask import Flask, Response, request, render_template, redirect
 
 global server_manager_instance
 server_manager_instance = ServerManager()
-server_manager_instance.setup()
-server_manager_instance.start()
+#server_manager_instance.setup()
+#server_manager_instance.start()
 
 @app.route('/stream')
 def stream():

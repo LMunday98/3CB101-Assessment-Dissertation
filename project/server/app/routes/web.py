@@ -5,3 +5,8 @@ from app import app
 @app.route('/')
 def root():
     return render_template('public/index.html')
+
+@app.route('/cox')
+def cox():
+    return render_template('public/cox.html')
+

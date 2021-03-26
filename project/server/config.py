@@ -1,10 +1,10 @@
 # config.py
 
 # Enable Flask's debugging features. Should be False in production
-DEBUG = False
+DEBUG = True
 
 # Custom config
-TEMPLATES_AUTO_RELOAD = False
+TEMPLATES_AUTO_RELOAD = True
 
 # Secret key
 #SECRET_KEY = 'super secret key'

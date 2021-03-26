@@ -4,11 +4,11 @@
     {% set sensor_points=["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"] %}
 
     <table class="table caption-top">
-        <tr>
+        <tr class="table-light">
             <th scope="col">Timestamp</th>
-            <th scope="col><div id="datetime">datetime</div></th>
+            <th scope="col" colspan="8"><div id="datetime">datetime</div></th>
         </tr>
-        <tr>
+        <tr class="table-light">
             <th scope="col">Position</th>
             {% for sensor_point in sensor_points %}
             <th scope="col">{{ sensor_point}}</th>
