@@ -11,12 +11,11 @@ class SocketServer:
     def __init__(self):
         self.buffer = 4096
         self.port = 5001
-        
-    def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
-
+        
+    def setup(self):
         # Add server socket to the list of readable connections
         self.connection_handler = ConnectionHandler(self.server_socket, self.buffer)
 
@@ -33,7 +32,11 @@ class SocketServer:
         while self.run_server:
             # Get the list sockets which are ready to be read through select
             current_connections = self.connection_handler.get_connections()
-            rList,wList,error_sockets = select.select(current_connections,[],[])
+
+            try:
+                rList,wList,error_sockets = select.select(current_connections,[],[])
+            except:
+                continue
 
             for sock in rList:
                 if sock == self.server_socket:
@@ -79,5 +82,8 @@ class SocketServer:
             print("End session")
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
-        print (socket_code)
-        self.connection_handler.send_to_all(socket_code)
+        if socket_code == "cal":
+            self.connection_handler.send_to_all(socket_code)
+        if socket_code == "disconnect_all":
+            self.connection_handler.disconnect_all(socket_code)
+            self.setup()

@@ -84,6 +84,8 @@ class SocketClient:
         if socket_code == "cal":
             print("Calibration call")
             self.sensor.calibrate()
+        if socket_code == "disconnect_all":
+            print("Disconnecting client")
 
     def finish(self):
         try:

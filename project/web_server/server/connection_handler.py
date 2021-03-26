@@ -36,7 +36,13 @@ class ConnectionHandler:
         print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
         del self.record[(i,p)]
         self.remove_connection(sock)
-        sock.close()  
+        sock.close()
+
+    def disconnect_all(self, code):
+        self.send_to_all(code)
+        for connection_index in range(1,len(self.connected_list)):
+            sock = self.connected_list[connection_index]
+            self.disconnect_client(sock)
 
     def send_message(self, sock, message):
         sock.send(message.encode())
