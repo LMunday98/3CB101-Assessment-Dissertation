@@ -41,7 +41,8 @@ class Sensor():
     def calibrate(self):
         print("Calibrating sensor...")
         calibration_data = self.get_cal_offset()
-        self.cal_offset = calibration_data
+        self.cal_offset[0] = self.cal_offset[0] + calibration_data[0]
+        self.cal_offset[1] = self.cal_offset[1] + calibration_data[1]
         print("Calibration offset:", self.cal_offset)
 
     def get_cal_offset(self):

@@ -3,15 +3,15 @@
     {% set seats=["bow", "bow2", "stroke2", "stroke"] %}
     {% set sensor_points=["gx", "gy", "gz", "sax", "say", "saz", "rx", "ry"] %}
 
-    <table>
-        <tr>
-            <th>Timestamp</th>
-            <th><div id="datetime">datetime</div></th>
+    <table class="table caption-top">
+        <tr class="table-light">
+            <th scope="col">Timestamp</th>
+            <th scope="col" colspan="8"><div id="datetime">datetime</div></th>
         </tr>
-        <tr>
-            <th>Position</th>
+        <tr class="table-light">
+            <th scope="col">Position</th>
             {% for sensor_point in sensor_points %}
-            <th style="width: 50px;">{{ sensor_point}}</th>
+            <th scope="col">{{ sensor_point}}</th>
             {% endfor %}
         </tr>
         {% for seat in seats %}

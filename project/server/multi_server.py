@@ -180,6 +180,9 @@ class MultiServer:
             else:
                 yield 'data: \n\n'
 
+    def get_latest_data(self):
+        return self.file_handler.get_csv_to_json()
+
     def send_message(self, socket_code):
         if socket_code == "session_start":
             print("Start session")

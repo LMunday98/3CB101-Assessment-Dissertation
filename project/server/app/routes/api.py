@@ -21,3 +21,10 @@ def socket_call():
         socket_instance = server_manager_instance.get_socket_instance()
         socket_instance.send_message(socket_code)
     return redirect("/")
+
+@app.route('/test')
+def test():
+    code_string = request.args.get('code', None)
+    socket_instance = server_manager_instance.get_socket_instance()
+    latest_data = socket_instance.get_latest_data()
+    return latest_data
