@@ -2,8 +2,8 @@ import pickle
 import time, datetime
 import socket, select, traceback
 from shutil import copyfile
-from socket_server_package.file_handler import FileHandler
-from socket_server_package.response_handler import ResponseHandler
+from server.file_handler import FileHandler
+from server.response_handler import ResponseHandler
 
 import sys
 sys.path.append("..")
