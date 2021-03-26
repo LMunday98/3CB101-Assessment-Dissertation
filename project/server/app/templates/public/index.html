@@ -1,22 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YSJBC</title>
-  <!-- CSS -->
-  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
+{% extends "base.html" %}
+
+{% block head %}
   <!-- Js classes -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
-
+  
   <!-- CDNs -->
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-</head>
-<body>
+{% endblock %}
 
+{% block body %}
   <!-- Socket server calls -->
   <form>
     <a href=# id=calibrate><button class='btn btn-default'>Calibrate</button></a>
@@ -37,5 +30,4 @@
   <!-- Js handlers -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
-</body>
-</html>
+{% endblock %}
