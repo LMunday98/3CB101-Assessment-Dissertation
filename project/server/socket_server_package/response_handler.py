@@ -1,7 +1,7 @@
 class ResponseHandler:
 
     def new_connection(self, server_socket, record, connected_list, buffer):
-        # Handle the case in which there is a new connection recieved through self.server_socket
+        # Handle the case in which there is a new connection recieved through server_socket
         name = ""
         sockfd, addr = server_socket.accept()
         name = sockfd.recv(buffer)
@@ -15,5 +15,10 @@ class ResponseHandler:
             record[addr] = name
             connected_list.append(sockfd)
             print ("Client (%s, %s) connected" % addr," [",record[addr],"]")
-            #sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
-            #self.send_to_all(sockfd, "\33[32m\33[1m\r "+name.decode()+" joined the conversation \n\33[0m")
+
+    def disconnect_client(self, sock, record, connected_list):
+        (i,p)=sock.getpeername()
+        print ("Client (%s, %s) is offline (error)" % (i,p)," [",record[(i,p)],"]\n")
+        del record[(i,p)]
+        connected_list.remove(sock)
+        sock.close()

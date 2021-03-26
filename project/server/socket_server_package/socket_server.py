@@ -31,18 +31,6 @@ class SocketServer:
         self.run_server = True
         self.session_name = datetime.datetime.now()
 
-    #Function to send message to all connected clients
-    def send_to_all (self, sock, message):
-        #Message not forwarded to server and sender itself
-        for socket in self.connected_list:
-            if socket != self.server_socket and socket != sock :
-                try :
-                    socket.send(message.encode())
-                except :
-                    # if connection not available
-                    socket.close()
-                    self.connected_list.remove(socket)   
-
     def run_listen(self):
         print ("\33[32m \t\t\t\tSocket Server Running \33[0m")
         while self.run_server:
@@ -52,7 +40,7 @@ class SocketServer:
             for sock in rList:
                 if sock == self.server_socket:
                     self.response_handler.new_connection(self.server_socket, self.record, self.connected_list, self.buffer)
-
+                    continue
                 #Some incoming message from a client
                 else:
                     # Data from client
@@ -60,12 +48,7 @@ class SocketServer:
                         client_data = sock.recv(self.buffer)
                         try:
                             if client_data.decode() == "disconnect":
-                                (i,p)=sock.getpeername()
-                                self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
-                                print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
-                                del self.record[(i,p)]
-                                self.connected_list.remove(sock)
-                                sock.close()
+                                self.response_handler.disconnect_client(sock, self.record, self.connected_list)
                                 continue
                         except Exception as e:
                             x = 1
@@ -77,12 +60,7 @@ class SocketServer:
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
-                        (i,p)=sock.getpeername()
-                        self.send_to_all(sock, "\r\33[31m \33[1m"+self.record[(i,p)].decode()+" left the conversation unexpectedly\33[0m\n")
-                        print ("Client (%s, %s) is offline (error)" % (i,p)," [",self.record[(i,p)],"]\n")
-                        del self.record[(i,p)]
-                        self.connected_list.remove(sock)
-                        sock.close()
+                        self.response_handler.disconnect_client(sock, self.record, self.connected_list)
                         continue
 
     def capture_data(self, rower_data):
