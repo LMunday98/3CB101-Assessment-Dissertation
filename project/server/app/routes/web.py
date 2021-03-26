@@ -6,7 +6,10 @@ from app import app
 def root():
     return render_template('public/index.html')
 
-@app.route('/cox')
+@app.route('/public/cox')
 def cox():
     return render_template('public/cox.html')
 
+@app.route('/public/test')
+def charts():
+    return render_template('public/test.html')
