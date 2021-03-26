@@ -87,7 +87,6 @@
                             </div>
                         </div>
                         
-
                     </div>
                 </div>
 
@@ -105,6 +104,6 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
   <script>
-      var realtimeChart = new RealtimeChart();
+      var realtimeChart = new RealtimeChart('realTimeChart');
   </script>
 {% endblock %}
