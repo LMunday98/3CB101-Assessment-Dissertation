@@ -79,12 +79,12 @@ class SocketServer:
             print("Start session")
             self.record_session = True
             self.new_session()
-        if socket_code == "session_end":
+        elif socket_code == "session_end":
             print("End session")
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
-        if socket_code == "cal":
+        elif socket_code == "cal":
             self.connection_handler.send_to_all(socket_code)
-        if socket_code == "disconnect_all":
+        elif socket_code == "disconnect_all":
             self.connection_handler.disconnect_all(socket_code)
             self.setup()
