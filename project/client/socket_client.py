@@ -2,7 +2,7 @@ import socket, select, string, sys, time, pickle
 sys.path.append("..")
 from mpu.sensor import Sensor
 
-class MultiClient:
+class SocketClient:
     def __init__(self, client_index):
         self.run_client = True
         self.name = str(client_index)

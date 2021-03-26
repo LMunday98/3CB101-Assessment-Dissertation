@@ -1,9 +1,9 @@
 import threading
-from multi_server import MultiServer
+from socket_server import SocketServer
 
 class ServerManager:
     def __init__(self):
-        self.socket_server = MultiServer()
+        self.socket_server = SocketServer()
 
     def setup(self):
         self.threads = []

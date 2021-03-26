@@ -9,7 +9,7 @@ import sys
 sys.path.append("..")
 import mpu
 
-class MultiServer:
+class SocketServer:
     def __init__(self):
         self.name=""
         #dictionary to store address corresponding to userself.name
