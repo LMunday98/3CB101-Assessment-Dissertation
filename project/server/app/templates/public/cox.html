@@ -78,11 +78,31 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Realtime Chart</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Realtime RX Chart</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">
-                                    <canvas id="realTimeChart"></canvas>
+                                    <canvas id="rx_chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <div class="col">
+
+                        <!-- Area Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Realtime RY Chart</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="ry_chart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -104,11 +124,12 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
   <script>
-    var chart_instance = new RealtimeChart('realTimeChart');
-        window.onload = function() {
-            var ctx = document.getElementById('realTimeChart').getContext('2d');
-            var config = chart_instance.get_config();
-            var myChart = new Chart(ctx, config);
-		};
+    var rx_instance = new RealtimeChart('rx_chart');
+    var ry_instance = new RealtimeChart('ry_chart');
+
+    window.onload = function() {
+        var rx_chart = new Chart(rx_instance.get_chart_element(), rx_instance.get_config());
+        var ry_chart = new Chart(ry_instance.get_chart_element(), ry_instance.get_config());
+    };
   </script>
 {% endblock %}

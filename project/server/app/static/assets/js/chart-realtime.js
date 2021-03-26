@@ -56,7 +56,13 @@ class RealtimeChart {
 			}
 		};
 
+		this.ctx = document.getElementById(chart_id).getContext('2d');
+
 		//this.create_listeners();
+	}
+
+	get_chart_element() {
+		return this.ctx;
 	}
 
 	get_config() {
