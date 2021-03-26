@@ -1,18 +1,13 @@
-import pickle
-import time, datetime
-import socket, select, traceback
+import sys, pickle, time, datetime, socket, select, traceback
 from shutil import copyfile
 from server.file_handler import FileHandler
 from server.connection_handler import ConnectionHandler
 
-import sys
 sys.path.append("..")
 import mpu
 
 class SocketServer:
     def __init__(self):
-        #dictionary to store address corresponding to userself.name
-        # List to keep track of socket descriptors
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
