@@ -9,6 +9,9 @@
 
   <!-- Custom styles for this template-->
   <link href="{{ url_for('static',filename='assets/css/sb-admin-2.css') }}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
 {% endblock %}
 
 
@@ -60,6 +63,13 @@
                     </div>
                 </div>
 
+                <p>
+                    <button id="randomizeData">Randomize Data</button>
+                    <button id="addDataset">Add Dataset</button>
+                    <button id="removeDataset">Remove Dataset</button>
+                    <button id="addData">Add Data</button>
+                </p>
+
                 <!-- Content Row -->
                 <div class="row">
 
@@ -80,6 +90,8 @@
 
                     </div>
                 </div>
+
+                
 
             </div>
             <!-- /.container-fluid -->
