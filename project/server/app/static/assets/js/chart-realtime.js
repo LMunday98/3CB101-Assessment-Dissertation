@@ -3,7 +3,7 @@ class RealtimeChart {
 		this.chartColors = this.get_colours();
 
 		this.color = Chart.helpers.color;
-		var config = {
+		this.config = {
 			type: 'line',
 			data: {
 				datasets: [{
@@ -56,13 +56,11 @@ class RealtimeChart {
 			}
 		};
 
-
-		window.onload = function() {
-			this.ctx = document.getElementById(chart_id).getContext('2d');
-			this.myChart = new Chart(ctx, config);
-			this.create_listen_add_dataset();
-		};
 		//this.create_listeners();
+	}
+
+	get_config() {
+		return this.config;
 	}
 
 	get_colours() {

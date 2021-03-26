@@ -104,6 +104,11 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
   <script>
-      var realtimeChart = new RealtimeChart('realTimeChart');
+    var chart_instance = new RealtimeChart('realTimeChart');
+        window.onload = function() {
+            var ctx = document.getElementById('realTimeChart').getContext('2d');
+            var config = chart_instance.get_config();
+            var myChart = new Chart(ctx, config);
+		};
   </script>
 {% endblock %}
