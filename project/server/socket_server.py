@@ -2,7 +2,6 @@ import pickle
 import time, datetime
 import socket, select, traceback
 from shutil import copyfile
-from flask import stream_with_context
 from file_handler import FileHandler
 
 import sys
@@ -32,24 +31,6 @@ class SocketServer:
         self.run_server = True
 
         self.session_name = datetime.datetime.now()
-
-        self.new_session()
-        self.record_session = False
-
-
-    def reset(self):
-        self.logged_data = [
-        self.create_clean_data_array(),
-        self.create_clean_data_array(),
-        self.create_clean_data_array(),
-        self.create_clean_data_array()]
-
-    def create_clean_data_array(self):
-        return [0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-    def new_session(self):
-        self.file_handler.write_rower_data("realtime_analysis", "/session_data", ["Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Rower Id", "gx", "gy", "gz", "sax", "say", "saz", "rx", "ry", "Timestamp"], "w")
-        self.reset()
 
     #Function to send message to all connected clients
     def send_to_all (self, sock, message):
@@ -108,6 +89,8 @@ class SocketServer:
                                 continue
                         except Exception as e:
                             x = 1
+
+                        ### CAPTURE DATA ###
                         rower_data = pickle.loads(client_data)
                         self.capture_data(rower_data)
                             
@@ -124,42 +107,9 @@ class SocketServer:
 
     def capture_data(self, rower_data):
         rower_index = rower_data.get_rowerId()
-        logged_data = self.logged_data[rower_index]
-        logged_data[0] = logged_data[0] + 1
-
-        data_index = 1
-        for data in rower_data.get_sensor_data():
-            logged_data[data_index] = logged_data[data_index] + data
-            data_index += 1
-
-        self.file_handler.write_rower_data("rower" + str(rower_data.get_rowerId()), "/session_data_" + str(self.session_name) ,rower_data.get_all_data())
 
     def run_calc_timing(self):
-        while self.run_server:
-            time.sleep(0.5)
-            logged_data = self.logged_data
-
-            data_array = []
-            rower_index = 0
-            for rower_data in logged_data:
-                num_data_logs = rower_data[0]
-
-                data_array.append(rower_index)
-                
-                if num_data_logs == 0:
-                    for data_index in range(8):
-                        data_array.append(0)
-                else:
-                    for data_index in range(1,9):
-                        avg_data = rower_data[data_index] / num_data_logs
-                        data_array.append(avg_data)
-                
-                rower_index += 1
-                
-            if (len(data_array) != 0) and (self.record_session == True):
-                data_array.append(datetime.datetime.now())
-                self.file_handler.write_rower_data("realtime_analysis", "/session_data", data_array)
-            self.reset()
+        x = 1
             
     def finish(self):
         print("Shutting down socket server")
@@ -170,15 +120,6 @@ class SocketServer:
         except Exception as e:
             print(e)
         copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
-
-    @stream_with_context
-    def get_stream(self):
-        while True:
-            time.sleep(.2)
-            if self.record_session == True:
-                yield 'data: %s\n\n' % (self.file_handler.get_data_string())
-            else:
-                yield 'data: \n\n'
 
     def get_latest_data(self):
         return self.file_handler.get_csv_to_json()
