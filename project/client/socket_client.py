@@ -8,6 +8,8 @@ class SocketClient:
         self.run_client = True
         self.client_index = client_index
         self.connection_handler = ConnectionHandler(str(client_index))
+        self.connection_handler.socket_create()
+        self.connection_handler.socket_connect()
 
     def setup_sensor(self):
         while True:
@@ -34,6 +36,7 @@ class SocketClient:
         while self.run_client:
             #socket_code = self.connection_handler.connection_listen()
             #self.execute_code(socket_code)
+            x=1
             
             
     def execute_code(self, socket_code):
