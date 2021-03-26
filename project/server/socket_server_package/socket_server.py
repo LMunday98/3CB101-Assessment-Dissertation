@@ -3,6 +3,7 @@ import time, datetime
 import socket, select, traceback
 from shutil import copyfile
 from socket_server_package.file_handler import FileHandler
+from socket_server_package.response_handler import ResponseHandler
 
 import sys
 sys.path.append("..")
@@ -10,26 +11,24 @@ import mpu
 
 class SocketServer:
     def __init__(self):
-        self.name=""
         #dictionary to store address corresponding to userself.name
         # List to keep track of socket descriptors
         self.buffer = 4096
         self.port = 5001
         self.file_handler = FileHandler()
+        self.response_handler = ResponseHandler()
 
     def setup(self):
         self.record={}
         self.connected_list = []
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("192.168.0.184", self.port))
         self.server_socket.listen(10) #listen atmost 10 connection at one time
 
         # Add server socket to the list of readable connections
         self.connected_list.append(self.server_socket)
-
         self.run_server = True
-
         self.session_name = datetime.datetime.now()
 
     #Function to send message to all connected clients
@@ -52,26 +51,7 @@ class SocketServer:
 
             for sock in rList:
                 if sock == self.server_socket:
-                    # Handle the case in which there is a new connection recieved through self.server_socket
-                    sockfd, addr = self.server_socket.accept()
-                    self.name=sockfd.recv(self.buffer)
-                    self.connected_list.append(sockfd)
-                    self.record[addr]=""
-                    #print "self.record and conn list ",self.record,self.connected_list
-                    
-                    #if repeated userself.name
-                    if self.name in self.record.values():
-                        sockfd.send("\r\33[31m\33[1m Username already taken!\n\33[0m".encode())
-                        del self.record[addr]
-                        self.connected_list.remove(sockfd)
-                        sockfd.close()
-                        continue
-                    else:
-                        #add name and address
-                        self.record[addr]=self.name
-                        print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
-                        #sockfd.send("\33[32m\r\33[1m Welcome to chat room. Enter 'tata' anytime to exit\n\33[0m".encode())
-                        #self.send_to_all(sockfd, "\33[32m\33[1m\r "+self.name.decode()+" joined the conversation \n\33[0m")
+                    self.response_handler.new_connection(self.server_socket, self.record, self.connected_list, self.buffer)
 
                 #Some incoming message from a client
                 else:
