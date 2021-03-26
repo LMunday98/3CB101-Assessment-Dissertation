@@ -13,7 +13,7 @@ class SocketServer:
         self.port = 5001
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("192.168.0.184", self.port))
-        self.server_socket.listen(10) #listen atmost 10 connection at one time
+        self.server_socket.listen(10)
         
     def setup(self):
         # Add server socket to the list of readable connections
@@ -32,13 +32,13 @@ class SocketServer:
         while self.run_server:
             # Get the list sockets which are ready to be read through select
             current_connections = self.connection_handler.get_connections()
-
             try:
                 rList,wList,error_sockets = select.select(current_connections,[],[])
             except:
                 continue
 
             for sock in rList:
+                # Check connection against pre-existing ones
                 if sock == self.server_socket:
                     self.connection_handler.new_connection(self.server_socket)
                     continue
@@ -53,6 +53,12 @@ class SocketServer:
                         traceback.print_exc()
                         self.connection_handler.disconnect_client(sock)
                         continue
+        # Close socket
+        try:
+            self.server_socket.shutdown()
+            self.server_socket.close()
+        except Exception as e:
+            print(e)
 
     def capture_data(self, rower_data):
         rower_index = rower_data.get_rowerId()
@@ -61,14 +67,9 @@ class SocketServer:
         x = 1
             
     def finish(self):
-        print("Shutting down socket server")
+        print("Closing socket")
         self.run_server = False
-        try:
-            self.server_socket.shutdown()
-            self.server_socket.close()
-        except Exception as e:
-            print(e)
-        copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
+        # copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
 
     def get_latest_data(self):
         return self.file_handler.get_csv_to_json()
