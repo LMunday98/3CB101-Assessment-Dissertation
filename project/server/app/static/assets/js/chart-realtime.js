@@ -56,13 +56,13 @@ class RealtimeChart {
 			}
 		};
 
+
 		window.onload = function() {
-			var ctx = document.getElementById(chart_id).getContext('2d');
+			this.ctx = document.getElementById(chart_id).getContext('2d');
 			this.myChart = new Chart(ctx, config);
+			this.create_listen_add_dataset();
 		};
-		
-		this.create_listeners();
-		
+		//this.create_listeners();
 	}
 
 	get_colours() {
@@ -79,15 +79,15 @@ class RealtimeChart {
 	}
 
 	create_listeners() {
-		this.create_listen_randomise()
-		this.create_listen_add_dataset()
-		this.create_listen_remove_dataset()
-		this.create_listen_add_data()
+		this.create_listen_randomise();
+		this.create_listen_add_dataset();
+		this.create_listen_remove_dataset();
+		this.create_listen_add_data();
 	}
 
 	create_listen_randomise() {
 		document.getElementById('randomizeData').addEventListener('click', function() {
-			this.config.data.datasets.forEach(function(dataset) {
+			config.data.datasets.forEach(function(dataset) {
 				dataset.data.forEach(function(dataObj) {
 					dataObj.y = this.randomScalingFactor();
 				});
@@ -97,12 +97,13 @@ class RealtimeChart {
 	}
 
 	create_listen_add_dataset() {
+		var config = this.myChart.config;
 		var colorNames = Object.keys(this.chartColors);
 		document.getElementById('addDataset').addEventListener('click', function() {
-			var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
+			var colorName = colorNames[config.data.datasets.length % colorNames.length];
 			var newColor = this.chartColors[colorName];
 			var newDataset = {
-				label: 'Dataset ' + (this.config.data.datasets.length + 1),
+				label: 'Dataset ' + (config.data.datasets.length + 1),
 				backgroundColor: color(newColor).alpha(0.5).rgbString(),
 				borderColor: newColor,
 				fill: false,
@@ -110,14 +111,14 @@ class RealtimeChart {
 				data: []
 			};
 		
-			this.config.data.datasets.push(newDataset);
+			config.data.datasets.push(newDataset);
 			this.myChart.update();
 		});
 	}
 
 	create_listen_remove_dataset() {
 		document.getElementById('removeDataset').addEventListener('click', function() {
-			this.config.data.datasets.pop();
+			config.data.datasets.pop();
 			this.myChart.update();
 		});
 	}
