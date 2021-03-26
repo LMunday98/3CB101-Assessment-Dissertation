@@ -21,3 +21,6 @@ class FileHandler:
         data_string = data_string[:-1]
         f.write(data_string)
         f.close()
+
+    def get_csv_to_json(self):
+        return {'Stroke': 100, 'Stroke2': 200, 'Bow2': 300, 'Bow': 400}

@@ -25,5 +25,6 @@ def socket_call():
 @app.route('/test')
 def test():
     code_string = request.args.get('code', None)
-
-    return {'Stroke': 1, 'Stroke2': 2, 'Bow2': 3, 'Bow': 4}
+    socket_instance = server_manager_instance.get_socket_instance()
+    latest_data = socket_instance.get_latest_data()
+    return latest_data
