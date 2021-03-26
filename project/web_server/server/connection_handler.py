@@ -3,6 +3,7 @@ import sys, time, datetime, socket, traceback, select
 class ConnectionHandler:
 
     def __init__(self, server_socket, buffer):
+        self.names = []
         self.record = {}
         self.buffer = buffer
         self.connected_list = []
@@ -43,10 +44,11 @@ class ConnectionHandler:
         # Handle the case in which there is a new connection recieved through server_socket
         name = ""
         sock, addr = server_socket.accept()
-        name = sock.recv(self.buffer)
+        name = sock.recv(self.buffer).decode()
         
         # if repeated username
-        print(name)
+        print("name", name)
+        print("names", self.record.values())
         if name in self.record.values():
             self.send_message(sock, "\r\33[31m\33[1m Username already taken!\n\33[0m")
             sock.close()

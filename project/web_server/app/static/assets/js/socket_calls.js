@@ -1,7 +1,8 @@
-button_bind('#calibrate', 'cal')
+button_bind('#calibrate', 'calibrate')
 button_bind('#session_start', 'session_start')
 button_bind('#session_end', 'session_end')
 button_bind('#disconnect_all', 'disconnect_all')
+button_bind('#send_data', 'send_data')
 
 function button_bind(button_id, socket_code) {
     $(function() {

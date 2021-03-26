@@ -54,6 +54,7 @@ class SocketServer:
         return self.file_handler.get_csv_to_json()
 
     def server_request(self, socket_code):
+        print("Socket code:", socket_code)
         if socket_code == "session_start":
             print("Start session")
             self.record_session = True
@@ -62,8 +63,8 @@ class SocketServer:
             print("End session")
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
-        elif socket_code == "cal":
-            self.connection_handler.send_to_all(socket_code)
         elif socket_code == "disconnect_all":
             self.connection_handler.disconnect_all(socket_code)
             self.setup()
+        else:
+            self.connection_handler.send_to_all(socket_code)

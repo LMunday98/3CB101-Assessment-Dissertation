@@ -22,31 +22,27 @@ class SocketClient:
     def read_sensor(self):
         try:
             sensor_data = self.sensor.get_data()
-            message = pickle.dumps(sensor_data)
-            # print(data_string)
-            self.connection_handler.send_message(message)
+            return pickle.dumps(sensor_data)
         except:
             print ("\n\33[93m\33[1mReinitalising sensor \33[0m")
             self.setup_sensor()
         
     def send(self):
-        while self.run_client:
-            try:
-                self.read_sensor()
-                time.sleep(.2)
-            except Exception as e:
-                print (e)
+        print("SEND DATA TO SERVER")
                     
     def listen(self):
         while self.run_client:
-            socket_code = self.connection_handler.connection_listen()
-            self.execute_code(socket_code)
+            #socket_code = self.connection_handler.connection_listen()
+            #self.execute_code(socket_code)
+            
             
     def execute_code(self, socket_code):
-        if socket_code == "cal":
+        if socket_code == "send_data":
+            self.send()
+        elif socket_code == "calibrate":
             print("Calibration call")
-            self.sensor.calibrate()
-        if socket_code == "disconnect_all":
+            # self.sensor.calibrate()
+        elif socket_code == "disconnect_all":
             print("Disconnecting client")
             # self.connection_handler.close_socket()
 

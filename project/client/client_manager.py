@@ -36,7 +36,7 @@ class ClientManager:
 
     def thread_clients(self):
         for client in self.clients:
-            self.threads.append(threading.Thread(target=client.send))
+            #self.threads.append(threading.Thread(target=client.send))
             self.threads.append(threading.Thread(target=client.listen))
 
         for thread in self.threads:
