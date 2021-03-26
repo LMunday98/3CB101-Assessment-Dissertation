@@ -38,8 +38,14 @@
     
     <!-- Page level plugins -->
     <script src="{{ url_for('static',filename='vendor/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='vendor/chart.js/moment.js') }}"></script>
+    <script src="{{ url_for('static',filename='vendor/chart.js/chartjs-plugin-streaming.js') }}"></script>
 
-    <!-- Chart Js -->
+    <!-- New chart js -->
+    <script src="{{ url_for('static',filename='vendor/chart-js-new/Chart.js') }}"></script>
+
+    <!-- Charts -->
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-area-demo.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
 </body>
 </html>
