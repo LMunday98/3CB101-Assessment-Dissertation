@@ -1,4 +1,4 @@
-import sys, pickle, time, datetime, socket, select, traceback
+import sys, time, datetime, socket, select, traceback
 from shutil import copyfile
 from server.file_handler import FileHandler
 from server.data_handler import DataHandler
@@ -11,8 +11,6 @@ class SocketServer:
     def __init__(self):
         self.buffer = 4096
         self.port = 5001
-        self.file_handler = FileHandler()
-        self.data_handler = DataHandler()
         
     def setup(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,6 +19,10 @@ class SocketServer:
 
         # Add server socket to the list of readable connections
         self.connection_handler = ConnectionHandler(self.server_socket, self.buffer)
+
+        # Setup server handlers
+        self.file_handler = FileHandler()
+        self.data_handler = DataHandler(self.connection_handler)
 
         # Runtime vars
         self.run_server = True
@@ -41,18 +43,8 @@ class SocketServer:
                 else:
                     # Data from client
                     try:
-                        client_data = sock.recv(self.buffer)
-                        try:
-                            if client_data.decode() == "disconnect":
-                                self.connection_handler.disconnect_client(sock)
-                                continue
-                        except Exception as e:
-                            x = 1
-
-                        ### CAPTURE DATA ###
-                        rower_data = pickle.loads(client_data)
-                        self.capture_data(rower_data)
-                            
+                        sent_data = sock.recv(self.buffer)
+                        self.data_handler.record_data(sent_data)
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
