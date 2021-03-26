@@ -21,3 +21,9 @@ def socket_call():
         socket_instance = server_manager_instance.get_socket_instance()
         socket_instance.send_message(socket_code)
     return redirect("/")
+
+@app.route('/test')
+def test():
+    code_string = request.args.get('code', None)
+
+    return {'Stroke': 1, 'Stroke2': 2, 'Bow2': 3, 'Bow': 4}

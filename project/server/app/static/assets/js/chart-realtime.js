@@ -152,6 +152,15 @@ class RealtimeChart {
 	onRefresh(chart) {
 		chart.config.data.datasets.forEach(function(dataset) {
 			//var new_y = this.randomScalingFactor();
+
+			let call_url = '/test?code=' + 'some_code';
+            $.getJSON(call_url, function(results) {
+				$.each(results, function(seat, data){
+					console.log("seat", seat);
+					console.log("data", data);
+				  });
+			} );
+
 			var new_y = (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
 			dataset.data.push({
 				x: Date.now(),
