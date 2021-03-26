@@ -2,13 +2,13 @@ class RealtimeChart {
 	constructor(chart_id) {
 		this.chartColors = this.get_colours();
 
-		var color = Chart.helpers.color;
+		this.color = Chart.helpers.color;
 		var config = {
 			type: 'line',
 			data: {
 				datasets: [{
 					label: 'Dataset 1 (linear interpolation)',
-					backgroundColor: color(this.chartColors.red).alpha(0.5).rgbString(),
+					backgroundColor: this.color(this.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.red,
 					fill: false,
 					lineTension: 0,
@@ -16,7 +16,7 @@ class RealtimeChart {
 					data: []
 				}, {
 					label: 'Dataset 2 (cubic interpolation)',
-					backgroundColor: color(this.chartColors.blue).alpha(0.5).rgbString(),
+					backgroundColor: this.color(this.chartColors.blue).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.blue,
 					fill: false,
 					cubicInterpolationMode: 'monotone',
@@ -58,13 +58,8 @@ class RealtimeChart {
 
 		window.onload = function() {
 			var ctx = document.getElementById(chart_id).getContext('2d');
-			window.myChart = new Chart(ctx, config);
+			this.myChart = new Chart(ctx, config);
 		};
-		
-		
-		
-		
-		
 		
 		this.create_listeners();
 		
@@ -92,22 +87,22 @@ class RealtimeChart {
 
 	create_listen_randomise() {
 		document.getElementById('randomizeData').addEventListener('click', function() {
-			config.data.datasets.forEach(function(dataset) {
+			this.config.data.datasets.forEach(function(dataset) {
 				dataset.data.forEach(function(dataObj) {
 					dataObj.y = this.randomScalingFactor();
 				});
 			});
-			window.myChart.update();
+			this.myChart.update();
 		});
 	}
 
 	create_listen_add_dataset() {
 		var colorNames = Object.keys(this.chartColors);
 		document.getElementById('addDataset').addEventListener('click', function() {
-			var colorName = colorNames[config.data.datasets.length % colorNames.length];
+			var colorName = colorNames[this.config.data.datasets.length % colorNames.length];
 			var newColor = this.chartColors[colorName];
 			var newDataset = {
-				label: 'Dataset ' + (config.data.datasets.length + 1),
+				label: 'Dataset ' + (this.config.data.datasets.length + 1),
 				backgroundColor: color(newColor).alpha(0.5).rgbString(),
 				borderColor: newColor,
 				fill: false,
@@ -115,22 +110,22 @@ class RealtimeChart {
 				data: []
 			};
 		
-			config.data.datasets.push(newDataset);
-			window.myChart.update();
+			this.config.data.datasets.push(newDataset);
+			this.myChart.update();
 		});
 	}
 
 	create_listen_remove_dataset() {
 		document.getElementById('removeDataset').addEventListener('click', function() {
-			config.data.datasets.pop();
-			window.myChart.update();
+			this.config.data.datasets.pop();
+			this.myChart.update();
 		});
 	}
 
 	create_listen_add_data() {
 		document.getElementById('addData').addEventListener('click', function() {
-			this.onRefresh(window.myChart);
-			window.myChart.update();
+			this.onRefresh(this.myChart);
+			this.myChart.update();
 		});
 	}
 
