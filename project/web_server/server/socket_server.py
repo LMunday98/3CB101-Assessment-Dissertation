@@ -19,7 +19,6 @@ class SocketServer:
         self.response_handler = ResponseHandler()
 
     def setup(self):
-        self.record={}
         self.connected_list = []
 
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,7 +38,7 @@ class SocketServer:
 
             for sock in rList:
                 if sock == self.server_socket:
-                    self.response_handler.new_connection(self.server_socket, self.record, self.connected_list, self.buffer)
+                    self.response_handler.new_connection(self.server_socket, self.connected_list, self.buffer)
                     continue
                 #Some incoming message from a client
                 else:
@@ -48,7 +47,7 @@ class SocketServer:
                         client_data = sock.recv(self.buffer)
                         try:
                             if client_data.decode() == "disconnect":
-                                self.response_handler.disconnect_client(sock, self.record, self.connected_list)
+                                self.response_handler.disconnect_client(sock, self.connected_list)
                                 continue
                         except Exception as e:
                             x = 1
@@ -60,7 +59,7 @@ class SocketServer:
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
-                        self.response_handler.disconnect_client(sock, self.record, self.connected_list)
+                        self.response_handler.disconnect_client(sock, self.connected_list)
                         continue
 
     def capture_data(self, rower_data):
