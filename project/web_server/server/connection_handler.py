@@ -43,5 +43,5 @@ class ConnectionHandler:
     
     def send_to_all(self, message):
         for connection_index in range(1,len(self.connected_list)):
-            sock = self.connected_list[client_index]
+            sock = self.connected_list[connection_index]
             self.send_message(sock, message)

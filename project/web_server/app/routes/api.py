@@ -14,8 +14,8 @@ def socket_call():
     socket_code = request.args.get('socket_code', None)
     if socket_code != None:
         socket_instance = server_manager_instance.get_socket_instance()
-        socket_instance.send_message(socket_code)
-    return redirect("/")
+        socket_instance.server_request(socket_code)
+    return redirect("/public/test")
 
 @app.route('/get_data')
 def get_data():

@@ -70,7 +70,7 @@ class SocketServer:
     def get_latest_data(self):
         return self.file_handler.get_csv_to_json()
 
-    def send_message(self, socket_code):
+    def server_request(self, socket_code):
         if socket_code == "session_start":
             print("Start session")
             self.record_session = True
@@ -79,5 +79,5 @@ class SocketServer:
             print("End session")
             copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
             self.record_session = False
-
-        self.connection_handler(socket_code)
+        print (socket_code)
+        self.connection_handler.send_to_all(socket_code)
