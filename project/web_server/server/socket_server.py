@@ -1,7 +1,6 @@
 import sys, time, datetime, socket, traceback, select
 from shutil import copyfile
 from server.file_handler import FileHandler
-from server.data_handler import DataHandler
 from server.connection_handler import ConnectionHandler
 
 sys.path.append("..")
@@ -21,7 +20,6 @@ class SocketServer:
 
         # Setup server handlers
         self.file_handler = FileHandler()
-        self.data_handler = DataHandler(self.connection_handler)
 
         # Runtime vars
         self.run_server = True

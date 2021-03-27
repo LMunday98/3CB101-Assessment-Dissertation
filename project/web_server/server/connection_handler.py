@@ -1,4 +1,5 @@
 import sys, time, datetime, socket, traceback, select
+from server.data_handler import DataHandler
 
 class ConnectionHandler:
 
@@ -7,6 +8,7 @@ class ConnectionHandler:
         self.record = {}
         self.buffer = buffer
         self.connected_list = []
+        self.data_handler = DataHandler()
         self.server_socket = server_socket
         self.add_connection(server_socket)
 
@@ -22,7 +24,10 @@ class ConnectionHandler:
     def check_connections(self):
         try:
             # Get the list sockets which are ready to be read through select
-            rList, wList, error_sockets = select.select(self.connected_list,[],[])
+            rList, wList, error_sockets = select.select(self.connected_list, [], self.connected_list)
+            #print("rList", rList)
+            #print("wList", wList)
+            #print("error_sockets", error_sockets)
             for sock in rList:
                 # Check connection against pre-existing ones
                 if sock == self.server_socket:
@@ -32,7 +37,7 @@ class ConnectionHandler:
                     # Data from client
                     try:
                         sent_data = sock.recv(self.buffer)
-                        # self.data_handler.record_data(sent_data)
+                        self.data_handler.record_data(sent_data)
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()

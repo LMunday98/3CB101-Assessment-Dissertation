@@ -10,6 +10,7 @@ class SocketClient:
         self.connection_handler = ConnectionHandler(str(client_index))
         self.connection_handler.socket_create()
         self.connection_handler.socket_connect()
+        self.setup_sensor()
 
     def setup_sensor(self):
         while True:
@@ -31,13 +32,13 @@ class SocketClient:
         
     def send(self):
         print("SEND DATA TO SERVER")
+        pickle_data = self.read_sensor()
+        self.connection_handler.socket_send(pickle_data)
                     
     def listen(self):
         while self.run_client:
-            #socket_code = self.connection_handler.connection_listen()
-            #self.execute_code(socket_code)
-            x=1
-            
+            socket_code = self.connection_handler.connection_listen()
+            self.execute_code(socket_code)
             
     def execute_code(self, socket_code):
         if socket_code == "send_data":

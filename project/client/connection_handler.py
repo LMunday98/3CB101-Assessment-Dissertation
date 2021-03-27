@@ -20,7 +20,18 @@ class ConnectionHandler:
             except :
                 print ("\33[31m\33[1m Can't connect to the server \33[0m")
         # if connceted, send client name to server
-        self.socket_send(self.client_name)
+        self.socket_send(self.client_name.encode())
 
     def socket_send(self, data):
-        self.client_socket.send(data.encode())
+        self.client_socket.send(data)
+
+    def connection_listen(self):
+        try:
+            data = self.client_socket.recv(self.buffer)
+            if not data :
+                return 0
+            else :
+                socket_code = data.decode()
+                return socket_code
+        except Exception as e:
+            return 0
