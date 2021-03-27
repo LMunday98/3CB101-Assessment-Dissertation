@@ -4,21 +4,26 @@ from server.socket_server import SocketServer
 class ServerManager:
     def __init__(self):
         self.socket_server = SocketServer()
+        self.threads = []
+
+    def create_thread(self, thread_target):
+        print('Create thread')
+        new_thread = threading.Thread(target=thread_target)
+        self.threads.append(new_thread)
 
     def setup(self):
-        self.threads = []
+        print('Socket setup')
         self.socket_server.setup()
-        listen_thread = threading.Thread(target=self.socket_server.run_listen)
-        process_thread = threading.Thread(target=self.socket_server.run_calc_timing)
+        self.create_thread(self.socket_server.run_listen)
+        self.create_thread(self.socket_server.run_send)
 
-        listen_thread.setDaemon(True)
-        process_thread.setDaemon(True)
-
-        self.threads.append(listen_thread)
-        self.threads.append(process_thread)
+        print('Set dameon')
+        for thread in self.threads:
+            thread.setDaemon(True)
 
     def start(self):
         for thread in self.threads:
+            print('Start thread')
             thread.start()
 
     def finish(self):

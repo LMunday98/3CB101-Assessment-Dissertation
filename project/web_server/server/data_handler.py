@@ -21,7 +21,6 @@ class DataHandler:
             # Addd timestamp
             rower_dict['timestamp'] = ''
             self.rower_dicts.append(rower_dict)
-        print(self.rower_dicts)
 
     def record_data(self, sent_data):
         decoded_data = pickle.loads(sent_data)

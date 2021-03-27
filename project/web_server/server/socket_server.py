@@ -46,8 +46,15 @@ class SocketServer:
         except Exception as e:
             print(e)
 
-    def run_calc_timing(self):
-        x = 1
+    def run_send(self):
+        while self.run_server:
+            try:
+                #print('Request data')
+                self.connection_handler.send_to_all('send_data')
+            except Exception as e:
+                print('Error requesting sensor data')
+                x=1
+            time.sleep(1)
             
     def finish(self):
         print("Closing socket")
