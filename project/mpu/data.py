@@ -47,9 +47,11 @@ class Data:
     def get_all_data(self):
         return [self.rowerId, self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry, self.data_datetime]
 
-    def get_sensor_data(self):
+    def get_sensor_dict(self):
         return {'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
-        #return [self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry]
+
+    def get_sensor_data(self):
+        return [self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry]
 
     def printData(self):
         print ("\nRower Identification")

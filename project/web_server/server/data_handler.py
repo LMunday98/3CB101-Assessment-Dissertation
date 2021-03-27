@@ -24,6 +24,13 @@ class DataHandler:
     def record_data(self, sent_data):
         decoded_data = pickle.loads(sent_data)
         rower_index = decoded_data.get_rowerId()
-        sensor_data = decoded_data.get_sensor_data()
+        sensor_dict = decoded_data.get_sensor_dict()
 
-        print(sensor_data)
+        rower_dictionary = self.rower_dicts[rower_index]
+        rower_dictionary = sensor_dict
+    
+    def get_rower_dicts(self):
+        return self.rower_dicts
+
+    def get_rower_dict(self, rower_index):
+        return self.get_rower_dicts[rower_index]
