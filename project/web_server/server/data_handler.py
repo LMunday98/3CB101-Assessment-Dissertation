@@ -1,4 +1,4 @@
-import pickle
+import pickle, json
 
 class DataHandler:
     def __init__(self):
@@ -25,12 +25,21 @@ class DataHandler:
         decoded_data = pickle.loads(sent_data)
         rower_index = decoded_data.get_rowerId()
         sensor_dict = decoded_data.get_sensor_dict()
+        
+        print(sensor_dict)
 
         rower_dictionary = self.rower_dicts[rower_index]
         rower_dictionary = sensor_dict
+
+        print(self.get_rower_json(0))
     
     def get_rower_dicts(self):
         return self.rower_dicts
 
     def get_rower_dict(self, rower_index):
-        return self.get_rower_dicts[rower_index]
+        return self.rower_dicts[rower_index]
+
+    def get_rower_json(self, rower_index):
+        rower_dict = self.get_rower_dict(rower_index)
+        rower_json = json.dumps(rower_dict)
+        return rower_json

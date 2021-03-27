@@ -10,9 +10,18 @@ class SocketServer:
     def __init__(self):
         self.buffer = 4096
         self.port = 5001
+        self.create_socket()
+    
+    def create_socket(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind(("192.168.0.184", self.port))
-        self.server_socket.listen(10)
+        while True:
+            try:
+                self.server_socket.bind(("192.168.0.184", self.port))
+                self.server_socket.listen(10)
+                break
+            except Exception as e:
+                print("Couldnt create socket server")
+            time.sleep(1)
         
     def setup(self):
         # Add server socket to the list of readable connections
