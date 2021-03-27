@@ -132,4 +132,7 @@
         var ry_chart = new Chart(ry_instance.get_chart_element(), ry_instance.get_config());
     };
   </script>
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static',filename='vendor/chart.js/moment.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/chart.js/chartjs-plugin-streaming.js') }}"></script>
 {% endblock %}

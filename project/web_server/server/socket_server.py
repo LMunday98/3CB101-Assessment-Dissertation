@@ -63,7 +63,7 @@ class SocketServer:
 
     def get_latest_data(self, rower_index):
         data_handler = self.connection_handler.get_data_handler()
-        return data_handler.get_rower_json(rower_index)
+        return data_handler.get_rower_json(int(rower_index))
 
     def server_request(self, socket_code):
         if socket_code == "session_start":

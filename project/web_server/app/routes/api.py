@@ -21,7 +21,7 @@ def socket_call():
 
 @app.route('/get_data')
 def get_data():
-    rower_index = request.args.get('rower_index', 0)
+    rower_index = request.args.get('rower_index', '0')
     code_string = request.args.get('code', None)
     socket_instance = server_manager_instance.get_socket_instance()
     latest_data = socket_instance.get_latest_data(rower_index)

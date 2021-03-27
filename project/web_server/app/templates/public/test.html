@@ -1,15 +1,24 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug screen</title>
 
-{% block head %}
+  <!-- CSS -->
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
+
   <!-- Js classes -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
   
   <!-- CDNs -->
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-{% endblock %}
-
-{% block body %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
   <!-- Socket server calls -->
   <div class="d-flex justify-content-center">
     <form class="row">
@@ -32,7 +41,12 @@
   <div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
   <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
 
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
   <!-- Js handlers -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
-{% endblock %}
+</body>
+</html>
