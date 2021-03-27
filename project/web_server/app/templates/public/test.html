@@ -46,7 +46,25 @@
   <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
   <!-- Js handlers -->
-  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script> -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
+
+  <script>
+    setInterval(function(){ 
+      var call_url = '/get_data?rower_index=' + '0';
+      $.getJSON(call_url, function(results) {
+        jQuery.each(results, function(field, val) {
+          element_id = 'stroke' + field
+          //console.log('element_id', element_id);
+          display_data(element_id, val)
+        });
+      } );
+    }, 500);
+
+    function display_data(element_id, data) {
+        html_element = document.getElementById(element_id)
+        html_element.innerHTML = data;
+    }
+  </script>
 </body>
 </html>

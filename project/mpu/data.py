@@ -49,7 +49,9 @@ class Data:
         return [self.rowerId, self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry, self.data_datetime]
 
     def get_sensor_dict(self):
-        return {'rower_index' : self.rowerId, 'seat' : self.get_seat_name(self.rowerId), 'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
+        #return {'rower_index' : self.rowerId, 'seat' : self.get_seat_name(self.rowerId), 'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
+        return {'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
+
 
     def get_sensor_data(self):
         return [self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry]
