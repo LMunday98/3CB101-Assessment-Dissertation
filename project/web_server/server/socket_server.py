@@ -61,8 +61,9 @@ class SocketServer:
         self.run_server = False
         # copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
 
-    def get_latest_data(self):
-        return self.file_handler.get_csv_to_json()
+    def get_latest_data(self, rower_index):
+        data_handler = self.connection_handler.get_data_handler()
+        return data_handler.get_rower_json(rower_index)
 
     def server_request(self, socket_code):
         if socket_code == "session_start":

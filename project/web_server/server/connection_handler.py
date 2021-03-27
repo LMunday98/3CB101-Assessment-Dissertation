@@ -20,6 +20,9 @@ class ConnectionHandler:
 
     def get_connections(self):
         return self.connected_list
+
+    def get_data_handler(self):
+        return self.data_handler
     
     def print_connections(self):
         print("\nconnected_list", self.connected_list)
