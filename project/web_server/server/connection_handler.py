@@ -30,9 +30,6 @@ class ConnectionHandler:
         try:
             # Get the list sockets which are ready to be read through select
             rList, wList, error_sockets = select.select(self.connected_list, [], self.connected_list)
-            #print("rList", rList)
-            #print("wList", wList)
-            #print("error_sockets", error_sockets)
             for sock in rList:
                 # Check connection against pre-existing ones
                 if sock == self.server_socket:
@@ -41,14 +38,17 @@ class ConnectionHandler:
                 else:
                     # Data from client
                     try:
-                        sent_data = sock.recv(self.buffer)
-                        self.data_handler.record_data(sent_data)
+                        self.recieve_data(sock)
                     #abrupt user exit
                     except Exception:
                         traceback.print_exc()
                         self.disconnect_client(sock)
         except:
             print("No connections")
+
+    def recieve_data(self, sock):
+        recieved_data = sock.recv(self.buffer)
+        self.data_handler.record_data(recieved_data)
 
     def new_connection(self, server_socket):
         # Handle the case in which there is a new connection recieved through server_socket
