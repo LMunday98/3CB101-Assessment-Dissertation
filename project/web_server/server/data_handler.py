@@ -5,7 +5,7 @@ class DataHandler:
         self.rower_dicts = []
         self.rower_indexes = [0, 1, 2, 3]
         self.seats = ['stroke', 'stroke2', 'bow2', 'bow']
-        self.measurements = ['ax', 'ay', 'az', 'sax', 'say', 'saz', 'rx', 'ry']
+        self.measurements = ['gx', 'gy', 'gz', 'sax', 'say', 'saz', 'rx', 'ry']
         self.setup_data_dicts()
 
     def setup_data_dicts(self):
@@ -24,4 +24,6 @@ class DataHandler:
     def record_data(self, sent_data):
         decoded_data = pickle.loads(sent_data)
         rower_index = decoded_data.get_rowerId()
-        print(rower_index)
+        sensor_data = decoded_data.get_sensor_data()
+
+        print(sensor_data)
