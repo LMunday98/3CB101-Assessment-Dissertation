@@ -8,6 +8,8 @@ class SocketClient:
         self.run_client = True
         self.client_index = client_index
         self.connection_handler = ConnectionHandler(str(client_index))
+
+    def setup(self):
         self.connection_handler.socket_create()
         self.connection_handler.socket_connect()
         self.setup_sensor()
@@ -36,6 +38,7 @@ class SocketClient:
         self.connection_handler.socket_send(pickle_data)
                     
     def listen(self):
+        self.setup()
         while self.run_client:
             socket_code = self.connection_handler.connection_listen()
             self.execute_code(socket_code)
@@ -48,7 +51,7 @@ class SocketClient:
             # self.sensor.calibrate()
         elif socket_code == "disconnect_all":
             print("Disconnecting client")
-            # self.connection_handler.close_socket()
+            self.connection_handler.socket_reconnect()
 
     def finish(self):
         sys.exit()

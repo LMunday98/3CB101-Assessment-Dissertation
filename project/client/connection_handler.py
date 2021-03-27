@@ -9,18 +9,32 @@ class ConnectionHandler:
         self.buffer = 4096
 
     def socket_create(self):
+        print ("\33[31m\33[1m Create socket \33[0m")
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.settimeout(2)
 
     def socket_connect(self):
         while True:
             try :
+                print ("\33[31m\33[1mConnecting to server \33[0m")
                 self.client_socket.connect((self.host, self.port))
+                print ("\33[31m\33[1mConnected to server \33[0m")
                 break
             except :
-                print ("\33[31m\33[1m Can't connect to the server \33[0m")
+                print ("\33[31m\33[1mCan't connect to the server \33[0m")
         # if connceted, send client name to server
         self.socket_send(self.client_name.encode())
+
+    def socket_reconnect(self):
+        #self.socket_close()
+
+        self.socket_create()
+        self.socket_connect()
+
+    def socket_close(self):
+        print ("\33[31m\33[1m Closing socket \33[0m")
+        self.client_socket.shutdown(socket.SHUT_RDWR)
+        self.client_socket.close()
 
     def socket_send(self, data):
         self.client_socket.send(data)

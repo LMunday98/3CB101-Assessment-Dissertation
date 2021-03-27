@@ -32,7 +32,7 @@ class SocketServer:
         # Close socket
         try:
             self.connection_handler.disconnect_all()
-            self.server_socket.shutdown()
+            self.server_socket.shutdown(socket.SHUT_RDWR)
             self.server_socket.close()
         except Exception as e:
             print(e)
