@@ -18,6 +18,8 @@ class DataHandler:
             # Add measurements
             for measurement in self.measurements:
                 rower_dict[measurement] = 0
+            # Addd timestamp
+            rower_dict['timestamp'] = ''
             self.rower_dicts.append(rower_dict)
         print(self.rower_dicts)
 
@@ -26,6 +28,8 @@ class DataHandler:
         rower_index = decoded_data.get_rowerId()
         sensor_dict = decoded_data.get_sensor_dict()
         self.rower_dicts[rower_index] = sensor_dict
+
+        print(self.get_rower_json(rower_index))
     
     def get_rower_dicts(self):
         return self.rower_dicts
