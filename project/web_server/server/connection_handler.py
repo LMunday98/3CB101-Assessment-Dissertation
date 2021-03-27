@@ -20,6 +20,11 @@ class ConnectionHandler:
 
     def get_connections(self):
         return self.connected_list
+    
+    def print_connections(self):
+        print("\nconnected_list", self.connected_list)
+        print("\nrecord", self.record)
+        print("\n")
 
     def check_connections(self):
         try:
@@ -59,9 +64,12 @@ class ConnectionHandler:
             sock.close()
         else:
             # add name and address
+            print("Add name and address")
+            self.print_connections()
             self.record[addr] = name
             self.add_connection(sock)
             print ("Client (%s, %s) connected" % addr," [",self.record[addr],"]")
+            self.print_connections()
 
     def disconnect_client(self, sock):
         (i,p)=sock.getpeername()
@@ -71,15 +79,18 @@ class ConnectionHandler:
         sock.close()
 
     def disconnect_all(self, code):
+        self.print_connections()
         self.send_to_all(code)
         for connection_index in range(1,len(self.connected_list)):
             sock = self.connected_list[connection_index]
             self.disconnect_client(sock)
+        self.print_connections()
 
     def send_message(self, sock, message):
         sock.send(message.encode())
     
     def send_to_all(self, message):
+        self.print_connections()
         for connection_index in range(1,len(self.connected_list)):
             sock = self.connected_list[connection_index]
             self.send_message(sock, message)

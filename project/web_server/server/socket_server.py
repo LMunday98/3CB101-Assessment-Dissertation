@@ -37,9 +37,6 @@ class SocketServer:
         except Exception as e:
             print(e)
 
-    def capture_data(self, rower_data):
-        rower_index = rower_data.get_rowerId()
-
     def run_calc_timing(self):
         x = 1
             
@@ -63,6 +60,6 @@ class SocketServer:
             self.record_session = False
         elif socket_code == "disconnect_all":
             self.connection_handler.disconnect_all(socket_code)
-            self.setup()
+            #self.setup()
         else:
             self.connection_handler.send_to_all(socket_code)
