@@ -33,7 +33,7 @@ class SocketClient:
             self.setup_sensor()
         
     def send(self):
-        print("SEND DATA TO SERVER")
+        print("Send to server")
         pickle_data = self.read_sensor()
         self.connection_handler.socket_send(pickle_data)
                     
@@ -48,7 +48,7 @@ class SocketClient:
             self.send()
         elif socket_code == "calibrate":
             print("Calibration call")
-            # self.sensor.calibrate()
+            self.sensor.calibrate()
         elif socket_code == "disconnect_all":
             print("Disconnecting client")
             self.connection_handler.socket_reconnect()
