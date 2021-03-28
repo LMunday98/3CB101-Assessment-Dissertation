@@ -153,7 +153,7 @@ class RealtimeChart {
 		chart.config.data.datasets.forEach(function(dataset) {
 			//var new_y = this.randomScalingFactor();
 
-			let call_url = '/test?code=' + 'some_code';
+			let call_url = '/get_data?code=' + 'some_code';
             $.getJSON(call_url, function(results) {
 				$.each(results, function(seat, data){
 					console.log("seat", seat);

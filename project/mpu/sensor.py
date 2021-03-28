@@ -47,21 +47,22 @@ class Sensor():
 
     def get_cal_offset(self):
         data_reading = self.get_data()
-        data = data_reading.get_sensor_data()
-        rx = data[6]
-        ry = data[7]
+        data_dict = data_reading.get_data_dict()
+        rx = data_dict['rx']
+        ry = data_dict['ry']
         return [rx, ry]
 
     def get_data(self):
-        gx = self.read_word_2c(0x43)
-        gy = self.read_word_2c(0x45)
-        gz = self.read_word_2c(0x47)
+        gyro_readings = {
+            'gx' : self.read_word_2c(0x43),
+            'gy' : self.read_word_2c(0x45),
+            'gz' : self.read_word_2c(0x47),
+        }
 
-        ax = self.read_word_2c(0x3b)
-        ay = self.read_word_2c(0x3d)
-        az = self.read_word_2c(0x3f)
-
-        data_reading = Data(self.rowerId, gx, gy, gz, ax, ay, az, [0,0], datetime.datetime.now())
-        data_reading.rx = data_reading.rx - self.cal_offset[0]
-        data_reading.ry = data_reading.ry - self.cal_offset[1]
-        return data_reading
+        accel_readings = {
+            'ax' : self.read_word_2c(0x3b),
+            'ay' : self.read_word_2c(0x3d),
+            'az' : self.read_word_2c(0x3f),
+        }
+        
+        return Data(self.rowerId, gyro_readings, accel_readings, self.cal_offset, datetime.datetime.now())

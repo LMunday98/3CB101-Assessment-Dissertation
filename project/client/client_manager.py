@@ -1,5 +1,5 @@
 import socket, threading
-from multi_client import MultiClient
+from socket_client import SocketClient
 
 class ClientManager:
     def __init__(self):
@@ -32,11 +32,11 @@ class ClientManager:
         return ip_dict[ip]
 
     def create_new_client(self, rower_index):
-        self.clients.append(MultiClient(rower_index))
+        self.clients.append(SocketClient(rower_index))
 
     def thread_clients(self):
         for client in self.clients:
-            self.threads.append(threading.Thread(target=client.send))
+            #self.threads.append(threading.Thread(target=client.send))
             self.threads.append(threading.Thread(target=client.listen))
 
         for thread in self.threads:

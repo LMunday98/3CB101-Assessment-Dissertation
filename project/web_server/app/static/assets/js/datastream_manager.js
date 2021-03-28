@@ -6,7 +6,7 @@ let charts = gen_charts(dataLength, seats);
 let rowers = gen_rowers(seats, charts);
 
 window.onload = function () { 
-
+/*
     var eventSource = new EventSource("/stream"); 
     eventSource.onmessage = function(e) {
     if (e.data == "") {
@@ -27,7 +27,17 @@ window.onload = function () {
         });
     }
     };
+    */
+   
+   /*
+    let call_url = '/get_data?rower_index=' + '0';
+    $.getJSON(call_url, function(results) {
+        console.log(results);
+    } );
+    */
 };
+
+
 
 function clear_table_data() {
     seats.forEach(seat_name => {
