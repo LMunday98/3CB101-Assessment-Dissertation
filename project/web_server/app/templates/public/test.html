@@ -53,11 +53,13 @@
     setInterval(function(){ 
       var call_url = '/get_data?rower_index=' + '0';
       $.getJSON(call_url, function(results) {
+        console.log(results);
         jQuery.each(results, function(field, val) {
           element_id = 'stroke' + field
-          //console.log('element_id', element_id);
-          display_data(element_id, val)
+          console.log(element_id, val);
+          //display_data(element_id, val)
         });
+        console.log("");
       } );
     }, 500);
 
