@@ -1,4 +1,4 @@
-import pickle, json
+import pickle, json, datetime
 
 class DataHandler:
     def __init__(self):
@@ -13,17 +13,26 @@ class DataHandler:
 
     def setup_data_dicts(self):
         for rower_index in self.rower_indexes:
-            info_dict = {}
-            data_dict = {}
-            for label in self.info_labels:
-                info_dict[label] = ''
-            for label in self.data_labels:
-                data_dict[label] = 0
+            data_dict = self.populate_dict(self.data_labels, 0)
+
+            info_dict = {
+                'rower_index' : rower_index,
+                'seat' : self.seat_labels[rower_index],
+                'datetime' : str(datetime.datetime.now())
+            }
+
             rower_dict = {
                 'info' : info_dict,
                 'data' : data_dict
             }
+
             self.rower_dicts.append(rower_dict)
+
+    def populate_dict(self, labels, inital_value):
+        new_dict = {}
+        for label in labels:
+            new_dict[label] = inital_value
+        return new_dict
 
     def record_data(self, sent_data):
         decoded_data = pickle.loads(sent_data)
