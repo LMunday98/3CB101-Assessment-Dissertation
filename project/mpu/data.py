@@ -11,7 +11,7 @@ class Data:
         self.info_dict = {
             'rower_index' : rowerId,
             'seat' : self.calc_seat(rowerId),
-            'datetime' : datetime
+            'datetime' : str(datetime)
         }
 
         self.data_dict = {}
@@ -44,7 +44,7 @@ class Data:
     # Processing functions
 
     def round_data(self):
-        for key, value in data.items():
+        for key, value in self.data_dict.items():
             self.data_dict[key] = round(value, 2)
 
     def dict_append(self, data):

@@ -40,11 +40,15 @@ class DataHandler:
 
         info_dict = decoded_data.get_info_dict()
         data_dict = decoded_data.get_data_dict()
+        
+        rower_dict = {
+            'info' : info_dict,
+            'data' : data_dict
+        }
 
-        print('\nInfo dict: ', info_dict)
-        print('\nData dict: ', data_dict)
+        print(rower_dict)
 
-        #self.rower_dicts[rower_index] = sensor_dict
+        self.rower_dicts[rower_index] = rower_dict
     
     def get_rower_dicts(self):
         return self.rower_dicts

@@ -64,6 +64,5 @@ class Sensor():
             'ay' : self.read_word_2c(0x3d),
             'az' : self.read_word_2c(0x3f),
         }
-
-        data_reading = Data(self.rowerId, gyro_readings, accel_readings, self.cal_offset, datetime.datetime.now())
-        return data_reading
+        
+        return Data(self.rowerId, gyro_readings, accel_readings, self.cal_offset, datetime.datetime.now())
