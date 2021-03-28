@@ -21,12 +21,19 @@ class DataHandler:
             # Addd timestamp
             rower_dict['timestamp'] = ''
             self.rower_dicts.append(rower_dict)
+        print(self.rower_dicts)
 
     def record_data(self, sent_data):
         decoded_data = pickle.loads(sent_data)
-        rower_index = decoded_data.get_rowerId()
-        sensor_dict = decoded_data.get_sensor_dict()
-        self.rower_dicts[rower_index] = sensor_dict
+        rower_index = decoded_data.get_rower_index()
+
+        info_dict = decoded_data.get_info_dict()
+        data_dict = decoded_data.get_data_dict()
+
+        print('\nInfo dict: ', info_dict)
+        print('\nData dict: ', data_dict)
+
+        #self.rower_dicts[rower_index] = sensor_dict
     
     def get_rower_dicts(self):
         return self.rower_dicts
