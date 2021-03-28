@@ -10,7 +10,7 @@ class Data:
 
         self.info_dict = {
             'rower_index' : rowerId,
-            'seat' : self.get_seat_name(rowerId),
+            'seat' : self.calc_seat(rowerId),
             'datetime' : datetime
         }
 
@@ -36,8 +36,16 @@ class Data:
         self.data_dict['rx'] = calculations.get_x_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz']) - calibration_offsets[0]
         self.data_dict['ry'] = calculations.get_y_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz']) - calibration_offsets[1]
 
+        self.round_data()
+
         print('\nInfo dict: ', self.info_dict)
         print('\nData dict: ', self.data_dict)
+
+    # Processing functions
+
+    def round_data(self):
+        for key, value in data.items():
+            self.data_dict[key] = round(value, 2)
 
     def dict_append(self, data):
         for key, value in data.items():
@@ -49,18 +57,25 @@ class Data:
             scaled_dict['s' + key] = (value / scale_offset)
         return scaled_dict
 
-    def get_rowerId(self):
-        return self.rowerId
+    def calc_seat(self, rower_index):
+        seats = ['stroke', 'stroke2', 'bow2', 'bow']
+        return seats[rower_index]
+
+    # Get specific data functions
+
+    def get_rower_index(self):
+        return self.info_dict['rower_index']
+
+    def get_seat_name(self):
+        return self.info_dict['seat']
 
     def get_datetime(self):
-        return self.datetime
+        return self.info_dict['datetime']
+
+    # Get dict functions
 
     def get_info_dict(self):
         return self.info_dict
 
     def get_data_dict(self):
         return self.data_dict
-
-    def get_seat_name(self, rower_index):
-        seats = ['stroke', 'stroke2', 'bow2', 'bow']
-        return seats[rower_index]
