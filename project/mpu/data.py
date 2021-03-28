@@ -6,76 +6,61 @@ class Data:
 
     rowerId = 0
 
-    def __init__(self, rowerId, gx, gy, gz, ax, ay, az, cal_offset, data_datetime):
-        self.rowerId = rowerId
+    def __init__(self, rowerId, gyro_readings, accel_readings, calibration_offsets, datetime):
 
-        self.gx = gx
-        self.gy = gy
-        self.gz = gz
+        self.info_dict = {
+            'rower_index' : rowerId,
+            'seat' : self.get_seat_name(rowerId),
+            'datetime' : datetime
+        }
 
-        self.sgx = (gx / 131)
-        self.sgy = (gy / 131)
-        self.sgz = (gz / 131)
+        self.data_dict = {}
 
-        self.ax = ax
-        self.ay = ay
-        self.az = az
+        # Add inital gyro and accel data
 
-        sax = (ax / 16384.0)
-        say = (ay / 16384.0)
-        saz = (az / 16384.0)
+        self.dict_append(gyro_readings)
+        self.dict_append(accel_readings)
 
-        self.sax = sax
-        self.say = say
-        self.saz = saz
+        # Add scaled gyro and accel data
+
+        scaled_gyro = self.scale_data(gyro_readings, 131)
+        scaled_accel = self.scale_data(accel_readings, 16384)
+
+        self.dict_append(scaled_gyro)
+        self.dict_append(scaled_accel)
+
+        # Add rotation data
 
         calculations = Calc()
 
-        self.rx = calculations.get_x_rotation(sax, say, saz) - cal_offset[0]
-        self.ry = calculations.get_y_rotation(sax, say, saz) - cal_offset[0]
+        self.data_dict['rx'] = calculations.get_x_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz']) - calibration_offsets[0]
+        self.data_dict['ry'] = calculations.get_y_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz']) - calibration_offsets[1]
 
-        self.data_datetime = data_datetime
+        print('\nInfo dict: ', self.info_dict)
+        print('\nData dict: ', self.data_dict)
 
-    def set_rowerId(self, newId):
-        self.rowerId = newId
+    def dict_append(self, data):
+        for key, value in data.items():
+            self.data_dict[key] = value
+
+    def scale_data(self, data, scale_offset):
+        scaled_dict = {}
+        for key, value in data.items():
+            scaled_dict['s' + key] = (value / scale_offset)
+        return scaled_dict
 
     def get_rowerId(self):
         return self.rowerId
 
-    def get_data_datetime(self):
-        return self.data_datetime
+    def get_datetime(self):
+        return self.datetime
 
-    def get_all_data(self):
-        return [self.rowerId, self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry, self.data_datetime]
+    def get_info_dict(self):
+        return self.info_dict
 
-    def get_sensor_dict(self):
-        #return {'rower_index' : self.rowerId, 'seat' : self.get_seat_name(self.rowerId), 'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
-        return {'gx' : self.gx, 'gy' : self.gy, 'gz' : self.gz, 'sax' : self.sax, 'say' : self.say, 'saz' : self.saz, 'rx' : self.rx, 'ry' : self.ry}
-
-
-    def get_sensor_data(self):
-        return [self.gx, self.gy, self.gz, self.sax, self.say, self.saz, self.rx, self.ry]
+    def get_data_dict(self):
+        return self.data_dict
 
     def get_seat_name(self, rower_index):
         seats = ['stroke', 'stroke2', 'bow2', 'bow']
         return seats[rower_index]
-
-    def printData(self):
-        print ("\nRower Identification")
-        print ("Id: ", ("%5d" % self.rowerId))
-
-        print ("\nGyroscope")
-        print ("gyro_xout: ", ("%5d" % self.gx), " scaled: ", self.sgx)
-        print ("gyro_yout: ", ("%5d" % self.gy), " scaled: ", self.sgy)
-        print ("gyro_zout: ", ("%5d" % self.gz), " scaled: ", self.sgz)
-
-        print ("\nAcceleromoter")
-        print ("accel_xout: ", ("%6d" % self.ax), " scaled: ", self.sax)
-        print ("accel_yout: ", ("%6d" % self.ay), " scaled: ", self.say)
-        print ("accel_zout: ", ("%6d" % self.az), " scaled: ", self.saz)
-
-        print ("\nRotation")
-        print ("X Rotation: " , self.rx)
-        print ("Y Rotation: " , self.ry)
-
-        print ("\n- - - - - - - - - - - - - -")

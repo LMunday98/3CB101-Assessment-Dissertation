@@ -22,20 +22,22 @@ class SocketClient:
                 break
             except Exception as e:
                 print ("\33[31m\33[1mError setting up the sensor \33[0m")
+                print (e)
                 time.sleep(1)    
 
     def read_sensor(self):
         try:
             sensor_data = self.sensor.get_data()
             return pickle.dumps(sensor_data)
-        except:
+        except Exception as e:
             print ("\n\33[93m\33[1mReinitalising sensor \33[0m")
+            print (e)
             self.setup_sensor()
         
     def send(self):
         print("Send to server")
         pickle_data = self.read_sensor()
-        self.connection_handler.socket_send(pickle_data)
+        # self.connection_handler.socket_send(pickle_data)
                     
     def listen(self):
         self.setup()
