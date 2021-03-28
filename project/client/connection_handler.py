@@ -22,6 +22,7 @@ class ConnectionHandler:
                 break
             except :
                 print ("\33[31m\33[1mCan't connect to the server \33[0m")
+                time.sleep(1)
         # if connceted, send client name to server
         self.socket_send(self.client_name.encode())
 
