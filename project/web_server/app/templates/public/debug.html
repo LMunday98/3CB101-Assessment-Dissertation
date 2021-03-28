@@ -9,14 +9,18 @@
   <!-- CSS -->
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
 
-  <!-- Js classes -->
-  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower_chart.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/rower.js') }}"></script>
-  
   <!-- CDNs -->
-  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+  <!-- Custom fonts for this template-->
+  <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{{ url_for('static',filename='assets/css/sb-admin-2.css') }}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
 </head>
 <body>
   <!-- Socket server calls -->
@@ -38,8 +42,31 @@
   {{ create_data_table () }}
 
   <!-- Chart containers -->
-  <div id="chartContainer_rx" style="height: 300px; width: 100%;"></div>
-  <div id="chartContainer_ry" style="height: 300px; width: 100%;"></div>
+  <div class="row">
+
+    <p>
+      <button id="randomizeData">Randomize Data</button>
+      <button id="addDataset">Add Dataset</button>
+      <button id="removeDataset">Remove Dataset</button>
+      <button id="addData">Add Data</button>
+    </p>
+
+    <div class="col">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Realtime RX Chart</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="rx_chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+  </div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
@@ -48,29 +75,42 @@
   <!-- Js handlers -->
   <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script> -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
 
   <script>
+    create_graph();
+
     setInterval(function(){ 
       var call_url = '/get_data?rower_index=' + '0';
       $.getJSON(call_url, function(results) {
-        var info_dict = results['info']
-        var data_dict = results['data']
+        var info_dict = results['info'];
+        var data_dict = results['data'];
         
-        jQuery.each(data_dict, function(field, val) {
-          element_id = info_dict['seat'] + field
-          display_data(element_id, val)
-        });
-
-        element_id = info_dict['seat'] + 'datetime'
-        datetime = info_dict['datetime']
-        console.log(element_id, datetime);
-        display_data(element_id, datetime)
-
+        update_table(info_dict, data_dict);
       } );
     }, 100);
 
+    function create_graph() {
+      var rx_instance = new RealtimeChart('rx_chart', 'A graph of rx rotation', 'Time (s)', 'X Rotation (deg)');
+      window.onload = function() {
+        var rx_chart = new Chart(rx_instance.get_chart_element(), rx_instance.get_config());
+    };
+    }
+
+    function update_table(info_dict, data_dict) {
+      jQuery.each(data_dict, function(field, val) {
+          element_id = info_dict['seat'] + field;
+          display_data(element_id, val);
+        });
+
+        element_id = info_dict['seat'] + 'datetime'
+        datetime = info_dict['datetime'];
+        console.log(element_id, datetime);
+        display_data(element_id, datetime);
+    }
+
     function display_data(element_id, data) {
-        html_element = document.getElementById(element_id)
+        html_element = document.getElementById(element_id);
         html_element.innerHTML = data;
     }
   </script>
