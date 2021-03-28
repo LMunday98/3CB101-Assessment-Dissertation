@@ -55,16 +55,17 @@
       $.getJSON(call_url, function(results) {
         var info_dict = results['info']
         var data_dict = results['data']
+        var element_id = 
 
         console.log(info_dict, data_dict);
         console.log("");
-        /*
-        jQuery.each(results, function(field, val) {
-          element_id = 'stroke' + field
+        
+        jQuery.each(data_dict, function(field, val) {
+          element_id = info_dict['seat'] + field
           console.log(element_id, val);
-          //display_data(element_id, val)
+          display_data(element_id, val)
         });
-        */
+
       } );
     }, 500);
 
