@@ -54,7 +54,7 @@ class SocketServer:
             except Exception as e:
                 print('Error requesting sensor data')
                 x=1
-            time.sleep(1)
+            time.sleep(.1)
             
     def finish(self):
         print("Closing socket")
