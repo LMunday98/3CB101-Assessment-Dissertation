@@ -11,7 +11,7 @@ class Data:
         self.info_dict = {
             'rower_index' : rowerId,
             'seat' : self.calc_seat(rowerId),
-            'datetime' : str(datetime)
+            'datetime' : str(datetime).split(".")[0]
         }
 
         self.data_dict = {}

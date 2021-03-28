@@ -46,8 +46,6 @@ class DataHandler:
             'data' : data_dict
         }
 
-        print(rower_dict)
-
         self.rower_dicts[rower_index] = rower_dict
     
     def get_rower_dicts(self):
