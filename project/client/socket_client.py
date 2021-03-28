@@ -37,7 +37,7 @@ class SocketClient:
     def send(self):
         print("Send to server")
         pickle_data = self.read_sensor()
-        # self.connection_handler.socket_send(pickle_data)
+        self.connection_handler.socket_send(pickle_data)
                     
     def listen(self):
         self.setup()
