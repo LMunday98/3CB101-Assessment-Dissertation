@@ -10,10 +10,10 @@ class RealtimeChart {
 					label: 'Dataset 1 (Stroke)',
 					backgroundColor: this.color(this.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.red,
-					fill: true,
+					fill: false,
 					cubicInterpolationMode: 'monotone',
 					data: []
-				}, {
+				}/*, {
 					label: 'Dataset 2 (Stroke 2)',
 					backgroundColor: this.color(this.chartColors.blue).alpha(0.5).rgbString(),
 					borderColor: this.chartColors.blue,
@@ -34,7 +34,7 @@ class RealtimeChart {
 					fill: false,
 					cubicInterpolationMode: 'monotone',
 					data: []
-				}]
+				}*/]
 			},
 			options: {
 				title: {
@@ -151,21 +151,21 @@ class RealtimeChart {
 
 	onRefresh(chart) {
 		chart.config.data.datasets.forEach(function(dataset) {
-			//var new_y = this.randomScalingFactor();
+			
+			var call_url = '/get_data?rower_index=' + '0';
+			$.getJSON(call_url, function(results) {
+				var info_dict = results['info'];
+				var data_dict = results['data'];
 
-			let call_url = '/get_data?code=' + 'some_code';
-            $.getJSON(call_url, function(results) {
-				$.each(results, function(seat, data){
-					console.log("seat", seat);
-					console.log("data", data);
-				  });
+				var rx_data = data_dict['rx'];
+
+				var new_y = rx_data;
+				dataset.data.push({
+					x: Date.now(),
+					y: new_y
+				});
 			} );
 
-			var new_y = (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
-			dataset.data.push({
-				x: Date.now(),
-				y: new_y
-			});
 		});
 	}
 
