@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
 </head>
 <body>
+  <br>
   <!-- Socket server calls -->
   <div class="d-flex justify-content-center">
     <form class="row">
@@ -36,18 +37,54 @@
   <div id="session_satus"></div>
   
   <br>
+  <br>
 
   <!-- Rowing data table-->
   {% from "components/data_table.html" import create_data_table with context %}
   {{ create_data_table () }}
 
+  <br>
+  <br>
+
+  <!-- Chart buttons -->
+  <div class="d-flex justify-content-center">
+    
+    <div class="btn-group">
+      <a id="gx" href="#" class="btn btn-primary">GX</a>
+      <a id="gy" href="#" class="btn btn-primary">GY</a>
+      <a id="gz" href="#" class="btn btn-primary">GZ</a>
+    </div>
+
+    <div class="btn-group">
+      <a id="ax" href="#" class="btn btn-success">AX</a>
+      <a id="ay" href="#" class="btn btn-success">AY</a>
+      <a id="az" href="#" class="btn btn-success">AZ</a>
+    </div>
+
+    <div class="btn-group">
+      <a id="sgx" href="#" class="btn btn-warning">SGX</a>
+      <a id="sgy" href="#" class="btn btn-warning">SGY</a>
+      <a id="sgz" href="#" class="btn btn-warning">SGZ</a>
+    </div>
+
+    <div class="btn-group">
+      <a id="sax" href="#" class="btn btn-danger">SAX</a>
+      <a id="say" href="#" class="btn btn-danger">SAY</a>
+      <a id="saz" href="#" class="btn btn-danger">SAZ</a>
+    </div>
+
+    <div class="btn-group">
+      <a id="rx" href="#" class="btn btn-info active" aria-current="page">RX</a>
+      <a id="ry" href="#" class="btn btn-info">RY</a>
+    </div>
+
+  </div>
+
+  <br>  
+  <br>
+
   <!-- Chart containers -->
   <div class="row">
-
-    <p>
-      <button id="rx">rx</button>
-      <button id="ry">ry</button>
-    </p>
 
     <div class="col">
 
@@ -78,15 +115,10 @@
 
   <script>
     let rower_indexes = [0, 1, 2, 3];
-    let data_stream = new DataStream()
-
+    let data_stream = new DataStream();
     create_chart(data_stream);
 
-    bind_chart_button('rx');
-    bind_chart_button('ry');
-
     setInterval(function(){ 
-
       rower_indexes.forEach(rower_index => {
         var call_url = '/get_data?rower_index=' + rower_index;
         $.getJSON(call_url, function(results) {
@@ -95,7 +127,6 @@
           update_table(results);
         } );
       });
-
     }, 100);
         
     function update_table(results) {
@@ -117,10 +148,6 @@
         html_element.innerHTML = data;  
     }
 
-    
-
-    
-        
   </script>
 </body>
 </html>

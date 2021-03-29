@@ -100,16 +100,33 @@ function create_chart(data_stream) {
 
 function bind_chart_button(measurement_label) {
 	document.getElementById(measurement_label).addEventListener('click', function() {
-	  console.log(measurement_label);
-	  display_data('chart_label', 'Realtime ' + measurement_label.toUpperCase() + ' Chart');
-	  data_stream.set_measurement(measurement_label);
-	  destroy_data();
-	  });
-  }
+		console.log(measurement_label);
+		display_data('chart_label', 'Realtime ' + measurement_label.toUpperCase() + ' Chart');
+		data_stream.set_measurement(measurement_label);
+		destroy_data();
+		reset_button_classes();
+		set_button_active(measurement_label);
+	});
+}
 
-  function destroy_data() {
+function reset_button_classes() {
+	var current = document.getElementsByClassName("active");
+    current[0].classList.toggle('active');
+}
+
+function set_button_active(element_id) {
+	html_element = document.getElementById(element_id);
+	html_element.className = html_element.className + ' active';
+}
+
+function destroy_data() {
 	console.log("destroy");
 	window.myChart.config.data.datasets.forEach(function(dataset) {
-	  dataset.data = [];
+		dataset.data = [];
 	});
-  }
+}
+
+let measurements = ['gx', 'gy', 'gz', 'ax', 'ay', 'az', 'sgx', 'sgy', 'sgz', 'sax', 'say', 'saz', 'rx', 'ry'];
+measurements.forEach(measurement_label => {
+	bind_chart_button(measurement_label);
+});
