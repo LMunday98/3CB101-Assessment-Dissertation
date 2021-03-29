@@ -4,12 +4,12 @@ from app import app
 
 @app.route('/')
 def root():
-    return render_template('public/index.html')
+    return render_template('public/debug.html')
 
 @app.route('/public/cox')
 def cox():
     return render_template('public/cox.html')
 
-@app.route('/public/test')
+@app.route('/public/debug')
 def charts():
-    return render_template('public/test.html')
+    return render_template('public/debug.html')

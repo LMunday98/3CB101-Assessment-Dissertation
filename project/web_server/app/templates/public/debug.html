@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug screen</title>
+
+  <!-- CSS -->
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/main.css') }}">
+
+  <!-- CDNs -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+  <!-- Custom fonts for this template-->
+  <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{{ url_for('static',filename='assets/css/sb-admin-2.css') }}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+</head>
+<body>
+
+
+
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <br>
+
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+
+              <!-- Content Row -->
+              <div class="row">
+
+                <div class="col">
+
+                    <!-- Area Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                          <h1 class="h3 mb-2 text-gray-800">Debug Menu</h1>
+                        </div>
+                        <div class="card-body">
+                          <p class="mb-4">
+                            This page is intended for the admin to debug the program.
+                          </p>
+                          <p class="mb-4">
+                            Link to the <a href="public/dashboard">dashboard</a>.
+                          </p>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                          <!-- Socket server calls -->
+                          <div class="d-flex justify-content-center" style="margin: 1em;">
+                            <form class="row">
+                              <a class="col-sm" href=# id=calibrate><button type="button" class='btn btn-primary btn-lg'>Calibrate</button></a>
+                              <a class="col-sm" href=# id=session_start><button class='btn btn-success btn-lg'>Start Session</button></a>
+                              <a class="col-sm" href=# id=session_end><button class='btn btn-warning btn-lg'>End Session</button></a>
+                              <a class="col-sm" href=# id=disconnect_all><button class='btn btn-danger btn-lg'>Disconnect All</button></a>
+                              <a class="col-sm" href=# id=get_data><button class='btn btn-info btn-lg'>Get Data</button></a>
+                            </form>
+                          </div>
+                          <div id="session_satus"></div>
+                      </div>
+                      
+
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                        <!-- Rowing data table-->
+                        {% from "components/data_table.html" import create_data_table with context %}
+                        {{ create_data_table () }}
+                      </div>
+                      
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                            <!-- Chart buttons -->
+                            <div class="d-flex justify-content-center" style="margin: 1em;">
+                              
+                              <div class="btn-group">
+                                <a id="gx" href="#" class="btn btn-primary btn-chart">GX</a>
+                                <a id="gy" href="#" class="btn btn-primary btn-chart">GY</a>
+                                <a id="gz" href="#" class="btn btn-primary btn-chart">GZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="ax" href="#" class="btn btn-success btn-chart">AX</a>
+                                <a id="ay" href="#" class="btn btn-success btn-chart">AY</a>
+                                <a id="az" href="#" class="btn btn-success btn-chart">AZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="sgx" href="#" class="btn btn-warning btn-chart">SGX</a>
+                                <a id="sgy" href="#" class="btn btn-warning btn-chart">SGY</a>
+                                <a id="sgz" href="#" class="btn btn-warning btn-chart">SGZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="sax" href="#" class="btn btn-danger btn-chart">SAX</a>
+                                <a id="say" href="#" class="btn btn-danger btn-chart">SAY</a>
+                                <a id="saz" href="#" class="btn btn-danger btn-chart">SAZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="rx" href="#" class="btn btn-info btn-chart active">RX</a>
+                                <a id="ry" href="#" class="btn btn-info btn-chart align-middle">RY</a>
+                              </div>
+
+                            </div>
+                      </div>
+                      
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                <div class="col">
+            
+                      <!-- Chart containers -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 id="chart_label" class="m-0 font-weight-bold text-primary">Realtime RX Chart</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="realtime_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+              </div>
+
+          </div>
+          <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Js handlers -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/data_stream.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
+
+  <script>
+    let rower_indexes = [0, 1, 2, 3];
+    let data_stream = new DataStream();
+    create_chart(data_stream);
+
+    setInterval(function(){ 
+      rower_indexes.forEach(rower_index => {
+        var call_url = '/get_data?rower_index=' + rower_index;
+        $.getJSON(call_url, function(results) {
+
+          data_stream.update_data(rower_index, results);
+          update_table(results);
+        } );
+      });
+    }, 100);
+        
+    function update_table(results) {
+      var info_dict = results['info'];
+      var data_dict = results['data'];
+      
+      jQuery.each(data_dict, function(field, val) {
+          element_id = info_dict['seat'] + field;
+          display_data(element_id, val);
+      });
+
+      element_id = info_dict['seat'] + 'datetime'
+      datetime = info_dict['datetime'];
+      display_data(element_id, datetime);
+    }
+  
+    function display_data(element_id, data) {
+        html_element = document.getElementById(element_id);
+        html_element.innerHTML = data;  
+    }
+
+  </script>
+</body>
+</html>

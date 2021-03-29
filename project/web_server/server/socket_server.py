@@ -44,7 +44,8 @@ class SocketServer:
             self.server_socket.shutdown(socket.SHUT_RDWR)
             self.server_socket.close()
         except Exception as e:
-            print(e)
+            # print(e)
+            x = 1
 
     def run_send(self):
         while self.run_server:
@@ -53,7 +54,6 @@ class SocketServer:
                 self.connection_handler.send_to_all('send_data')
             except Exception as e:
                 print('Error requesting sensor data')
-                x=1
             time.sleep(.1)
             
     def finish(self):
