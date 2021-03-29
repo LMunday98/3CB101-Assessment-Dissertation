@@ -60,7 +60,7 @@
             </div>
             <div class="card-body">
                 <div class="chart-area">
-                    <canvas id="rx_chart"></canvas>
+                    <canvas id="realtime_chart"></canvas>
                 </div>
             </div>
         </div>
@@ -73,46 +73,49 @@
   <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
   <!-- Js handlers -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/data_stream.js') }}"></script>
   <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/datastream_manager.js') }}"></script> -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/socket_calls.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart-realtime.js') }}"></script>
 
   <script>
-    create_graph();
+    let rower_indexes = [0, 1, 2, 3];
+    let data_stream = new DataStream()
+    create_graph(data_stream);
 
     setInterval(function(){ 
-      var call_url = '/get_data?rower_index=' + '0';
-      $.getJSON(call_url, function(results) {
-        var info_dict = results['info'];
-        var data_dict = results['data'];
-        
-        update_table(info_dict, data_dict);
-      } );
+
+      rower_indexes.forEach(rower_index => {
+        var call_url = '/get_data?rower_index=' + rower_index;
+        $.getJSON(call_url, function(results) {
+
+          data_stream.update_data(rower_index, results);
+          update_table(results);
+        } );
+      });
+
     }, 100);
-
-    function create_graph() {
-      var rx_instance = new RealtimeChart('rx_chart', 'A graph of rx rotation', 'Time (s)', 'X Rotation (deg)');
-      window.onload = function() {
-        var rx_chart = new Chart(rx_instance.get_chart_element(), rx_instance.get_config());
-    };
-    }
-
-    function update_table(info_dict, data_dict) {
+        
+    function update_table(results) {
+      var info_dict = results['info'];
+      var data_dict = results['data'];
+      
       jQuery.each(data_dict, function(field, val) {
           element_id = info_dict['seat'] + field;
           display_data(element_id, val);
-        });
+      });
 
-        element_id = info_dict['seat'] + 'datetime'
-        datetime = info_dict['datetime'];
-        console.log(element_id, datetime);
-        display_data(element_id, datetime);
+      element_id = info_dict['seat'] + 'datetime'
+      datetime = info_dict['datetime'];
+      console.log(element_id, datetime);
+      display_data(element_id, datetime);
     }
-
+  
     function display_data(element_id, data) {
         html_element = document.getElementById(element_id);
-        html_element.innerHTML = data;
+        html_element.innerHTML = data;  
     }
+        
   </script>
 </body>
 </html>
