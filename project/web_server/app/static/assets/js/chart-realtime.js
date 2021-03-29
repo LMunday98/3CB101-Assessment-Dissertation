@@ -1,4 +1,4 @@
-function create_graph(data_stream) {
+function create_chart(data_stream) {
 
 	var chartColors = {
 	  red: 'rgb(255, 99, 132)',
@@ -96,4 +96,20 @@ function create_graph(data_stream) {
 	  var ctx = document.getElementById('realtime_chart').getContext('2d');
 	  window.myChart = new Chart(ctx, config);
 	};
+}
+
+function bind_chart_button(measurement_label) {
+	document.getElementById(measurement_label).addEventListener('click', function() {
+	  console.log(measurement_label);
+	  display_data('chart_label', 'Realtime ' + measurement_label.toUpperCase() + ' Chart');
+	  data_stream.set_measurement(measurement_label);
+	  destroy_data();
+	  });
+  }
+
+  function destroy_data() {
+	console.log("destroy");
+	window.myChart.config.data.datasets.forEach(function(dataset) {
+	  dataset.data = [];
+	});
   }
