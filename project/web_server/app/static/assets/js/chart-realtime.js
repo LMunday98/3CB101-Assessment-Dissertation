@@ -68,9 +68,9 @@ function create_chart(data_stream) {
 		  xAxes: [{
 			type: 'realtime',
 			realtime: {
-			  duration: 20000,
-			  refresh: 1000,
-			  delay: 1000,
+			  duration: 10000,
+			  refresh: 100,
+			  delay: 100,
 			  onRefresh: onRefresh
 			}
 		  }],
@@ -100,7 +100,7 @@ function create_chart(data_stream) {
 
 function bind_chart_button(measurement_label) {
 	document.getElementById(measurement_label).addEventListener('click', function() {
-		console.log(measurement_label);
+		console.log('create ' + measurement_label);
 		display_data('chart_label', 'Realtime ' + measurement_label.toUpperCase() + ' Chart');
 		data_stream.set_measurement(measurement_label);
 		destroy_data();
@@ -120,7 +120,7 @@ function set_button_active(element_id) {
 }
 
 function destroy_data() {
-	console.log("destroy");
+	console.log("destroy data");
 	window.myChart.config.data.datasets.forEach(function(dataset) {
 		dataset.data = [];
 	});
