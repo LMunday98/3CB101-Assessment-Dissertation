@@ -23,85 +23,164 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
 </head>
 <body>
-  <br>
-  <!-- Socket server calls -->
-  <div class="d-flex justify-content-center">
-    <form class="row">
-      <a class="col-sm" href=# id=calibrate><button type="button" class='btn btn-primary btn-lg'>Calibrate</button></a>
-      <a class="col-sm" href=# id=session_start><button class='btn btn-success btn-lg'>Start Session</button></a>
-      <a class="col-sm" href=# id=session_end><button class='btn btn-warning btn-lg'>End Session</button></a>
-      <a class="col-sm" href=# id=disconnect_all><button class='btn btn-danger btn-lg'>Disconnect All</button></a>
-      <a class="col-sm" href=# id=get_data><button class='btn btn-info btn-lg'>Get Data</button></a>
-    </form>
-  </div>
-  <div id="session_satus"></div>
-  
-  <br>
-  <br>
 
-  <!-- Rowing data table-->
-  {% from "components/data_table.html" import create_data_table with context %}
-  {{ create_data_table () }}
 
-  <br>
-  <br>
 
-  <!-- Chart buttons -->
-  <div class="d-flex justify-content-center">
-    
-    <div class="btn-group">
-      <a id="gx" href="#" class="btn btn-primary btn-chart">GX</a>
-      <a id="gy" href="#" class="btn btn-primary btn-chart">GY</a>
-      <a id="gz" href="#" class="btn btn-primary btn-chart">GZ</a>
-    </div>
 
-    <div class="btn-group">
-      <a id="ax" href="#" class="btn btn-success btn-chart">AX</a>
-      <a id="ay" href="#" class="btn btn-success btn-chart">AY</a>
-      <a id="az" href="#" class="btn btn-success btn-chart">AZ</a>
-    </div>
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-    <div class="btn-group">
-      <a id="sgx" href="#" class="btn btn-warning btn-chart">SGX</a>
-      <a id="sgy" href="#" class="btn btn-warning btn-chart">SGY</a>
-      <a id="sgz" href="#" class="btn btn-warning btn-chart">SGZ</a>
-    </div>
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
 
-    <div class="btn-group">
-      <a id="sax" href="#" class="btn btn-danger btn-chart">SAX</a>
-      <a id="say" href="#" class="btn btn-danger btn-chart">SAY</a>
-      <a id="saz" href="#" class="btn btn-danger btn-chart">SAZ</a>
-    </div>
+      <!-- Main Content -->
+      <div id="content">
 
-    <div class="btn-group">
-      <a id="rx" href="#" class="btn btn-info btn-chart active">RX</a>
-      <a id="ry" href="#" class="btn btn-info btn-chart align-middle">RY</a>
-    </div>
+        <br>
 
-  </div>
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
 
-  <br>  
-  <br>
+              <!-- Content Row -->
+              <div class="row">
 
-  <!-- Chart containers -->
-  <div class="row">
+                <div class="col">
 
-    <div class="col">
+                    <!-- Area Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                          <h1 class="h3 mb-2 text-gray-800">Debug Menu</h1>
+                        </div>
+                        <div class="card-body">
+                          <p class="mb-4">
+                            This page is intended for the admin to debug the program.
+                          </p>
+                          <p class="mb-4">
+                            Link to the <a href="public/dashboard">dashboard</a>.
+                          </p>
+                        </div>
+                    </div>
+                    
 
-        <!-- Area Chart -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 id="chart_label" class="m-0 font-weight-bold text-primary">Realtime RX Chart</h6>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="realtime_chart"></canvas>
                 </div>
             </div>
-        </div>
-        
-    </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                          <!-- Socket server calls -->
+                          <div class="d-flex justify-content-center" style="margin: 1em;">
+                            <form class="row">
+                              <a class="col-sm" href=# id=calibrate><button type="button" class='btn btn-primary btn-lg'>Calibrate</button></a>
+                              <a class="col-sm" href=# id=session_start><button class='btn btn-success btn-lg'>Start Session</button></a>
+                              <a class="col-sm" href=# id=session_end><button class='btn btn-warning btn-lg'>End Session</button></a>
+                              <a class="col-sm" href=# id=disconnect_all><button class='btn btn-danger btn-lg'>Disconnect All</button></a>
+                              <a class="col-sm" href=# id=get_data><button class='btn btn-info btn-lg'>Get Data</button></a>
+                            </form>
+                          </div>
+                          <div id="session_satus"></div>
+                      </div>
+                      
+
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                        <!-- Rowing data table-->
+                        {% from "components/data_table.html" import create_data_table with context %}
+                        {{ create_data_table () }}
+                      </div>
+                      
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                  <div class="col">
+
+                      <!-- Area Chart -->
+                      <div class="card shadow mb-4">
+                            <!-- Chart buttons -->
+                            <div class="d-flex justify-content-center" style="margin: 1em;">
+                              
+                              <div class="btn-group">
+                                <a id="gx" href="#" class="btn btn-primary btn-chart">GX</a>
+                                <a id="gy" href="#" class="btn btn-primary btn-chart">GY</a>
+                                <a id="gz" href="#" class="btn btn-primary btn-chart">GZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="ax" href="#" class="btn btn-success btn-chart">AX</a>
+                                <a id="ay" href="#" class="btn btn-success btn-chart">AY</a>
+                                <a id="az" href="#" class="btn btn-success btn-chart">AZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="sgx" href="#" class="btn btn-warning btn-chart">SGX</a>
+                                <a id="sgy" href="#" class="btn btn-warning btn-chart">SGY</a>
+                                <a id="sgz" href="#" class="btn btn-warning btn-chart">SGZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="sax" href="#" class="btn btn-danger btn-chart">SAX</a>
+                                <a id="say" href="#" class="btn btn-danger btn-chart">SAY</a>
+                                <a id="saz" href="#" class="btn btn-danger btn-chart">SAZ</a>
+                              </div>
+
+                              <div class="btn-group">
+                                <a id="rx" href="#" class="btn btn-info btn-chart active">RX</a>
+                                <a id="ry" href="#" class="btn btn-info btn-chart align-middle">RY</a>
+                              </div>
+
+                            </div>
+                      </div>
+                      
+                  </div>
+              </div>
+
+              <!-- Content Row -->
+              <div class="row">
+
+                <div class="col">
+            
+                      <!-- Chart containers -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 id="chart_label" class="m-0 font-weight-bold text-primary">Realtime RX Chart</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="realtime_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+              </div>
+
+          </div>
+          <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
   </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
