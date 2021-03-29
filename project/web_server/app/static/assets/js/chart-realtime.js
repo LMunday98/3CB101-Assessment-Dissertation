@@ -15,14 +15,14 @@ function create_graph(data_stream) {
 	}
 
 	function onRefresh(chart) {
-		var rower_index = 0
-	  chart.config.data.datasets.forEach(function(dataset) {
-		dataset.data.push({
-		  x: Date.now(),
-		  y: data_stream.get_data(rower_index)
-		});
-		rower_index++;
-	  });
+		var rower_index = 0	
+	  	chart.config.data.datasets.forEach(function(dataset) {
+			dataset.data.push({
+		  		x: Date.now(),
+		  		y: data_stream.get_data(rower_index)
+			});
+			rower_index++;
+	  	});
 	}
 
 	var color = Chart.helpers.color;
@@ -61,8 +61,8 @@ function create_graph(data_stream) {
 	  },
 	  options: {
 		title: {
-		  display: true,
-		  text: 'Line chart (hotizontal scroll) sample'
+		  display: false,
+		  text: ''
 		},
 		scales: {
 		  xAxes: [{
@@ -70,7 +70,7 @@ function create_graph(data_stream) {
 			realtime: {
 			  duration: 20000,
 			  refresh: 1000,
-			  delay: 2000,
+			  delay: 1000,
 			  onRefresh: onRefresh
 			}
 		  }],
@@ -96,40 +96,4 @@ function create_graph(data_stream) {
 	  var ctx = document.getElementById('realtime_chart').getContext('2d');
 	  window.myChart = new Chart(ctx, config);
 	};
-
-	document.getElementById('randomizeData').addEventListener('click', function() {
-	  config.data.datasets.forEach(function(dataset) {
-		dataset.data.forEach(function(dataObj) {
-		  dataObj.y = randomScalingFactor();
-		});
-	  });
-	  window.myChart.update();
-	});
-
-	var colorNames = Object.keys(chartColors);
-	document.getElementById('addDataset').addEventListener('click', function() {
-	  var colorName = colorNames[config.data.datasets.length % colorNames.length];
-	  var newColor = chartColors[colorName];
-	  var newDataset = {
-		label: 'Dataset ' + (config.data.datasets.length + 1),
-		backgroundColor: color(newColor).alpha(0.5).rgbString(),
-		borderColor: newColor,
-		fill: false,
-		lineTension: 0,
-		data: []
-	  };
-
-	  config.data.datasets.push(newDataset);
-	  window.myChart.update();
-	});
-
-	document.getElementById('removeDataset').addEventListener('click', function() {
-	  config.data.datasets.pop();
-	  window.myChart.update();
-	});
-
-	document.getElementById('addData').addEventListener('click', function() {
-	  onRefresh(window.myChart);
-	  window.myChart.update();
-	});
   }

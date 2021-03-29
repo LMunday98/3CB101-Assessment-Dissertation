@@ -45,10 +45,8 @@
   <div class="row">
 
     <p>
-      <button id="randomizeData">Randomize Data</button>
-      <button id="addDataset">Add Dataset</button>
-      <button id="removeDataset">Remove Dataset</button>
-      <button id="addData">Add Data</button>
+      <button id="dataset_rx">rx</button>
+      <button id="dataset_ry">ry</button>
     </p>
 
     <div class="col">
@@ -107,13 +105,42 @@
 
       element_id = info_dict['seat'] + 'datetime'
       datetime = info_dict['datetime'];
-      console.log(element_id, datetime);
       display_data(element_id, datetime);
     }
   
     function display_data(element_id, data) {
         html_element = document.getElementById(element_id);
         html_element.innerHTML = data;  
+    }
+/*
+    document.getElementById('dataset_rx').addEventListener('click', function() {
+      console.log("dataset_rx");
+      data_stream.set_measurement('rx');
+      destroy_data();
+    });
+
+    document.getElementById('dataset_ry').addEventListener('click', function() {
+      console.log("dataset_ry");
+      data_stream.set_measurement('ry');
+      destroy_data();
+	  });
+*/
+    bind_chart_button('dataset_rx', 'rx');
+    bind_chart_button('dataset_ry', 'ry');
+
+    function bind_chart_button(element_id, measurement_label) {
+      document.getElementById(element_id).addEventListener('click', function() {
+        console.log(element_id);
+        data_stream.set_measurement(measurement_label);
+        destroy_data();
+	    });
+    }
+
+    function destroy_data() {
+      console.log("destroy");
+      window.myChart.config.data.datasets.forEach(function(dataset) {
+        dataset.data = [];
+      });
     }
         
   </script>
