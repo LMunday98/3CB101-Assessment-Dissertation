@@ -1,12 +1,12 @@
 import socket, threading
-from multi_client import MultiClient
+from socket_client import SocketClient
 
 class ClientManager:
     def __init__(self):
-        self.rower_index = self.get_rower_index()
-        self.create_new_client(self.rower_index)
         self.clients = []
         self.threads = []
+        self.rower_index = self.get_rower_index()
+        self.create_new_client(self.rower_index)
 
     def get_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,11 +32,12 @@ class ClientManager:
         return ip_dict[ip]
 
     def create_new_client(self, rower_index):
-        self.clients.append(MultiClient(rower_index))
+        self.clients.append(SocketClient(rower_index))
 
     def thread_clients(self):
         for client in self.clients:
-            threads.append(threading.Thread(target=client.run))
+            #self.threads.append(threading.Thread(target=client.send))
+            self.threads.append(threading.Thread(target=client.listen))
 
         for thread in self.threads:
             thread.setDaemon(True)
@@ -47,7 +48,7 @@ class ClientManager:
 
     def finish_threads(self):
         try:
-            input("Press enter to shutdown server")
+            input("Press enter to shutdown client\n")
         except Exception as e:
             print("Force quit")
 

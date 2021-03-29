@@ -130,3 +130,5 @@ dmypy.json
 
 # Custom
 *.csv
+data/
+startbootstrap-sb-admin-2-gh-pages/

@@ -1,0 +1,23 @@
+{% macro create_data_table () %}
+
+    {% set seats = ["stroke", "stroke2", "bow2", "bow"] %}
+    {% set table_labels = ["gx", "gy", "gz", "ax", "ay", "az", "sgx", "sgy", "sgz", "sax", "say", "saz", "rx", "ry", "datetime"] %}
+
+    <table class="table caption-top">
+        <tr class="table-light">
+            <th scope="col">Position</th>
+            {% for table_label in table_labels %}
+            <th scope="col">{{ table_label }}</th>
+            {% endfor %}
+        </tr>
+        {% for seat in seats %}
+        <tr>
+            <td>{{ seat }}</td>
+            {% for table_label in table_labels %}
+            <td id="{{seat}}{{table_label}}">{{seat}} {{ table_label }}</td>
+            {% endfor %}
+        </tr> 
+        {% endfor %}
+    </table>
+
+{% endmacro %}
