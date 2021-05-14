@@ -20,7 +20,7 @@ class SocketServer:
                 self.server_socket.listen(10)
                 break
             except Exception as e:
-                print("Couldnt create socket server")
+                print("Couldnt create socket server\t", e, "\t", datetime.datetime.now().time().strftime('%H:%M:%S'))
             time.sleep(1)
         
     def setup(self):

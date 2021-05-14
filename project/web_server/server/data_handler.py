@@ -1,4 +1,6 @@
-import pickle, json, datetime
+import pickle, json, datetime, sys
+sys.path.append("../mpu")
+from data import Data
 
 class DataHandler:
     def __init__(self):

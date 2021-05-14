@@ -90,7 +90,7 @@ class ConnectionHandler:
         sock.send(message.encode())
     
     def send_to_all(self, message):
-        print("Send to all", message)
+        # print("Send to all", message)
         for connection_index in range(1,len(self.connected_list)):
             sock = self.connected_list[connection_index]
             self.send_message(sock, message)

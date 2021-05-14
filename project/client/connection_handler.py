@@ -7,6 +7,7 @@ class ConnectionHandler:
         self.host = "192.168.0.184"
         self.port = 5001
         self.buffer = 4096
+        self.is_connected = True
 
     def socket_create(self):
         print ("\33[93m\33[1m Create socket \33[0m")
@@ -35,7 +36,11 @@ class ConnectionHandler:
     def socket_close(self):
         print ("\33[31m\33[1m Closing socket \33[0m")
         self.client_socket.shutdown(socket.SHUT_RDWR)
-        self.client_socket.close()
+        try:
+            self.client_socket.close()
+        except Exception as e:
+            print (e)
+        self.is_connected = False;
 
     def socket_send(self, data):
         self.client_socket.send(data)
@@ -50,3 +55,6 @@ class ConnectionHandler:
                 return socket_code
         except Exception as e:
             return 0
+
+    def check_connection(self):
+        return self.is_connected
