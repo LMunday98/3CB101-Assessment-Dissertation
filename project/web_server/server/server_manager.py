@@ -5,6 +5,7 @@ class ServerManager:
     def __init__(self):
         self.socket_server = SocketServer()
         self.threads = []
+        self.socket_ip = self.socket_server.get_ip()
 
     def create_thread(self, thread_target):
         print('Create thread')
@@ -31,3 +32,6 @@ class ServerManager:
 
     def get_socket_instance(self):
         return self.socket_server
+
+    def get_socket_ip(self):
+        return self.socket_ip

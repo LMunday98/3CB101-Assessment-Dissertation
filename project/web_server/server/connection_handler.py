@@ -3,12 +3,13 @@ from server.data_handler import DataHandler
 
 class ConnectionHandler:
 
-    def __init__(self, server_socket, buffer):
+    def __init__(self, server_socket, buffer, socket_ip):
         self.names = []
         self.record = {}
         self.buffer = buffer
         self.connected_list = []
-        self.data_handler = DataHandler()
+        self.socket_ip = socket_ip
+        self.data_handler = DataHandler(socket_ip)
         self.server_socket = server_socket
         self.add_connection(server_socket)
 
@@ -87,7 +88,12 @@ class ConnectionHandler:
             self.disconnect_client(sock)
 
     def send_message(self, sock, message):
-        sock.send(message.encode())
+        try:
+            sock.send(message.encode())
+        except Exception as e:
+            print("Error sending message to\t", sock)
+            print("Disconnecting client...")
+            self.disconnect_client(sock)
     
     def send_to_all(self, message):
         # print("Send to all", message)
