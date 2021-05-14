@@ -44,7 +44,7 @@ class ConnectionHandler:
                         self.recieve_data(sock)
                     #abrupt user exit
                     except Exception:
-                        # traceback.print_exc()
+                        traceback.print_exc()
                         self.disconnect_client(sock)
         except:
             #print("No connections")
