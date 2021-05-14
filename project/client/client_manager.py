@@ -22,6 +22,7 @@ class ClientManager:
 
     def get_rower_index(self):
         ip_dict = {
+            "192.168.0.185" : -1, # Host
             "192.168.0.184" : -1, # Host
             "192.168.0.186" : 0,  # Bow
             "192.168.0.162" : 1,  # Bow 2

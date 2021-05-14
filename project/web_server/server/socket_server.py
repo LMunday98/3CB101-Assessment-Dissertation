@@ -3,29 +3,42 @@ from shutil import copyfile
 from server.file_handler import FileHandler
 from server.connection_handler import ConnectionHandler
 
-sys.path.append("..")
-import mpu
+# sys.path.append("..")
+# import mpu
 
 class SocketServer:
     def __init__(self):
         self.buffer = 4096
         self.port = 5001
+        self.local_ip = self.get_ip()
         self.create_socket()
     
     def create_socket(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             try:
-                self.server_socket.bind(("192.168.0.184", self.port))
+                self.server_socket.bind((self.local_ip, self.port))
                 self.server_socket.listen(10)
                 break
             except Exception as e:
                 print("Couldnt create socket server\t", e, "\t", datetime.datetime.now().time().strftime('%H:%M:%S'))
             time.sleep(1)
+
+    def get_ip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(('10.255.255.255', 1))
+            ip = s.getsockname()[0]
+        except Exception as e:
+            print(e)
+            print(ip)
+        finally:
+            s.close()
+        return ip
         
     def setup(self):
         # Add server socket to the list of readable connections
-        self.connection_handler = ConnectionHandler(self.server_socket, self.buffer)
+        self.connection_handler = ConnectionHandler(self.server_socket, self.buffer, self.local_ip)
 
         # Setup server handlers
         self.file_handler = FileHandler()
@@ -53,7 +66,8 @@ class SocketServer:
                 #print('Request data')
                 self.connection_handler.send_to_all('send_data')
             except Exception as e:
-                print('Error requesting sensor data')
+                # print('Error requesting sensor data')
+                x=1
             time.sleep(.1)
             
     def finish(self):
