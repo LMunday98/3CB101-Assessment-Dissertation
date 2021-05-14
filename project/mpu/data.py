@@ -38,8 +38,8 @@ class Data:
 
         self.round_data()
 
-        print('\nInfo dict: ', self.info_dict)
-        print('\nData dict: ', self.data_dict)
+        # print('\nInfo dict: ', self.info_dict)
+        # print('\nData dict: ', self.data_dict)
 
     # Processing functions
 

@@ -62,5 +62,11 @@ class SocketClient:
             print("Disconnecting client")
             self.connection_handler.socket_close()
 
+    def check_client(self):
+        self.run_client = self.connection_handler.check_connection()
+
     def finish(self):
         sys.exit()
+
+    def get_client_run(self):
+        return self.run_client
