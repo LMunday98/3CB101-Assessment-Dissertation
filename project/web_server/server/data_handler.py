@@ -1,9 +1,14 @@
 import pickle, json, datetime, sys
-sys.path.append("../mpu")
-from data import Data
 
 class DataHandler:
-    def __init__(self):
+    def __init__(self, socket_ip):
+        if socket_ip == '192.168.0.184':
+            sys.path.append("../mpu")
+        else:
+            sys.path.append("/home/pi/Documents/3CB101-Pi/project/mpu")
+        from data import Data
+
+        self.socket_ip = socket_ip
         self.rower_dicts = []
         self.rower_indexes = [0, 1, 2, 3]
 

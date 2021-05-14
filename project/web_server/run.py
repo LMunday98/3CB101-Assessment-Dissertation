@@ -2,7 +2,7 @@ import threading
 
 def thread_flask_server():
     print("\nStart Flask Server\n")
-    flask_thread = threading.Thread(target=app.run(host='192.168.0.184', port=4444))
+    flask_thread = threading.Thread(target=app.run(host=socket_ip, port=4444))
     flask_thread.setDaemon(True)
     flask_thread.start()
 

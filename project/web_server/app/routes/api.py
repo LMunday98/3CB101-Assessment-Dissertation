@@ -9,6 +9,8 @@ server_manager_instance = ServerManager()
 server_manager_instance.setup()
 server_manager_instance.start()
 
+socket_ip = server_manager_instance.get_socket_ip()
+
 @app.route('/socket_call')
 def socket_call():
     socket_instance = server_manager_instance.get_socket_instance()
