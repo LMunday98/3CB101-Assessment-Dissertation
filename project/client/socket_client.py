@@ -60,7 +60,7 @@ class SocketClient:
             self.sensor.calibrate()
         elif socket_code == "disconnect_all":
             print("Disconnecting client")
-            self.connection_handler.socket_reconnect()
+            self.connection_handler.socket_close()
 
     def finish(self):
         sys.exit()
