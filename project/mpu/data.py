@@ -1,6 +1,6 @@
 import datetime
 import json
-from .calcs import Calc
+from calcs import Calc
 
 class Data:
 
@@ -38,14 +38,14 @@ class Data:
 
         self.round_data()
 
-        print('\nInfo dict: ', self.info_dict)
-        print('\nData dict: ', self.data_dict)
+        # print('\nInfo dict: ', self.info_dict)
+        # print('\nData dict: ', self.data_dict)
 
     # Processing functions
 
     def round_data(self):
         for key, value in self.data_dict.items():
-            self.data_dict[key] = round(value, 2)
+            self.data_dict[key] = round(value, 0)
 
     def dict_append(self, data):
         for key, value in data.items():

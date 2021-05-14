@@ -1,7 +1,11 @@
 import socket, select, string, sys, time, pickle
 from connection_handler import ConnectionHandler
-sys.path.append("..")
-from mpu.sensor import Sensor
+print(str(sys.path))
+print("\n\n\n")
+sys.path.append('/home/pi/Documents/3CB101-Pi/project/mpu')
+print(str(sys.path))
+print("\n\n\n")
+from sensor import Sensor
 
 class SocketClient:
     def __init__(self, client_index):
@@ -23,7 +27,7 @@ class SocketClient:
             except Exception as e:
                 print ("\33[31m\33[1mError setting up the sensor \33[0m")
                 print (e)
-                time.sleep(1)    
+                time.sleep(1)
 
     def read_sensor(self):
         try:
@@ -33,7 +37,7 @@ class SocketClient:
             print ("\n\33[93m\33[1mReinitalising sensor \33[0m")
             print (e)
             self.setup_sensor()
-        
+
     def send(self):
         try:
             print("Send to server")
@@ -41,13 +45,13 @@ class SocketClient:
             self.connection_handler.socket_send(pickle_data)
         except Exception as e:
             print (e)
-                    
+
     def listen(self):
         self.setup()
         while self.run_client:
             socket_code = self.connection_handler.connection_listen()
             self.execute_code(socket_code)
-            
+
     def execute_code(self, socket_code):
         if socket_code == "send_data":
             self.send()
@@ -56,7 +60,13 @@ class SocketClient:
             self.sensor.calibrate()
         elif socket_code == "disconnect_all":
             print("Disconnecting client")
-            self.connection_handler.socket_reconnect()
+            self.connection_handler.socket_close()
+
+    def check_client(self):
+        self.run_client = self.connection_handler.check_connection()
 
     def finish(self):
         sys.exit()
+
+    def get_client_run(self):
+        return self.run_client

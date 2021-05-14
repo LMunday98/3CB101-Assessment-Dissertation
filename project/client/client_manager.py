@@ -13,12 +13,13 @@ class ClientManager:
         try:
             s.connect(('10.255.255.255', 1))
             ip = s.getsockname()[0]
-        except Exception:
-            ip = '127.0.0.1'
+        except Exception as e:
+            print(e)
+            print(ip)
         finally:
             s.close()
         return ip
-        
+
     def get_rower_index(self):
         ip_dict = {
             "192.168.0.184" : -1, # Host
@@ -29,6 +30,7 @@ class ClientManager:
         }
 
         ip = self.get_ip()
+        print(ip)
         return ip_dict[ip]
 
     def create_new_client(self, rower_index):
@@ -36,7 +38,7 @@ class ClientManager:
 
     def thread_clients(self):
         for client in self.clients:
-            #self.threads.append(threading.Thread(target=client.send))
+            # self.threads.append(threading.Thread(target=client.check_client))
             self.threads.append(threading.Thread(target=client.listen))
 
         for thread in self.threads:
@@ -46,11 +48,23 @@ class ClientManager:
         for thread in self.threads:
             thread.start()
 
-    def finish_threads(self):
+    def wait_input(self):
         try:
             input("Press enter to shutdown client\n")
         except Exception as e:
             print("Force quit")
+
+    def wait_disconnect(self):
+        print("Wait disconnect...")
+        client = self.clients[0]
+        run = True
+        while run:
+            run = client.get_client_run()
+            client.check_client()
+
+    def finish_threads(self):
+        # self.wait_input()
+        self.wait_disconnect()
 
         for client in self.clients:
             client.finish()
