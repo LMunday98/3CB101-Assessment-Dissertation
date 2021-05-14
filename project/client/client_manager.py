@@ -13,12 +13,13 @@ class ClientManager:
         try:
             s.connect(('10.255.255.255', 1))
             ip = s.getsockname()[0]
-        except Exception:
-            ip = '127.0.0.1'
+        except Exception as e:
+            print(e)
+            print(ip)
         finally:
             s.close()
         return ip
-        
+
     def get_rower_index(self):
         ip_dict = {
             "192.168.0.184" : -1, # Host
@@ -29,6 +30,7 @@ class ClientManager:
         }
 
         ip = self.get_ip()
+        print(ip)
         return ip_dict[ip]
 
     def create_new_client(self, rower_index):
@@ -58,4 +60,7 @@ class ClientManager:
     def run(self):
         self.thread_clients()
         self.start_threads()
+        print("Running...")
+        while True:
+            x=1
         self.finish_threads()
