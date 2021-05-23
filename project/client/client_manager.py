@@ -43,7 +43,7 @@ class ClientManager:
             self.threads.append(threading.Thread(target=client.listen))
 
         for thread in self.threads:
-            thread.setDaemon(False)
+            thread.setDaemon(True)
 
     def start_threads(self):
         for thread in self.threads:
@@ -61,7 +61,7 @@ class ClientManager:
 
     def finish_threads(self):
         # self.wait_input()
-        # self.wait_disconnect()
+        self.wait_disconnect()
 
         for client in self.clients:
             client.finish()
@@ -69,4 +69,4 @@ class ClientManager:
     def run(self):
         self.thread_clients()
         self.start_threads()
-        # self.finish_threads()
+        self.finish_threads()
