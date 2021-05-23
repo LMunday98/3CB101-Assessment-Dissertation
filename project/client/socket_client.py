@@ -67,7 +67,7 @@ class SocketClient:
     def monitor(self):
         while self.run_client:
             self.client_connected = self.connection_handler.check_connection()
-            print("Check connected", self.client_connected)
+            # print("Check connected", self.client_connected)
             time.sleep(1)
 
     def finish(self):
