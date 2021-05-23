@@ -1,7 +1,7 @@
-import time
-
+import time, sys
 from app import app
-from server.server_manager import ServerManager
+sys.path.append("server")
+from server_manager import ServerManager
 from flask import Flask, Response, request, render_template, redirect
 
 global server_manager_instance

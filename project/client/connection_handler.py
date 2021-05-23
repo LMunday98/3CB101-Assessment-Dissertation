@@ -7,10 +7,10 @@ class ConnectionHandler:
         self.host = "192.168.0.184"
         self.port = 5001
         self.buffer = 4096
-        self.is_connected = True
+        self.is_connected = False
 
     def socket_create(self):
-        print ("\33[93m\33[1m Create socket \33[0m")
+        print ("\33[93m\33[1mCreate socket \33[0m")
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.settimeout(2)
 
@@ -20,6 +20,7 @@ class ConnectionHandler:
                 print ("\33[93m\33[1mConnecting to server \33[0m")
                 self.client_socket.connect((self.host, self.port))
                 print ("\33[32m\33[1mConnected to server \33[0m")
+                self.is_connected = True
                 break
             except :
                 print ("\33[31m\33[1mCan't connect to the server \33[0m")
@@ -34,8 +35,12 @@ class ConnectionHandler:
         self.socket_connect()
 
     def socket_close(self):
+        print ("\33[31m\33[1m Shutting down socket \33[0m")
+        try:
+            self.client_socket.shutdown(socket.SHUT_RDWR)
+        except Exception as e:
+            print (e)
         print ("\33[31m\33[1m Closing socket \33[0m")
-        self.client_socket.shutdown(socket.SHUT_RDWR)
         try:
             self.client_socket.close()
         except Exception as e:
@@ -49,6 +54,9 @@ class ConnectionHandler:
         try:
             data = self.client_socket.recv(self.buffer)
             if not data :
+                print ("\33[31m\33[1mCan't connect to the server \33[0m")
+                self.is_connected = False
+                self.socket_reconnect()
                 return 0
             else :
                 socket_code = data.decode()
