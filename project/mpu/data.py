@@ -1,11 +1,7 @@
-import datetime
-import json
-import math
+import datetime, json, math, socket
 from calcs import Calc
 
 class Data:
-
-    rowerId = 0
 
     def __init__(self, rowerId, sensor_readings, calibration_offsets):
         self.sensor_readings = sensor_readings
@@ -13,7 +9,8 @@ class Data:
         self.info_dict = {
             'rower_index' : rowerId,
             'seat' : self.calc_seat(rowerId),
-            'datetime' : str(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S"))
+            'datetime' : str(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")),
+            'ip' : socket.gethostbyname(socket.gethostname())
         }
 
         self.sensor_readings['scaled_gyro'] = self.scale_data(sensor_readings['gyro'], 131)
@@ -54,17 +51,6 @@ class Data:
     def calc_seat(self, rower_index):
         seats = ['stroke', 'stroke2', 'bow2', 'bow']
         return seats[rower_index]
-
-    # Get specific data functions
-
-    def get_rower_index(self):
-        return self.info_dict['rower_index']
-
-    def get_seat_name(self):
-        return self.info_dict['seat']
-
-    def get_datetime(self):
-        return self.info_dict['datetime']
 
     # Get dict functions
 
