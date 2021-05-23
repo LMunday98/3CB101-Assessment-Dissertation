@@ -56,14 +56,13 @@ class SocketClient:
     def execute_code(self, socket_code):
         if socket_code == "send_data":
             self.send()
-        elif socket_code == "shutdown":
-            self.run_client = False
         elif socket_code == "calibrate":
             print("Calibration call")
             self.sensor.calibrate()
         elif socket_code == "disconnect_all":
             print("Disconnecting client")
             self.connection_handler.socket_close()
+            self.run_client = False
 
     def monitor(self):
         while self.run_client:
@@ -72,4 +71,5 @@ class SocketClient:
             time.sleep(1)
 
     def finish(self):
+        self.connection_handler.socket_close()
         sys.exit()

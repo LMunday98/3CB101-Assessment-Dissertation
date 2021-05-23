@@ -10,7 +10,7 @@ class ConnectionHandler:
         self.is_connected = False
 
     def socket_create(self):
-        print ("\33[93m\33[1m Create socket \33[0m")
+        print ("\33[93m\33[1mCreate socket \33[0m")
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.settimeout(2)
 
@@ -35,8 +35,12 @@ class ConnectionHandler:
         self.socket_connect()
 
     def socket_close(self):
+        print ("\33[31m\33[1m Shutting down socket \33[0m")
+        try:
+            self.client_socket.shutdown(socket.SHUT_RDWR)
+        except Exception as e:
+            print (e)
         print ("\33[31m\33[1m Closing socket \33[0m")
-        self.client_socket.shutdown(socket.SHUT_RDWR)
         try:
             self.client_socket.close()
         except Exception as e:
