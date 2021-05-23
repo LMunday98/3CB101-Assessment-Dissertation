@@ -10,6 +10,7 @@ from sensor import Sensor
 class SocketClient:
     def __init__(self, client_index):
         self.run_client = True
+        self.client_connected = True
         self.client_index = client_index
         self.connection_handler = ConnectionHandler(str(client_index))
 
@@ -55,6 +56,8 @@ class SocketClient:
     def execute_code(self, socket_code):
         if socket_code == "send_data":
             self.send()
+        elif socket_code == "shutdown":
+            self.run_client = False
         elif socket_code == "calibrate":
             print("Calibration call")
             self.sensor.calibrate()
@@ -62,11 +65,11 @@ class SocketClient:
             print("Disconnecting client")
             self.connection_handler.socket_close()
 
-    def check_client(self):
-        self.run_client = self.connection_handler.check_connection()
+    def monitor(self):
+        while self.run_client:
+            self.client_connected = self.connection_handler.check_connection()
+            print("Check connected", self.client_connected)
+            time.sleep(1)
 
     def finish(self):
         sys.exit()
-
-    def get_client_run(self):
-        return self.run_client
