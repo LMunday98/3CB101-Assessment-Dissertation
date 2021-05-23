@@ -22,8 +22,8 @@ class Sensor():
         self.bus = smbus.SMBus(1)
         self.bus.write_byte_data(self.MPU_6050_ADDR, self.PWR_MGMT_1, 0)
         self.calibration_offsets = {
-            'x_offset' : 0,
-            'y_offset' : 0
+            'rx' : 0,
+            'ry' : 0
         }
 
     def read_byte(self, reg):
@@ -44,6 +44,10 @@ class Sensor():
 
     def calibrate(self):
         print("Calibrating sensor...")
+        calibration_reading = self.get_data().get_data_dict()
+        self.calibration_offsets['rx'] = self.calibration_offsets['rx'] + calibration_reading['rx']
+        self.calibration_offsets['ry'] = self.calibration_offsets['ry'] + calibration_reading['ry']
+        print(self.calibration_offsets)
 
     def get_data(self):
         gyro = {
@@ -57,5 +61,5 @@ class Sensor():
             'ay' : self.read_word_2c(self.ACCEL_Y),
             'az' : self.read_word_2c(self.ACCEL_Z)
         }
-        
+
         return Data(self.rowerId, { 'gyro' : gyro, 'accel' : accel }, self.calibration_offsets)

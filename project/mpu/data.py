@@ -19,9 +19,13 @@ class Data:
         self.sensor_readings['scaled_gyro'] = self.scale_data(sensor_readings['gyro'], 131)
         self.sensor_readings['scaled_accel'] = self.scale_data(sensor_readings['accel'], 16384.0)
 
+        s_acc = self.sensor_readings['scaled_accel']
+        raw_rx = Calc().get_x_rotation(s_acc['sax'], s_acc['say'], s_acc['saz'])
+        raw_ry = Calc().get_y_rotation(s_acc['sax'], s_acc['say'], s_acc['saz'])
+
         self.sensor_readings['rotation'] = {
-            'rx' : Calc().get_x_rotation(self.sensor_readings['scaled_accel']['sax'], self.sensor_readings['scaled_accel']['say'], self.sensor_readings['scaled_accel']['saz']),
-            'ry' : Calc().get_y_rotation(self.sensor_readings['scaled_accel']['sax'], self.sensor_readings['scaled_accel']['say'], self.sensor_readings['scaled_accel']['saz'])
+            'rx' : raw_rx - calibration_offsets['rx'],
+            'ry' : raw_ry - calibration_offsets['ry']
         }
 
         self.dict_append()
