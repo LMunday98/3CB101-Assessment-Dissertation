@@ -31,7 +31,6 @@ class ClientManager:
         }
 
         ip = self.get_ip()
-        print(ip)
         return ip_dict[ip]
 
     def create_new_client(self, rower_index):

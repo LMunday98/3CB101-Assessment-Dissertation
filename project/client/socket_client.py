@@ -1,10 +1,6 @@
 import socket, select, string, sys, time, pickle
 from connection_handler import ConnectionHandler
-print(str(sys.path))
-print("\n\n\n")
 sys.path.append('/home/pi/Documents/3CB101-Pi/project/mpu')
-print(str(sys.path))
-print("\n\n\n")
 from sensor import Sensor
 
 class SocketClient:
