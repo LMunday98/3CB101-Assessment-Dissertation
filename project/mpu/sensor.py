@@ -41,17 +41,6 @@ class Sensor():
             return -((65535 - val) + 1)
         else:
             return val
-    
-    def dist(self, a,b):
-        return math.sqrt((a*a)+(b*b))
-    
-    def get_y_rotation(self, x,y,z):
-        radians = math.atan2(x, self.dist(y,z))
-        return -math.degrees(radians)
-    
-    def get_x_rotation(self, x,y,z):
-        radians = math.atan2(y, self.dist(x,z))
-        return math.degrees(radians)
 
     def calibrate(self):
         print("Calibrating sensor...")
@@ -63,54 +52,10 @@ class Sensor():
             'gz' : self.read_word_2c(self.GYRO_Z)
         }
 
-        scaled_gyro = {
-            'sgx' : gyro['gx'] / 131,
-            'sgy' : gyro['gy'] / 131,
-            'sgz' : gyro['gz'] / 131
-        }
-
         accel = {
             'ax' : self.read_word_2c(self.ACCEL_X),
             'ay' : self.read_word_2c(self.ACCEL_Y),
             'az' : self.read_word_2c(self.ACCEL_Z)
         }
-
-        scaled_accel = {
-            'sax' : accel['ax'] / 16384.0,
-            'say' : accel['ay'] / 16384.0,
-            'saz' : accel['az'] / 16384.0
-        }
-
-        rotation = {
-            'rx' : self.get_x_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz']),
-            'ry' : self.get_y_rotation(scaled_accel['sax'], scaled_accel['say'], scaled_accel['saz'])
-        }
-
-        sensor_readings = {
-            'gyro' : gyro,
-            'scaled_gyro' : scaled_gyro,
-            'accel' : accel,
-            'scaled_accel' : scaled_accel,
-            'rotation' : rotation
-        }
-
-        print ("gyro")
-        print ("--------")
         
-        print ("gyro_xout: ", ("%5d" % gyro['gx']), " scaled: ", (scaled_gyro['sgx']))
-        print ("gyro_yout: ", ("%5d" % gyro['gy']), " scaled: ", (scaled_gyro['sgy']))
-        print ("gyro_zout: ", ("%5d" % gyro['gz']), " scaled: ", (scaled_gyro['sgz']))
-        
-        print
-        print ("accelerometer")
-        print ("---------------------")
-        
-        print ("accel_xout: ", ("%6d" % accel['ax']), " scaled: ", scaled_accel['sax'])
-        print ("accel_yout: ", ("%6d" % accel['ay']), " scaled: ", scaled_accel['say'])
-        print ("accel_zout: ", ("%6d" % accel['az']), " scaled: ", scaled_accel['saz'])
-        
-        print ("X Rotation: " , rotation['rx'])
-        print ("Y Rotation: " , rotation['ry'])
-
-        data = Data(self.rowerId, sensor_readings, self.calibration_offsets)
-        return data
+        return Data(self.rowerId, { 'gyro' : gyro, 'accel' : accel }, self.calibration_offsets)
