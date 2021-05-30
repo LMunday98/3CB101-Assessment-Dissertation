@@ -41,13 +41,11 @@ class FileHandler:
         f.close()
 
     def set_session_status(self, record_session):
-        if (record_session):
-            realtime = self.file_details['realtime']
-            os.remove(realtime['path'] + realtime['file_name'])
-        else:
+        if (not record_session):
             realtime = self.file_details['realtime']
             copy = self.file_details['copy']
             copyfile(realtime['path'] + realtime['file_name'], copy['path'] + self.get_session_name())
+            os.remove(realtime['path'] + realtime['file_name'])
         self.record_session = record_session
 
     def get_session_name(self):
