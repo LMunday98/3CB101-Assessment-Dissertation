@@ -18,6 +18,7 @@ class ServerManager:
         self.socket_server.setup()
         self.create_thread(self.socket_server.run_listen)
         self.create_thread(self.socket_server.run_send)
+        self.create_thread(self.socket_server.record_data)
 
         print('Set dameon')
         for thread in self.threads:
