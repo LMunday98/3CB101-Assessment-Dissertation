@@ -7,7 +7,6 @@ class DataHandler:
             sys.path.append("../mpu")
         else:
             sys.path.append("/home/pi/Documents/3CB101-Pi/project/mpu")
-        print(str(sys.path))
         from data import Data
 
         self.socket_ip = socket_ip
