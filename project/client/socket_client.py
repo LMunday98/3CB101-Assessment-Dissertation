@@ -1,10 +1,6 @@
 import socket, select, string, sys, time, pickle
 from connection_handler import ConnectionHandler
-print(str(sys.path))
-print("\n\n\n")
 sys.path.append('/home/pi/Documents/3CB101-Pi/project/mpu')
-print(str(sys.path))
-print("\n\n\n")
 from sensor import Sensor
 
 class SocketClient:
@@ -41,7 +37,7 @@ class SocketClient:
 
     def send(self):
         try:
-            print("Send to server")
+            # print("Send to server")
             pickle_data = self.read_sensor()
             self.connection_handler.socket_send(pickle_data)
         except Exception as e:
@@ -67,7 +63,7 @@ class SocketClient:
     def monitor(self):
         while self.run_client:
             self.client_connected = self.connection_handler.check_connection()
-            print("Check connected", self.client_connected)
+            # print("Check connected", self.client_connected)
             time.sleep(1)
 
     def finish(self):

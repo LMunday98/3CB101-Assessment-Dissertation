@@ -1,5 +1,4 @@
 import sys, time, datetime, socket, traceback, select
-from shutil import copyfile
 from server.file_handler import FileHandler
 from server.connection_handler import ConnectionHandler
 
@@ -42,6 +41,7 @@ class SocketServer:
 
         # Setup server handlers
         self.file_handler = FileHandler()
+        self.data_handler = self.connection_handler.get_data_handler()
 
         # Runtime vars
         self.run_server = True
@@ -69,28 +69,32 @@ class SocketServer:
                 # print('Error requesting sensor data')
                 x=1
             time.sleep(.1)
+
+    def record_data(self):
+        while self.run_server:
+            try:
+                self.file_handler.record_data(self.data_handler.get_rower_dicts())
+            except Exception as e:
+                print(e)
+                # x=1
+            time.sleep(.1)
             
     def finish(self):
         print("Closing socket")
         self.run_server = False
-        # copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
 
     def get_latest_data(self, rower_index):
-        data_handler = self.connection_handler.get_data_handler()
-        return data_handler.get_rower_json(int(rower_index))
+        return self.data_handler.get_rower_json(int(rower_index))
 
     def server_request(self, socket_code):
         if socket_code == "session_start":
             print("Start session")
-            self.record_session = True
-            self.new_session()
+            self.file_handler.set_session_status(True)
         elif socket_code == "session_end":
             print("End session")
-            copyfile("data/realtime_analysis/session_data.csv", "data/captured_analysis/session_data_" + str(self.session_name) + ".csv")
-            self.record_session = False
+            self.file_handler.set_session_status(False)
         elif socket_code == "disconnect_all":
             print("Disconnect clients")
             self.connection_handler.disconnect_all(socket_code)
-            #self.setup()
         else:
             self.connection_handler.send_to_all(socket_code)
