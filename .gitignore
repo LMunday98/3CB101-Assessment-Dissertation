@@ -132,3 +132,4 @@ dmypy.json
 *.csv
 data/
 startbootstrap-sb-admin-2-gh-pages/
+test.py

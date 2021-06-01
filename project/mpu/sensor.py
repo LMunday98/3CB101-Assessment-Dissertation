@@ -1,36 +1,40 @@
 import smbus
 import time
 import datetime
+import math
 from data import Data
 
 class Sensor():
 
-    # Register
-    power_mgmt_1 = 0x6b
-    power_mgmt_2 = 0x6c
+    # Mpu 6050 registers
 
-    address = 0x68       # via i2cdetect
+    MPU_6050_ADDR   = 0x68
+    PWR_MGMT_1      = 0x6b
+    GYRO_X          = 0x43
+    GYRO_Y          = 0x45
+    GYRO_Z          = 0x47
+    ACCEL_X         = 0x3b
+    ACCEL_Y         = 0x3d
+    ACCEL_Z         = 0x3f
 
     def __init__(self, rowerId):
         self.rowerId = rowerId
-
-        # Setup
-        self.bus = smbus.SMBus(1) # bus = smbus.SMBus(0) for Revision 1
-
-        # Activate to be able to address the module
-        self.bus.write_byte_data(self.address, self.power_mgmt_1, 0)
-
-        self.cal_offset = [0,0]
+        self.bus = smbus.SMBus(1)
+        self.bus.write_byte_data(self.MPU_6050_ADDR, self.PWR_MGMT_1, 0)
+        self.calibration_offsets = {
+            'rx' : 0,
+            'ry' : 0
+        }
 
     def read_byte(self, reg):
-        return self.bus.read_byte_data(self.address, reg)
-
+        return self.bus.read_byte_data(self.MPU_6050_ADDR, reg)
+ 
     def read_word(self, reg):
-        h = self.bus.read_byte_data(self.address, reg)
-        l = self.bus.read_byte_data(self.address, reg+1)
+        h = self.bus.read_byte_data(self.MPU_6050_ADDR, reg)
+        l = self.bus.read_byte_data(self.MPU_6050_ADDR, reg + 1)
         value = (h << 8) + l
         return value
-
+    
     def read_word_2c(self, reg):
         val = self.read_word(reg)
         if (val >= 0x8000):
@@ -40,29 +44,22 @@ class Sensor():
 
     def calibrate(self):
         print("Calibrating sensor...")
-        calibration_data = self.get_cal_offset()
-        self.cal_offset[0] = self.cal_offset[0] + calibration_data[0]
-        self.cal_offset[1] = self.cal_offset[1] + calibration_data[1]
-        print("Calibration offset:", self.cal_offset)
-
-    def get_cal_offset(self):
-        data_reading = self.get_data()
-        data_dict = data_reading.get_data_dict()
-        rx = data_dict['rx']
-        ry = data_dict['ry']
-        return [rx, ry]
+        calibration_reading = self.get_data().get_data_dict()
+        self.calibration_offsets['rx'] = self.calibration_offsets['rx'] + calibration_reading['rx']
+        self.calibration_offsets['ry'] = self.calibration_offsets['ry'] + calibration_reading['ry']
+        print(self.calibration_offsets)
 
     def get_data(self):
-        gyro_readings = {
-            'gx' : self.read_word_2c(0x43),
-            'gy' : self.read_word_2c(0x45),
-            'gz' : self.read_word_2c(0x47),
+        gyro = {
+            'gx' : self.read_word_2c(self.GYRO_X),
+            'gy' : self.read_word_2c(self.GYRO_Y),
+            'gz' : self.read_word_2c(self.GYRO_Z)
         }
 
-        accel_readings = {
-            'ax' : self.read_word_2c(0x3b),
-            'ay' : self.read_word_2c(0x3d),
-            'az' : self.read_word_2c(0x3f),
+        accel = {
+            'ax' : self.read_word_2c(self.ACCEL_X),
+            'ay' : self.read_word_2c(self.ACCEL_Y),
+            'az' : self.read_word_2c(self.ACCEL_Z)
         }
 
-        return Data(self.rowerId, gyro_readings, accel_readings, self.cal_offset, datetime.datetime.now())
+        return Data(self.rowerId, { 'gyro' : gyro, 'accel' : accel }, self.calibration_offsets)
