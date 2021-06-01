@@ -1,5 +1,5 @@
 import sys, time, datetime, socket, traceback, select
-from server.data_handler import DataHandler
+from data_handler import DataHandler
 
 class ConnectionHandler:
 
