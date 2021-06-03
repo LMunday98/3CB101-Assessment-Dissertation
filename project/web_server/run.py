@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 
 def thread_flask_server():
     print("\nStart Flask Server\n")
@@ -7,6 +8,8 @@ def thread_flask_server():
     flask_thread.start()
 
 if __name__ == '__main__':
+
+    sleep(15)
     
     from app import app
     import app.routes.web

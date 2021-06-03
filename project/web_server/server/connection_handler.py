@@ -1,5 +1,5 @@
 import sys, time, datetime, socket, traceback, select
-from server.data_handler import DataHandler
+from data_handler import DataHandler
 
 class ConnectionHandler:
 
@@ -45,7 +45,7 @@ class ConnectionHandler:
                         self.recieve_data(sock)
                     #abrupt user exit
                     except Exception:
-                        # traceback.print_exc()
+                        traceback.print_exc()
                         self.disconnect_client(sock)
         except:
             #print("No connections")

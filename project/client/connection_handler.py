@@ -4,7 +4,7 @@ class ConnectionHandler:
 
     def __init__(self, client_name):
         self.client_name = client_name
-        self.host = "192.168.0.184"
+        self.host = "192.168.0.185"
         self.port = 5001
         self.buffer = 4096
         self.is_connected = False

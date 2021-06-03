@@ -1,6 +1,6 @@
 import sys, time, datetime, socket, traceback, select
-from server.file_handler import FileHandler
-from server.connection_handler import ConnectionHandler
+from file_handler import FileHandler
+from connection_handler import ConnectionHandler
 
 # sys.path.append("..")
 # import mpu
