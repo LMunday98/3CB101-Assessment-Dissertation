@@ -1,5 +1,6 @@
 import time, sys
 from app import app
+sys.path.append('/home/pi/Documents/3CB101-Pi/project/web_server/server')
 sys.path.append("server")
 from server_manager import ServerManager
 from flask import Flask, Response, request, render_template, redirect
