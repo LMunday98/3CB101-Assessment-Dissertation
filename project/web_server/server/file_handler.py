@@ -4,10 +4,10 @@ import json, os
 
 class FileHandler:
     def __init__(self):
-        self.record_session = False
+        self.record_session = True
         self.access_rights = 0o755
 
-        root = '/home/pi/Documents/3CB101-Pi/project/web_server/data'
+        root = '/home/pi/Documents/3CB101-Pi/project/data'
 
         data = {
             'path' : root
@@ -54,6 +54,7 @@ class FileHandler:
             copyfile(realtime['path'] + realtime['file_name'], copy['path'] + self.get_session_name())
             os.remove(realtime['path'] + realtime['file_name'])
             self.record_session = record_session
+            print(self.record_session)
         except Exception as e:
             print(e)
         
