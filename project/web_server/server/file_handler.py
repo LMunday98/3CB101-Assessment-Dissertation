@@ -50,9 +50,9 @@ class FileHandler:
         try:
             if (not record_session):
                 realtime = self.file_details['realtime']
-            copy = self.file_details['copy']
-            copyfile(realtime['path'] + realtime['file_name'], copy['path'] + self.get_session_name())
-            os.remove(realtime['path'] + realtime['file_name'])
+                copy = self.file_details['copy']
+                copyfile(realtime['path'] + realtime['file_name'], copy['path'] + self.get_session_name())
+                os.remove(realtime['path'] + realtime['file_name'])
             self.record_session = record_session
             print(self.record_session)
         except Exception as e:
