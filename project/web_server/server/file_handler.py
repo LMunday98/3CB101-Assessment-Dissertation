@@ -47,12 +47,16 @@ class FileHandler:
         f.close()
 
     def set_session_status(self, record_session):
-        if (not record_session):
-            realtime = self.file_details['realtime']
+        try:
+            if (not record_session):
+                realtime = self.file_details['realtime']
             copy = self.file_details['copy']
             copyfile(realtime['path'] + realtime['file_name'], copy['path'] + self.get_session_name())
             os.remove(realtime['path'] + realtime['file_name'])
-        self.record_session = record_session
+            self.record_session = record_session
+        except Exception as e:
+            print(e)
+        
 
     def get_session_name(self):
         return 'session_data ' + str(datetime.now().strftime('%d-%m-%Y %H:%M:%S')) + '.csv'
