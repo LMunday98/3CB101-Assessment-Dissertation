@@ -7,14 +7,16 @@ class FileHandler:
         self.record_session = False
         self.access_rights = 0o755
 
+        root = '/home/pi/Documents/3CB101-Pi/project/web_server/'
+
         realtime = {
-            'path' : 'data/realtime/',
+            'path' : root + 'data/realtime/',
             'file_name' : 'session_data.csv',
             'write_mode' : 'a'
         }
 
         copy = {
-            'path' : 'data/saved_sessions/'
+            'path' : root + 'data/saved_sessions/'
         }
 
         self.file_details = {'realtime' : realtime, 'copy' : copy}
@@ -28,9 +30,10 @@ class FileHandler:
 
     def create_dir(self, path):
         try:
+            print("Creating", path)
             os.mkdir(path, self.access_rights)
-        except OSError:
-            print ("Creation of the directory %s failed" % path)
+        except Exception as e:
+            print (e)
         else:
             print ("Successfully created the directory %s" % path)
 
