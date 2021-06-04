@@ -7,23 +7,26 @@ class FileHandler:
         self.record_session = False
         self.access_rights = 0o755
 
-        root = '/home/pi/Documents/3CB101-Pi/project/web_server/'
+        root = '/home/pi/Documents/3CB101-Pi/project/web_server/data'
+
+        data = {
+            'path' : root
+        }
 
         realtime = {
-            'path' : root + 'data/realtime/',
+            'path' : root + '/realtime/',
             'file_name' : 'session_data.csv',
             'write_mode' : 'a'
         }
 
         copy = {
-            'path' : root + 'data/saved_sessions/'
+            'path' : root + '/saved_sessions/'
         }
 
-        self.file_details = {'realtime' : realtime, 'copy' : copy}
+        self.file_details = {'data': data, 'realtime' : realtime, 'copy' : copy}
         self.setup()
 
     def setup(self):
-        self.create_dir('data')
         for key in self.file_details:
             path = self.file_details[key]['path']
             self.create_dir(path)
