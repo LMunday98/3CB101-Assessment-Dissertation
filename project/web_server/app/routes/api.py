@@ -20,7 +20,19 @@ def socket_call():
         print('api call: ', get_data())
     elif socket_code != None:
         socket_instance.server_request(socket_code)
-    return redirect("/public/test")
+    return redirect("/public/debug")
+
+@app.route('/start')
+def start():
+    socket_instance = server_manager_instance.get_socket_instance()
+    socket_instance.server_request('session_start')
+    return redirect("/public/debug")
+
+@app.route('/end')
+def end():
+    socket_instance = server_manager_instance.get_socket_instance()
+    socket_instance.server_request('session_end')
+    return redirect("/public/debug")
 
 @app.route('/get_data')
 def get_data():

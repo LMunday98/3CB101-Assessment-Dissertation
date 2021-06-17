@@ -62,8 +62,8 @@ class ConnectionHandler:
         name = sock.recv(self.buffer).decode()
         
         # if repeated username
-        print("name", name)
-        print("names", self.record.values())
+        # print("name", name)
+        # print("names", self.record.values())
         if name in self.record.values():
             self.send_message(sock, "\r\33[31m\33[1m Username already taken!\n\33[0m")
             sock.close()
